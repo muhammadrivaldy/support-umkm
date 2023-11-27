@@ -1,9 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HomeScreen} from '../components/organism/Homescreen';
-import {DetailsScreen} from '../components/organism/Details';
+import HomeScreen from '../components/organism/Home';
+import DetailsScreen from '../components/organism/Details';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -18,7 +17,7 @@ const BellIcon = props => <Icon {...props} name="bell-outline" />;
 
 const EmailIcon = props => <Icon {...props} name="email-outline" />;
 
-const HomeNavigator = () => (
+export const HomeNavigator = () => (
   <Navigator
     screenOptions={{headerShown: false}}
     tabBar={props => <HomeBottomNavigation {...props} />}>
@@ -39,9 +38,3 @@ const HomeBottomNavigation = ({navigation, state}) => {
     </BottomNavigation>
   );
 };
-
-export const AppNavigator = () => (
-  <NavigationContainer>
-    <HomeNavigator />
-  </NavigationContainer>
-);

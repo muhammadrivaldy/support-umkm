@@ -10,7 +10,7 @@ import {
   Icon,
 } from '@ui-kitten/components';
 
-export const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation}) => {
   const navigateDetails = () => {
     navigation.navigate('Orders');
   };
@@ -29,3 +29,5 @@ export const HomeScreen = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+export default HomeScreen;
