@@ -12,7 +12,7 @@ import {
 
 export const HomeScreen = ({navigation}) => {
   const navigateDetails = () => {
-    navigation.navigate('Details');
+    navigation.navigate('Orders');
   };
 
   const FacebookIcon = props => <Icon name="facebook" {...props} />;
@@ -23,7 +23,7 @@ export const HomeScreen = ({navigation}) => {
       <Divider />
       <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Button onPress={navigateDetails} accessoryLeft={FacebookIcon}>
-          OPEN DETAILS
+          Open Details
         </Button>
       </Layout>
     </SafeAreaView>
