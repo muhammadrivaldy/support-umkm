@@ -12,29 +12,23 @@ import {
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
-const HomeNavigator = () => (
-  <Navigator
-    screenOptions={{headerShown: false}}
-    tabBar={props => <BottomNavigationTabThemingShowcase {...props} />}>
-    <Screen name="Users" component={HomeScreen} />
-    <Screen name="Orders" component={DetailsScreen} />
-    <Screen name="Transactions" component={HomeScreen} />
-  </Navigator>
-);
-
-export const AppNavigator = () => (
-  <NavigationContainer>
-    <HomeNavigator />
-  </NavigationContainer>
-);
-
 const PersonIcon = props => <Icon {...props} name="person-outline" />;
 
 const BellIcon = props => <Icon {...props} name="bell-outline" />;
 
 const EmailIcon = props => <Icon {...props} name="email-outline" />;
 
-export const BottomNavigationTabThemingShowcase = ({navigation, state}) => {
+const HomeNavigator = () => (
+  <Navigator
+    screenOptions={{headerShown: false}}
+    tabBar={props => <HomeBottomNavigation {...props} />}>
+    <Screen name="Users" component={HomeScreen} />
+    <Screen name="Orders" component={DetailsScreen} />
+    <Screen name="Transactions" component={HomeScreen} />
+  </Navigator>
+);
+
+const HomeBottomNavigation = ({navigation, state}) => {
   return (
     <BottomNavigation
       selectedIndex={state.index}
@@ -45,3 +39,9 @@ export const BottomNavigationTabThemingShowcase = ({navigation, state}) => {
     </BottomNavigation>
   );
 };
+
+export const AppNavigator = () => (
+  <NavigationContainer>
+    <HomeNavigator />
+  </NavigationContainer>
+);
