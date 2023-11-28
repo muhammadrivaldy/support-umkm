@@ -55,7 +55,12 @@ const LoginScreen = ({navigation}) => {
   };
 
   const textLogin = () => {
-    return <TextH1 text="Email" />;
+    return (
+      <Layout style={{alignItems: 'center'}}>
+        <TextH1 text="Selamat Datang" />
+        <Text category="s1">Silahkan masukkan email & password kamu</Text>
+      </Layout>
+    );
   };
 
   const textForgotPassword = () => {
@@ -117,9 +122,8 @@ const LoginScreen = ({navigation}) => {
         <Button
           onPress={navigateToHome}
           accessoryLeft={iconGoogle}
-          style={{flex: 1}}>
-          Google
-        </Button>
+          style={{flex: 1}}
+        />
         <View style={{marginHorizontal: 5}} />
         <Button
           onPress={navigateToHome}

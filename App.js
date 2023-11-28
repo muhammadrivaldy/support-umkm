@@ -20,7 +20,7 @@ function App() {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         {...eva}
-        theme={{...eva.light, ...theme}}
+        theme={{...theme, ...eva.light}}
         customMapping={mapping}>
         <Navigation />
       </ApplicationProvider>
