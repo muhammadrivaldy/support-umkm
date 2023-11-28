@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {Button, Icon, Layout, Text} from '@ui-kitten/components';
+import {Button, Icon, Layout} from '@ui-kitten/components';
 
 const DetailsScreen = ({navigation}) => {
   const navigateDetails = () => {
