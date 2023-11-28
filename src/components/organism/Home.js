@@ -5,7 +5,7 @@ import {Button, Layout, Icon, Text} from '@ui-kitten/components';
 
 const HomeScreen = ({navigation}) => {
   const navigateDetails = () => {
-    navigation.navigate('Chat');
+    navigation.navigate('Message');
   };
 
   const iconChat = props => <Icon name="message-square-outline" {...props} />;
@@ -18,7 +18,7 @@ const HomeScreen = ({navigation}) => {
             evaProps.style.fontFamily = 'Raleway-Bold';
             evaProps.style.fontWeight = '600';
             evaProps.style.marginTop = -2;
-            return <Text {...evaProps}>Open Chat</Text>;
+            return <Text {...evaProps}>Open Message</Text>;
           }}
         </Button>
       </Layout>

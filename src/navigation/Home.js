@@ -2,7 +2,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../components/organism/Home';
-import ChatScreen from '../components/organism/Chat';
+import ChatScreen from '../components/organism/Message';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -16,7 +16,7 @@ const HomeNavigator = () => (
     screenOptions={{headerShown: false}}
     tabBar={props => <HomeBottomNavigation {...props} />}>
     <Screen name="Maps" component={HomeScreen} />
-    <Screen name="Chat" component={ChatScreen} />
+    <Screen name="Message" component={ChatScreen} />
   </Navigator>
 );
 
@@ -31,7 +31,7 @@ const HomeBottomNavigation = ({navigation, state}) => {
       selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index])}>
       <BottomNavigationTab icon={iconMap} title="Maps" />
-      <BottomNavigationTab icon={iconMessage} title="Chat" />
+      <BottomNavigationTab icon={iconMessage} title="Message" />
     </BottomNavigation>
   );
 };

@@ -151,7 +151,7 @@ const LoginScreen = ({navigation}) => {
   };
 
   const navigateToRegistration = () => {
-    navigation.navigate('Registration');
+    navigation.navigate('Example');
   };
 
   return index();
