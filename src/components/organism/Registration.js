@@ -3,7 +3,7 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
 
-const Registration = () => {
+export function RegistrationScreen() {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout
@@ -17,6 +17,4 @@ const Registration = () => {
       </Layout>
     </SafeAreaView>
   );
-};
-
-export default Registration;
+}

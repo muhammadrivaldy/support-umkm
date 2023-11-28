@@ -3,9 +3,9 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {Button, Layout, Icon, Text} from '@ui-kitten/components';
 
-const HomeScreen = ({navigation}) => {
+export function MapsScreen({navigation}) {
   const navigateDetails = () => {
-    navigation.navigate('Message');
+    navigation.navigate('MessageScreen');
   };
 
   const iconChat = props => <Icon name="message-square-outline" {...props} />;
@@ -24,6 +24,4 @@ const HomeScreen = ({navigation}) => {
       </Layout>
     </SafeAreaView>
   );
-};
-
-export default HomeScreen;
+}

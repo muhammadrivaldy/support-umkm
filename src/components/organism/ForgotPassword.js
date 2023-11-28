@@ -3,7 +3,7 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
 
-const ForgotPassword = () => {
+export function ForgotPasswordScreen() {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout
@@ -17,6 +17,4 @@ const ForgotPassword = () => {
       </Layout>
     </SafeAreaView>
   );
-};
-
-export default ForgotPassword;
+}

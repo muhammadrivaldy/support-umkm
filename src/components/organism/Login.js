@@ -3,7 +3,7 @@ import React from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
 
-const LoginScreen = ({navigation}) => {
+export function LoginScreen({navigation}) {
   const [emailValue, setEmailValue] = React.useState('');
   const [passwordValue, setPasswordValue] = React.useState('');
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
@@ -142,19 +142,17 @@ const LoginScreen = ({navigation}) => {
   const navigateToHome = () => {
     navigation.reset({
       index: 0,
-      routes: [{name: 'Home'}],
+      routes: [{name: 'HomeScreen'}],
     });
   };
 
   const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate('ForgotPasswordScreen');
   };
 
   const navigateToRegistration = () => {
-    navigation.navigate('Example');
+    navigation.navigate('RegistrationScreen');
   };
 
   return index();
-};
-
-export default LoginScreen;
+}

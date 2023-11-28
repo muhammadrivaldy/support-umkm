@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../components/organism/Home';
-import ChatScreen from '../components/organism/Message';
+import {MapsScreen} from '../components/organism/Maps';
+import {MessageScreen} from '../components/organism/Message';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -11,16 +11,18 @@ import {
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
-const HomeNavigator = () => (
-  <Navigator
-    screenOptions={{headerShown: false}}
-    tabBar={props => <HomeBottomNavigation {...props} />}>
-    <Screen name="Maps" component={HomeScreen} />
-    <Screen name="Message" component={ChatScreen} />
-  </Navigator>
-);
+export function HomeNavigator() {
+  return (
+    <Navigator
+      screenOptions={{headerShown: false}}
+      tabBar={props => <HomeBottomNavigation {...props} />}>
+      <Screen name="MapsScreen" component={MapsScreen} />
+      <Screen name="MessageScreen" component={MessageScreen} />
+    </Navigator>
+  );
+}
 
-const HomeBottomNavigation = ({navigation, state}) => {
+function HomeBottomNavigation({navigation, state}) {
   const iconMap = props => <Icon {...props} name="compass-outline" />;
   const iconMessage = props => (
     <Icon {...props} name="message-square-outline" />
@@ -34,6 +36,4 @@ const HomeBottomNavigation = ({navigation, state}) => {
       <BottomNavigationTab icon={iconMessage} title="Message" />
     </BottomNavigation>
   );
-};
-
-export default HomeNavigator;
+}

@@ -1,22 +1,25 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../components/organism/Login';
-import HomeNavigator from './Home';
-import ForgotPassword from '../components/organism/ForgotPassword';
-import Registration from '../components/organism/Registration';
+import {LoginScreen} from '../components/organism/Login';
+import {HomeNavigator} from './Home';
+import {ForgotPasswordScreen} from '../components/organism/ForgotPassword';
+import {RegistrationScreen} from '../components/organism/Registration';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => (
   <NavigationContainer>
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="LoginScreen"
       screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="Registration" component={Registration} />
-      <Stack.Screen name="Home" component={HomeNavigator} />
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+      />
+      <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeNavigator} />
     </Stack.Navigator>
   </NavigationContainer>
 );

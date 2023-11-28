@@ -32,7 +32,7 @@ function ListItemSimpleUsageShowcase({name, lastChat}) {
   );
 }
 
-function ChatScreen({navigation}) {
+export function MessageScreen({navigation}) {
   var chats = [];
 
   exampleChats.forEach((value, index, array) => {
@@ -51,8 +51,6 @@ function ChatScreen({navigation}) {
     </SafeAreaView>
   );
 }
-
-export default ChatScreen;
 
 const exampleChats = [
   {
