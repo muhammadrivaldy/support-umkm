@@ -9,12 +9,12 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('Orders');
   };
 
-  const FacebookIcon = props => <Icon name="facebook" {...props} />;
+  const iconFacebook = props => <Icon name="facebook" {...props} />;
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Button onPress={navigateDetails} accessoryLeft={FacebookIcon}>
+        <Button onPress={navigateDetails} accessoryLeft={iconFacebook}>
           Open Details
         </Button>
       </Layout>

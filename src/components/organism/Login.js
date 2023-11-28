@@ -2,6 +2,7 @@
 import React from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
+import {TextH1} from '../atoms/Text';
 
 const LoginScreen = ({navigation}) => {
   const [emailValue, setEmailValue] = React.useState('');
@@ -23,35 +24,41 @@ const LoginScreen = ({navigation}) => {
           {inputEmail()}
           <View style={{marginVertical: 10}} />
           {inputPassword()}
-          <View style={{marginVertical: 10}} />
-          {textForgotPassowrd()}
+          <View style={{marginVertical: 5}} />
+          {textForgotPassword()}
           <View style={{marginVertical: 20}} />
           {buttonLogin()}
-          <View style={{marginVertical: 10}} />
+          <View style={{marginVertical: 5}} />
           {textNotRegistered()}
         </Layout>
       </SafeAreaView>
     );
   };
 
-  const iconPassword = props => (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setSecureTextEntry(!secureTextEntry);
-      }}>
-      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
-    </TouchableWithoutFeedback>
-  );
-
-  const textLogin = () => {
+  const iconPassword = props => {
     return (
-      <Text style={{flexDirection: 'row', alignItems: 'center'}} category="h2">
-        Login
-      </Text>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setSecureTextEntry(!secureTextEntry);
+        }}>
+        <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+      </TouchableWithoutFeedback>
     );
   };
 
-  const textForgotPassowrd = () => {
+  const iconGoogle = props => {
+    return <Icon {...props} name="google" />;
+  };
+
+  const iconLogin = props => {
+    return <Icon {...props} name="arrow-circle-right" />;
+  };
+
+  const textLogin = () => {
+    return <TextH1 text="Email" />;
+  };
+
+  const textForgotPassword = () => {
     return (
       <Layout
         style={{
@@ -59,7 +66,7 @@ const LoginScreen = ({navigation}) => {
           alignSelf: 'flex-end',
         }}>
         <Text category="p1">Lupa password? </Text>
-        <Text category="p1" onPress={navigateToForgotPassword}>
+        <Text category="s1" onPress={navigateToForgotPassword} status="info">
           Klik disini
         </Text>
       </Layout>
@@ -74,9 +81,9 @@ const LoginScreen = ({navigation}) => {
           alignSelf: 'flex-end',
           borderColor: 'black',
         }}>
-        <Text category="p1">Belum daftar? </Text>
-        <Text category="p1" onPress={navigateToRegistration}>
-          Daftar dulu
+        <Text category="p1">Belum punya akun? </Text>
+        <Text category="s1" onPress={navigateToRegistration} status="info">
+          Daftar dulu dong
         </Text>
       </Layout>
     );
@@ -85,7 +92,7 @@ const LoginScreen = ({navigation}) => {
   const inputEmail = () => {
     return (
       <Input
-        placeholder="Input your email"
+        placeholder="Email kamu"
         value={emailValue}
         onChangeText={nextValue => setEmailValue(nextValue)}
       />
@@ -96,7 +103,7 @@ const LoginScreen = ({navigation}) => {
     return (
       <Input
         value={passwordValue}
-        placeholder="Place your Text"
+        placeholder="Masukkan password kamu disini"
         accessoryRight={iconPassword}
         secureTextEntry={secureTextEntry}
         onChangeText={nextValue => setPasswordValue(nextValue)}
@@ -106,9 +113,21 @@ const LoginScreen = ({navigation}) => {
 
   const buttonLogin = () => {
     return (
-      <Button onPress={navigateToHome} style={{alignSelf: 'stretch'}}>
-        Login
-      </Button>
+      <Layout style={{flexDirection: 'row'}}>
+        <Button
+          onPress={navigateToHome}
+          accessoryLeft={iconGoogle}
+          style={{flex: 1}}>
+          Google
+        </Button>
+        <View style={{marginHorizontal: 5}} />
+        <Button
+          onPress={navigateToHome}
+          accessoryLeft={iconLogin}
+          style={{flex: 1}}>
+          Login
+        </Button>
+      </Layout>
     );
   };
 

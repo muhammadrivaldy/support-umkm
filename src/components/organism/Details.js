@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {SafeAreaView} from 'react-native';
@@ -9,14 +8,14 @@ const DetailsScreen = ({navigation}) => {
     navigation.navigate('Login');
   };
 
-  const LogoutIcon = props => (
+  const iconLogout = props => (
     <Icon name="corner-down-left-outline" {...props} />
   );
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Button onPress={navigateDetails} accessoryLeft={LogoutIcon}>
+        <Button onPress={navigateDetails} accessoryLeft={iconLogout}>
           Back to Login
         </Button>
       </Layout>
