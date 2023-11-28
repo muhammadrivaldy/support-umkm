@@ -86,11 +86,7 @@ const LoginScreen = ({navigation}) => {
           borderColor: 'black',
         }}>
         <Text category="p1">Belum punya akun? </Text>
-        <Text
-          category="s1"
-          onPress={navigateToRegistration}
-          status="info"
-          style={{fontFamily: 'Raleway-Bold'}}>
+        <Text category="s1" onPress={navigateToRegistration} status="info">
           Daftar dulu dong
         </Text>
       </Layout>

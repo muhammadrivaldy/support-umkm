@@ -11,16 +11,16 @@ import {
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
-const PersonIcon = props => <Icon {...props} name="person-outline" />;
+const IconMap = props => <Icon {...props} name="compass-outline" />;
 
-const BellIcon = props => <Icon {...props} name="bell-outline" />;
+const IconPerson = props => <Icon {...props} name="person-outline" />;
 
 const HomeNavigator = () => (
   <Navigator
     screenOptions={{headerShown: false}}
     tabBar={props => <HomeBottomNavigation {...props} />}>
-    <Screen name="Users" component={HomeScreen} />
-    <Screen name="Orders" component={DetailsScreen} />
+    <Screen name="Maps" component={HomeScreen} />
+    <Screen name="Users" component={DetailsScreen} />
   </Navigator>
 );
 
@@ -29,8 +29,8 @@ const HomeBottomNavigation = ({navigation, state}) => {
     <BottomNavigation
       selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab icon={PersonIcon} title="Users" />
-      <BottomNavigationTab icon={BellIcon} title="Orders" />
+      <BottomNavigationTab icon={IconMap} title="Maps" />
+      <BottomNavigationTab icon={IconPerson} title="Users" />
     </BottomNavigation>
   );
 };
