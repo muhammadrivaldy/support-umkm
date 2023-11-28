@@ -1,37 +1,24 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {
-  Divider,
-  Icon,
-  Layout,
-  Text,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
-
-const BackIcon = props => <Icon {...props} name="arrow-back" />;
+import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 
 const DetailsScreen = ({navigation}) => {
-  const navigateBack = () => {
-    navigation.goBack();
+  const navigateDetails = () => {
+    navigation.navigate('Login');
   };
 
-  const BackAction = () => (
-    <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
+  const LogoutIcon = props => (
+    <Icon name="corner-down-left-outline" {...props} />
   );
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <TopNavigation
-        title="MyApp"
-        alignment="center"
-        accessoryLeft={BackAction}
-      />
-      <Divider />
       <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text category="h1">DETAILS</Text>
+        <Button onPress={navigateDetails} accessoryLeft={LogoutIcon}>
+          Back to Login
+        </Button>
       </Layout>
     </SafeAreaView>
   );

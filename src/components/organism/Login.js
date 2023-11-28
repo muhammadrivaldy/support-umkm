@@ -1,13 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Layout, Text} from '@ui-kitten/components';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Button, Layout} from '@ui-kitten/components';
+import {SafeAreaView} from 'react-native';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Hello World</Text>
+        <Button
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Home'}],
+            });
+          }}>
+          Go to homepage
+        </Button>
       </Layout>
     </SafeAreaView>
   );

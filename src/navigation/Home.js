@@ -15,15 +15,12 @@ const PersonIcon = props => <Icon {...props} name="person-outline" />;
 
 const BellIcon = props => <Icon {...props} name="bell-outline" />;
 
-const EmailIcon = props => <Icon {...props} name="email-outline" />;
-
-export const HomeNavigator = () => (
+const HomeNavigator = () => (
   <Navigator
     screenOptions={{headerShown: false}}
     tabBar={props => <HomeBottomNavigation {...props} />}>
     <Screen name="Users" component={HomeScreen} />
     <Screen name="Orders" component={DetailsScreen} />
-    <Screen name="Transactions" component={HomeScreen} />
   </Navigator>
 );
 
@@ -34,7 +31,8 @@ const HomeBottomNavigation = ({navigation, state}) => {
       onSelect={index => navigation.navigate(state.routeNames[index])}>
       <BottomNavigationTab icon={PersonIcon} title="Users" />
       <BottomNavigationTab icon={BellIcon} title="Orders" />
-      <BottomNavigationTab icon={EmailIcon} title="Transactions" />
     </BottomNavigation>
   );
 };
+
+export default HomeNavigator;
