@@ -3,7 +3,7 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 
-const DetailsScreen = ({navigation}) => {
+const ChatScreen = ({navigation}) => {
   const navigateDetails = () => {
     navigation.navigate('Login');
   };
@@ -28,4 +28,4 @@ const DetailsScreen = ({navigation}) => {
   );
 };
 
-export default DetailsScreen;
+export default ChatScreen;

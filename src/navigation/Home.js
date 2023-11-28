@@ -2,7 +2,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../components/organism/Home';
-import DetailsScreen from '../components/organism/Details';
+import ChatScreen from '../components/organism/Chat';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -11,26 +11,27 @@ import {
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
-const IconMap = props => <Icon {...props} name="compass-outline" />;
-
-const IconPerson = props => <Icon {...props} name="person-outline" />;
-
 const HomeNavigator = () => (
   <Navigator
     screenOptions={{headerShown: false}}
     tabBar={props => <HomeBottomNavigation {...props} />}>
     <Screen name="Maps" component={HomeScreen} />
-    <Screen name="Users" component={DetailsScreen} />
+    <Screen name="Chat" component={ChatScreen} />
   </Navigator>
 );
 
 const HomeBottomNavigation = ({navigation, state}) => {
+  const iconMap = props => <Icon {...props} name="compass-outline" />;
+  const iconMessage = props => (
+    <Icon {...props} name="message-square-outline" />
+  );
+
   return (
     <BottomNavigation
       selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab icon={IconMap} title="Maps" />
-      <BottomNavigationTab icon={IconPerson} title="Users" />
+      <BottomNavigationTab icon={iconMap} title="Maps" />
+      <BottomNavigationTab icon={iconMessage} title="Chat" />
     </BottomNavigation>
   );
 };
