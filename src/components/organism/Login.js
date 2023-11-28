@@ -53,29 +53,32 @@ const LoginScreen = ({navigation}) => {
 
   const textForgotPassowrd = () => {
     return (
-      <Text
+      <Layout
         style={{
           flexDirection: 'row',
           alignSelf: 'flex-end',
-          borderColor: 'black',
-        }}
-        category="p1">
-        Lupa password? Klik disini
-      </Text>
+        }}>
+        <Text category="p1">Lupa password? </Text>
+        <Text category="p1" onPress={navigateToForgotPassword}>
+          Klik disini
+        </Text>
+      </Layout>
     );
   };
 
   const textNotRegistered = () => {
     return (
-      <Text
+      <Layout
         style={{
           flexDirection: 'row',
           alignSelf: 'flex-end',
           borderColor: 'black',
-        }}
-        category="p1">
-        Belum daftar? Daftar dulu
-      </Text>
+        }}>
+        <Text category="p1">Belum daftar? </Text>
+        <Text category="p1" onPress={navigateToRegistration}>
+          Daftar dulu
+        </Text>
+      </Layout>
     );
   };
 
@@ -103,17 +106,25 @@ const LoginScreen = ({navigation}) => {
 
   const buttonLogin = () => {
     return (
-      <Button
-        onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
-        }}
-        style={{alignSelf: 'stretch'}}>
+      <Button onPress={navigateToHome} style={{alignSelf: 'stretch'}}>
         Login
       </Button>
     );
+  };
+
+  const navigateToHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Home'}],
+    });
+  };
+
+  const navigateToForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
+
+  const navigateToRegistration = () => {
+    navigation.navigate('Registration');
   };
 
   return index();
