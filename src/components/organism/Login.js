@@ -2,7 +2,6 @@
 import React from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
-import {TextH1} from '../atoms/Text';
 
 const LoginScreen = ({navigation}) => {
   const [emailValue, setEmailValue] = React.useState('');
@@ -57,7 +56,7 @@ const LoginScreen = ({navigation}) => {
   const textLogin = () => {
     return (
       <Layout style={{alignItems: 'center'}}>
-        <TextH1 text="Selamat Datang" />
+        <Text category="h1">Selamat Datang</Text>
         <Text category="s1">Silahkan masukkan email & password kamu</Text>
       </Layout>
     );
@@ -87,7 +86,11 @@ const LoginScreen = ({navigation}) => {
           borderColor: 'black',
         }}>
         <Text category="p1">Belum punya akun? </Text>
-        <Text category="s1" onPress={navigateToRegistration} status="info">
+        <Text
+          category="s1"
+          onPress={navigateToRegistration}
+          status="info"
+          style={{fontFamily: 'Raleway-Bold'}}>
           Daftar dulu dong
         </Text>
       </Layout>
@@ -116,7 +119,7 @@ const LoginScreen = ({navigation}) => {
     );
   };
 
-  const buttonLogin = () => {
+  const buttonLogin = props => {
     return (
       <Layout style={{flexDirection: 'row'}}>
         <Button
@@ -129,7 +132,12 @@ const LoginScreen = ({navigation}) => {
           onPress={navigateToHome}
           accessoryLeft={iconLogin}
           style={{flex: 1}}>
-          Login
+          {evaProps => {
+            evaProps.style.fontFamily = 'Raleway-Bold';
+            evaProps.style.fontWeight = '600';
+            evaProps.style.marginTop = -2;
+            return <Text {...evaProps}>Login</Text>;
+          }}
         </Button>
       </Layout>
     );
