@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function ListItemSimpleUsageShowcase({name, lastChat}) {
+function ListItemSimpleUsageShowcase({id, name, lastChat, navigation}) {
   const iconList = props => {
     return (
       <Avatar
@@ -28,6 +28,9 @@ function ListItemSimpleUsageShowcase({name, lastChat}) {
       accessoryRight={() => {
         <Button size="tiny">INSTALL</Button>;
       }}
+      onPress={() => {
+        navigation.navigate('ChatScreen', {id: id, name: name});
+      }}
     />
   );
 }
@@ -39,8 +42,10 @@ export function MessageScreen({navigation}) {
     chats.push(
       <ListItemSimpleUsageShowcase
         key={index}
+        id={index}
         name={value.name}
         lastChat={value.lastChat}
+        navigation={navigation}
       />,
     );
   });

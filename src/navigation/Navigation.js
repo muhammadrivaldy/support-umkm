@@ -5,6 +5,7 @@ import {LoginScreen} from '../components/organism/Login';
 import {HomeNavigator} from './Home';
 import {ForgotPasswordScreen} from '../components/organism/ForgotPassword';
 import {RegistrationScreen} from '../components/organism/Registration';
+import {ChatScreen} from '../components/organism/Chat';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ const Navigation = () => (
         component={ForgotPasswordScreen}
       />
       <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="HomeScreen" component={HomeNavigator} />
     </Stack.Navigator>
   </NavigationContainer>

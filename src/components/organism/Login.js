@@ -151,7 +151,8 @@ export function LoginScreen({navigation}) {
   };
 
   const navigateToRegistration = () => {
-    navigation.navigate('RegistrationScreen');
+    // navigation.navigate('RegistrationScreen');
+    navigation.navigate('ChatScreen');
   };
 
   return index();
