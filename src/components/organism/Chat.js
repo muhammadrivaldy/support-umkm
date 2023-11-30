@@ -7,6 +7,7 @@ import {
   InputToolbar,
   Composer,
 } from 'react-native-gifted-chat';
+import {QuickReplies} from 'react-native-gifted-chat/lib/QuickReplies';
 
 export function ChatScreen(props) {
   const [messages, setMessages] = useState([]);
@@ -17,34 +18,45 @@ export function ChatScreen(props) {
     setMessages([
       {
         _id: 1,
-        text: 'Hello ' + name,
+        text: 'Tanya cepat ' + name,
         createdAt: new Date(),
+        system: false,
         quickReplies: {
-          type: 'checkbox', // or 'checkbox',
+          type: 'radio', // or 'checkbox',
           values: [
             {
-              title: '😋 Yes',
-              value: 'yes',
+              _id: 4,
+              createdAt: new Date(),
+              title: '🗓️ Hari ini jualan ga ' + name + '?',
+              text: '🗓️ Hari ini jualan ga ' + name + '?',
+              user: {
+                _id: id,
+                name: name,
+              },
             },
             {
-              title: '📷 Yes, let me show you with a picture!',
-              value: 'yes_picture',
-            },
-            {
-              title: '😞 Nope. What?',
-              value: 'no',
+              _id: 3,
+              createdAt: new Date(),
+              title: '📍 Posisi dimana ' + name + '?',
+              text: '📍 Posisi dimana ' + name + '?',
+              user: {
+                _id: id,
+                name: name,
+              },
             },
           ],
         },
         user: {
           _id: 2,
-          name: 'React Native',
+          name: name,
           avatar:
-            'https://icons.iconarchive.com/icons/hopstarter/bioman/256/Bioman-Avatar-2-Green-icon.png',
+            'https://ui-avatars.com/api/?background=0dbc3f&color=FFF&name=${' +
+            name +
+            '}',
         },
       },
     ]);
-  }, [name]);
+  }, [id, name]);
 
   const onSend = useCallback((messages = []) => {
     setMessages(previousMessages =>
@@ -59,42 +71,55 @@ export function ChatScreen(props) {
       showAvatarForEveryMessage={true}
       messagesContainerStyle={{backgroundColor: 'white'}}
       placeholder="Tulisnya disini yaaa..."
-      renderBubble={props => {
-        return (
-          <Bubble
-            {...props}
-            textStyle={{
-              left: {
-                fontFamily: 'Raleway-Regular',
-              },
-              right: {
-                fontFamily: 'Raleway-Regular',
-              },
-            }}
-          />
-        );
-      }}
-      renderInputToolbar={props => {
-        return (
-          <InputToolbar
-            {...props}
-            renderComposer={props => {
-              return (
-                <Composer
-                  {...props}
-                  textInputStyle={{fontFamily: 'Raleway-Regular'}}
-                />
-              );
-            }}
-          />
-        );
-      }}
+      onQuickReply={messages => onSend(messages)}
+      renderBubble={renderBubble}
+      renderInputToolbar={renderInputToolbar}
+      renderQuickReplies={renderQuickReplies}
       user={{
         _id: id,
         name: name,
-        avatar:
-          'https://icons.iconarchive.com/icons/hopstarter/bioman/256/Bioman-Avatar-2-Green-icon.png',
       }}
+    />
+  );
+}
+
+function renderBubble(props) {
+  return (
+    <Bubble
+      {...props}
+      textStyle={{
+        left: {
+          fontFamily: 'Raleway-Regular',
+        },
+        right: {
+          fontFamily: 'Raleway-Regular',
+        },
+      }}
+    />
+  );
+}
+
+function renderInputToolbar(props) {
+  return (
+    <InputToolbar
+      {...props}
+      renderComposer={props => {
+        return (
+          <Composer
+            {...props}
+            textInputStyle={{fontFamily: 'Raleway-Regular'}}
+          />
+        );
+      }}
+    />
+  );
+}
+
+function renderQuickReplies(props) {
+  return (
+    <QuickReplies
+      {...props}
+      quickReplyTextStyle={{fontFamily: 'Raleway-Regular'}}
     />
   );
 }
