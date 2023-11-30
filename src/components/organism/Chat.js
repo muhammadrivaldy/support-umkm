@@ -1,7 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-shadow */
 import React, {useState, useCallback, useEffect} from 'react';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {
+  GiftedChat,
+  Bubble,
+  InputToolbar,
+  Composer,
+} from 'react-native-gifted-chat';
 
 export function ChatScreen(props) {
   const [messages, setMessages] = useState([]);
@@ -43,7 +48,7 @@ export function ChatScreen(props) {
 
   const onSend = useCallback((messages = []) => {
     setMessages(previousMessages =>
-      GiftedChat.prepend(previousMessages, messages),
+      GiftedChat.append(previousMessages, messages),
     );
   }, []);
 
@@ -54,6 +59,36 @@ export function ChatScreen(props) {
       showAvatarForEveryMessage={true}
       messagesContainerStyle={{backgroundColor: 'white'}}
       placeholder="Tulisnya disini yaaa..."
+      renderBubble={props => {
+        return (
+          <Bubble
+            {...props}
+            textStyle={{
+              left: {
+                fontFamily: 'Raleway-Regular',
+              },
+              right: {
+                fontFamily: 'Raleway-Regular',
+              },
+            }}
+          />
+        );
+      }}
+      renderInputToolbar={props => {
+        return (
+          <InputToolbar
+            {...props}
+            renderComposer={props => {
+              return (
+                <Composer
+                  {...props}
+                  textInputStyle={{fontFamily: 'Raleway-Regular'}}
+                />
+              );
+            }}
+          />
+        );
+      }}
       user={{
         _id: id,
         name: name,
