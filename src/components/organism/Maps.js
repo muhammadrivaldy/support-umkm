@@ -1,27 +1,20 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {SafeAreaView} from 'react-native';
-import {Button, Layout, Icon, Text} from '@ui-kitten/components';
+import MapView from 'react-native-maps';
+import {Dimensions} from 'react-native';
 
 export function MapsScreen({navigation}) {
-  const navigateDetails = () => {
-    navigation.navigate('MessageScreen');
-  };
-
-  const iconChat = props => <Icon name="message-square-outline" {...props} />;
-
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Button onPress={navigateDetails} accessoryLeft={iconChat}>
-          {evaProps => {
-            evaProps.style.fontFamily = 'Raleway-Bold';
-            evaProps.style.fontWeight = '600';
-            evaProps.style.marginTop = -2;
-            return <Text {...evaProps}>Open Message</Text>;
-          }}
-        </Button>
-      </Layout>
-    </SafeAreaView>
+    <MapView
+      region={{
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }}
+      style={{
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      }}
+    />
   );
 }
