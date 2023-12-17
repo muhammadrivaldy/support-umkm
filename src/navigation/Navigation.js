@@ -8,6 +8,7 @@ import {RegistrationScreen} from '../components/organism/Registration';
 import {ChatScreen} from '../components/organism/Chat';
 import {MapsScreen} from '../components/organism/Maps';
 import {OrderListScreen} from '../components/organism/OrderList';
+import {CustomerListScreen} from '../components/organism/CustomerList';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ const Navigation = () => (
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="MapsScreen" component={MapsScreen} />
       <Stack.Screen name="OrderListScreen" component={OrderListScreen} />
+      <Stack.Screen name="CustomerListScreen" component={CustomerListScreen} />
       <Stack.Screen name="HomeScreen" component={HomeNavigator} />
     </Stack.Navigator>
   </NavigationContainer>

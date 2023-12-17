@@ -100,13 +100,13 @@ export function OrderListScreen({navigation}) {
 
   return (
     <Layout
+      level="2"
       style={{
         flex: 1,
         paddingHorizontal: 8,
         paddingVertical: 4,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-        backgroundColor: 'transparent',
       }}>
       <Layout style={{marginVertical: 4}} />
 

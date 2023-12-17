@@ -9,6 +9,7 @@ import {
   Icon,
 } from '@ui-kitten/components';
 import {OrderListScreen} from '../components/organism/OrderList';
+import {CustomerListScreen} from '../components/organism/CustomerList';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
@@ -20,6 +21,7 @@ export function HomeNavigator() {
       {/* <Screen name="MapsScreen" component={MapsScreen} /> */}
       {/* <Screen name="MessageScreen" component={MessageScreen} /> */}
       <Screen name="OrderListScreen" component={OrderListScreen} />
+      <Screen name="CustomerListScreen" component={CustomerListScreen} />
     </Navigator>
   );
 }
@@ -30,6 +32,7 @@ function HomeBottomNavigation({navigation, state}) {
   //   <Icon {...props} name="message-square-outline" />
   // );
   const iconOrderList = props => <Icon {...props} name="grid-outline" />;
+  const iconCustomerList = props => <Icon {...props} name="people-outline" />;
 
   return (
     <BottomNavigation
@@ -38,6 +41,7 @@ function HomeBottomNavigation({navigation, state}) {
       {/* <BottomNavigationTab icon={iconMap} title="Maps" /> */}
       {/* <BottomNavigationTab icon={iconMessage} title="Message" /> */}
       <BottomNavigationTab icon={iconOrderList} title="Order List" />
+      <BottomNavigationTab icon={iconCustomerList} title="Customer List" />
     </BottomNavigation>
   );
 }
