@@ -8,6 +8,7 @@ import {
   BottomNavigationTab,
   Icon,
 } from '@ui-kitten/components';
+import {OrderListScreen} from '../components/organism/OrderList';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
@@ -16,24 +17,27 @@ export function HomeNavigator() {
     <Navigator
       screenOptions={{headerShown: false}}
       tabBar={props => <HomeBottomNavigation {...props} />}>
-      <Screen name="MapsScreen" component={MapsScreen} />
-      <Screen name="MessageScreen" component={MessageScreen} />
+      {/* <Screen name="MapsScreen" component={MapsScreen} /> */}
+      {/* <Screen name="MessageScreen" component={MessageScreen} /> */}
+      <Screen name="OrderListScreen" component={OrderListScreen} />
     </Navigator>
   );
 }
 
 function HomeBottomNavigation({navigation, state}) {
-  const iconMap = props => <Icon {...props} name="compass-outline" />;
-  const iconMessage = props => (
-    <Icon {...props} name="message-square-outline" />
-  );
+  // const iconMap = props => <Icon {...props} name="compass-outline" />;
+  // const iconMessage = props => (
+  //   <Icon {...props} name="message-square-outline" />
+  // );
+  const iconOrderList = props => <Icon {...props} name="grid-outline" />;
 
   return (
     <BottomNavigation
       selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab icon={iconMap} title="Maps" />
-      <BottomNavigationTab icon={iconMessage} title="Message" />
+      {/* <BottomNavigationTab icon={iconMap} title="Maps" /> */}
+      {/* <BottomNavigationTab icon={iconMessage} title="Message" /> */}
+      <BottomNavigationTab icon={iconOrderList} title="Order List" />
     </BottomNavigation>
   );
 }
