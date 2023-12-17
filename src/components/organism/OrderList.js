@@ -69,6 +69,7 @@ const data = [
 
 const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
+const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
 const groupedData = {
   Status: [
@@ -110,6 +111,20 @@ export function OrderListScreen({navigation}) {
       }}>
       <Layout style={{marginVertical: 4}} />
 
+      <Layout
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          alignSelf: 'center',
+          flex: 1,
+          zIndex: 1,
+          borderRadius: 100,
+        }}>
+        <Button style={{borderRadius: 100}} accessoryLeft={PlusIcon}>
+          Buat Order
+        </Button>
+      </Layout>
+
       <Input
         placeholder="Nama, No hp, Alamat ..."
         accessoryRight={SearchIcon}
@@ -140,16 +155,16 @@ export function OrderListScreen({navigation}) {
 
       <Layout style={{marginVertical: 4}} />
 
-      <Button status="primary">Cari</Button>
+      <Button status="info">Cari</Button>
 
-      <Layout style={{marginVertical: 12}} />
+      <Layout style={{marginVertical: 8}} />
 
       <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
         <List
           data={data}
           style={{backgroundColor: 'transparent'}}
           renderItem={info => (
-            <Card style={{marginBottom: 8}}>
+            <Card style={{marginVertical: 4}}>
               <Layout
                 style={{
                   flexDirection: 'row',
@@ -216,6 +231,14 @@ export function OrderListScreen({navigation}) {
           )}
         />
       </Layout>
+
+      {/* <Layout style={{marginVertical: 8}} />
+
+      <Layout>
+        <Button accessoryLeft={PlusIcon}>Buat Order Baru</Button>
+      </Layout>
+
+      <Layout style={{marginVertical: 4}} /> */}
     </Layout>
   );
 }

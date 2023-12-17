@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Avatar,
   Button,
+  Divider,
   Icon,
   Layout,
   Menu,
@@ -15,6 +16,8 @@ import {Dimensions} from 'react-native';
 const SmartphoneIcon = props => <Icon {...props} name="smartphone-outline" />;
 const ShoppingIcon = props => <Icon {...props} name="shopping-bag-outline" />;
 const CubeIcon = props => <Icon {...props} name="cube-outline" />;
+const EmailIcon = props => <Icon {...props} name="email-outline" />;
+const BookmarkIcon = props => <Icon {...props} name="bookmark-outline" />;
 const CorderIcon = props => (
   <Icon {...props} name="corner-down-right-outline" />
 );
@@ -47,9 +50,11 @@ export function ProfileScreen({navigation}) {
         </Layout>
       </Layout>
 
-      <Layout style={{marginVertical: 16}} />
+      <Layout style={{marginVertical: 8}} />
+      <Divider />
+      <Layout style={{marginVertical: 8}} />
 
-      <Layout>
+      <Layout style={{marginHorizontal: 10}}>
         <Menu
           selectedIndex={selectedIndex}
           onSelect={index => setSelectedIndex(index)}>
@@ -62,10 +67,20 @@ export function ProfileScreen({navigation}) {
             <MenuItem title="Buat Baru" accessoryLeft={CorderIcon} />
             <MenuItem title="List" accessoryLeft={CorderIcon} />
           </MenuGroup>
+          <MenuItem
+            title="Masukkan Dari Pelanggan"
+            accessoryLeft={BookmarkIcon}
+          />
+          <MenuItem
+            title="Kasih Masukkan Untuk Pembuat Aplikasi"
+            accessoryLeft={EmailIcon}
+          />
         </Menu>
       </Layout>
 
-      <Layout style={{marginVertical: 18}} />
+      <Layout style={{marginVertical: 8}} />
+      <Divider />
+      <Layout style={{marginVertical: 8}} />
 
       <Button status="danger">Logout</Button>
       <Text category="c2" style={{alignSelf: 'center', marginTop: 4}}>

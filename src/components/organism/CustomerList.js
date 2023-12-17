@@ -16,6 +16,7 @@ const data = new Array(18).fill({
 });
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
+const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
 export function CustomerListScreen({navigation}) {
   const renderItemAccessory = () => (
@@ -49,6 +50,20 @@ Jl. Address`}
 
       <Layout
         style={{
+          position: 'absolute',
+          bottom: 20,
+          alignSelf: 'center',
+          flex: 1,
+          zIndex: 1,
+          borderRadius: 100,
+        }}>
+        <Button style={{borderRadius: 100}} accessoryLeft={PlusIcon}>
+          Tambah Pelanggan
+        </Button>
+      </Layout>
+
+      <Layout
+        style={{
           flexDirection: 'row',
           alignItems: 'center',
           marginHorizontal: 8,
@@ -59,7 +74,7 @@ Jl. Address`}
           style={{flex: 1, marginRight: 8}}
         />
 
-        <Button status="primary" size="small">
+        <Button status="info" size="small">
           Cari
         </Button>
       </Layout>
