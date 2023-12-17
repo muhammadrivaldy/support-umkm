@@ -20,7 +20,7 @@ const SearchIcon = props => <Icon {...props} name="search-outline" />;
 export function CustomerListScreen({navigation}) {
   const renderItemAccessory = () => (
     <Button size="tiny" status="danger">
-      Delete
+      Hapus
     </Button>
   );
 
