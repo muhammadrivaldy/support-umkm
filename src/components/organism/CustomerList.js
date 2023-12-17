@@ -66,7 +66,7 @@ Jl. Address`}
 
       <Layout style={{marginVertical: 4}} />
 
-      <Layout>
+      <Layout style={{flex: 1}}>
         <List
           data={data}
           renderItem={renderItem}
