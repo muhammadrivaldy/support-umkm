@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Avatar,
   Button,
-  Divider,
   Icon,
   Layout,
   Menu,
@@ -14,10 +13,11 @@ import {
 import {Dimensions} from 'react-native';
 
 const SmartphoneIcon = props => <Icon {...props} name="smartphone-outline" />;
-const BrowserIcon = props => <Icon {...props} name="browser-outline" />;
-const PeopleIcon = props => <Icon {...props} name="people-outline" />;
-const AddingIcon = props => <Icon {...props} name="plus-square-outline" />;
-const MenuIcon = props => <Icon {...props} name="menu-2-outline" />;
+const ShoppingIcon = props => <Icon {...props} name="shopping-bag-outline" />;
+const CubeIcon = props => <Icon {...props} name="cube-outline" />;
+const CorderIcon = props => (
+  <Icon {...props} name="corner-down-right-outline" />
+);
 
 export function ProfileScreen({navigation}) {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
@@ -47,33 +47,25 @@ export function ProfileScreen({navigation}) {
         </Layout>
       </Layout>
 
-      <Layout style={{marginVertical: 8}} />
-
-      <Divider />
-
-      <Layout style={{marginVertical: 8}} />
+      <Layout style={{marginVertical: 16}} />
 
       <Layout>
         <Menu
           selectedIndex={selectedIndex}
           onSelect={index => setSelectedIndex(index)}>
-          <MenuItem title="Update Password" accessoryLeft={SmartphoneIcon} />
-          <MenuGroup title="Manage Paket" accessoryLeft={BrowserIcon}>
-            <MenuItem title="Buat Paket Baru" accessoryLeft={AddingIcon} />
-            <MenuItem title="List Paket" accessoryLeft={MenuIcon} />
+          <MenuItem title="Edit Password" accessoryLeft={SmartphoneIcon} />
+          <MenuGroup title="Edit Laundry" accessoryLeft={ShoppingIcon}>
+            <MenuItem title="Nama" accessoryLeft={CorderIcon} />
+            <MenuItem title="Logo" disabled={true} accessoryLeft={CorderIcon} />
           </MenuGroup>
-          <MenuGroup title="Manage Member" accessoryLeft={PeopleIcon}>
-            <MenuItem title="Buat Member Baru" accessoryLeft={AddingIcon} />
-            <MenuItem title="List Member" accessoryLeft={MenuIcon} />
+          <MenuGroup title="Paket Member" accessoryLeft={CubeIcon}>
+            <MenuItem title="Buat Baru" accessoryLeft={CorderIcon} />
+            <MenuItem title="List" accessoryLeft={CorderIcon} />
           </MenuGroup>
         </Menu>
       </Layout>
 
-      <Layout style={{marginVertical: 10}} />
-
-      <Divider />
-
-      <Layout style={{marginVertical: 8}} />
+      <Layout style={{marginVertical: 18}} />
 
       <Button status="danger">Logout</Button>
       <Text category="c2" style={{alignSelf: 'center', marginTop: 4}}>
