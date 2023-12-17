@@ -3,12 +3,12 @@ import React from 'react';
 import {
   Button,
   Card,
-  Datepicker,
   Divider,
   Icon,
   Input,
   Layout,
   List,
+  RangeDatepicker,
   Select,
   SelectGroup,
   SelectItem,
@@ -83,7 +83,7 @@ const groupedData = {
 
 export function OrderListScreen({navigation}) {
   const [multiSelectedIndex, setMultiSelectedIndex] = React.useState([]);
-  const [date, setDate] = React.useState();
+  const [range, setRange] = React.useState({});
 
   const groupDisplayValues = multiSelectedIndex.map(index => {
     const groupTitle = Object.keys(groupedData)[index.section];
@@ -113,7 +113,6 @@ export function OrderListScreen({navigation}) {
       <Input
         placeholder="Nama, No hp, Alamat ..."
         accessoryRight={SearchIcon}
-        style={{backgroundColor: 'white'}}
       />
 
       <Layout style={{marginVertical: 4}} />
@@ -130,10 +129,12 @@ export function OrderListScreen({navigation}) {
           {Object.keys(groupedData).map(renderGroup)}
         </Select>
 
-        <Datepicker
+        <RangeDatepicker
           style={{flex: 1, marginLeft: 3}}
-          date={date}
-          onSelect={nextDate => setDate(nextDate)}
+          min={new Date('2023-12-01')}
+          max={new Date('2024-12-01')}
+          range={range}
+          onSelect={nextRange => setRange(nextRange)}
         />
       </Layout>
 

@@ -40,8 +40,8 @@ function HomeBottomNavigation({navigation, state}) {
       onSelect={index => navigation.navigate(state.routeNames[index])}>
       {/* <BottomNavigationTab icon={iconMap} title="Maps" /> */}
       {/* <BottomNavigationTab icon={iconMessage} title="Message" /> */}
-      <BottomNavigationTab icon={iconOrderList} title="Order List" />
-      <BottomNavigationTab icon={iconCustomerList} title="Customer List" />
+      <BottomNavigationTab icon={iconOrderList} title="Daftar Order" />
+      <BottomNavigationTab icon={iconCustomerList} title="Pelanggan" />
     </BottomNavigation>
   );
 }

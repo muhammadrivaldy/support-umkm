@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Button, Icon, Layout, List, ListItem} from '@ui-kitten/components';
+import {
+  Button,
+  Icon,
+  Input,
+  Layout,
+  List,
+  ListItem,
+} from '@ui-kitten/components';
 import {Dimensions} from 'react-native';
 
 const data = new Array(18).fill({
@@ -8,8 +15,14 @@ const data = new Array(18).fill({
   description: 'Description for Item',
 });
 
+const SearchIcon = props => <Icon {...props} name="search-outline" />;
+
 export function CustomerListScreen({navigation}) {
-  const renderItemAccessory = () => <Button size="tiny">FOLLOW</Button>;
+  const renderItemAccessory = () => (
+    <Button size="tiny" status="danger">
+      Delete
+    </Button>
+  );
 
   const renderItemIcon = props => <Icon {...props} name="person" />;
 
@@ -32,11 +45,34 @@ Jl. Address`}
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
-      <List
-        data={data}
-        renderItem={renderItem}
-        style={{backgroundColor: 'white'}}
-      />
+      <Layout style={{marginVertical: 4}} />
+
+      <Layout
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginHorizontal: 8,
+        }}>
+        <Input
+          placeholder="Nama, No hp, Alamat ..."
+          accessoryRight={SearchIcon}
+          style={{flex: 1, marginRight: 8}}
+        />
+
+        <Button status="primary" size="small">
+          Cari
+        </Button>
+      </Layout>
+
+      <Layout style={{marginVertical: 4}} />
+
+      <Layout>
+        <List
+          data={data}
+          renderItem={renderItem}
+          style={{backgroundColor: 'white'}}
+        />
+      </Layout>
     </Layout>
   );
 }
