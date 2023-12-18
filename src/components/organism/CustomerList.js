@@ -2,6 +2,7 @@
 import React from 'react';
 import {
   Button,
+  Divider,
   Icon,
   Input,
   Layout,
@@ -91,6 +92,7 @@ Jl. Address`}
           data={data}
           renderItem={renderItem}
           style={{backgroundColor: 'white'}}
+          ItemSeparatorComponent={Divider}
         />
       </Layout>
     </Layout>

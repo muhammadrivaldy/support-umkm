@@ -63,7 +63,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
   );
 
   return (
-    <>
+    <Layout style={{flex: 1}}>
       <TopNavigation
         accessoryLeft={BackAction(navigation)}
         title="Pilih Pelanggan"
@@ -77,8 +77,6 @@ export function CreateOrder_CustomerListScreen({navigation}) {
           flex: 1,
           paddingHorizontal: 8,
           paddingVertical: 4,
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height,
         }}>
         <Layout style={{marginVertical: 4}} />
 
@@ -125,9 +123,10 @@ export function CreateOrder_CustomerListScreen({navigation}) {
             data={data}
             renderItem={renderItem}
             style={{backgroundColor: 'white'}}
+            ItemSeparatorComponent={Divider}
           />
         </Layout>
       </Layout>
-    </>
+    </Layout>
   );
 }

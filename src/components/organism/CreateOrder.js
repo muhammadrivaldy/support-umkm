@@ -7,10 +7,11 @@ import {
   TopNavigation,
   TopNavigationAction,
   Layout,
-  Select,
-  SelectItem,
   Text,
   Input,
+  ListItem,
+  List,
+  Button,
 } from '@ui-kitten/components';
 
 const BackIcon = props => <Icon {...props} name="arrow-back" />;
@@ -26,51 +27,51 @@ const BackAction = navigation => {
   );
 };
 
-const PackageList = [
-  {
-    name: 'Paket 1 (Rp. 30.000)',
-    desc: 'Estimasi waktu pengerjaan 2 hari',
-  },
-  {
-    name: 'Paket 2 (Rp. 25.000)',
-    desc: 'Estimasi waktu pengerjaan 3 hari',
-  },
-];
+const data = new Array(10).fill({
+  title: 'Item',
+  description: 'Description for Item',
+});
+
+const PackageItems = ({item, index}) => (
+  <ListItem title={item.title} description={item.description} />
+);
 
 export function CreateOrderScreen({navigation}) {
-  const [selectedServiceName, setSelectedServiceName] = React.useState(0);
-  const [selectedPackage, setSelectedPackage] = React.useState(null);
-
-  const showingItem = () => {
-    return selectedPackage !== undefined && selectedPackage !== null
-      ? PackageList[selectedPackage.row].name
-      : null;
-  };
-
-  const renderItems = () =>
-    PackageList.map(idx => (
-      <SelectItem
-        key={idx.name}
-        title={TextProps => (
-          <Layout style={{backgroundColor: 'transparent'}}>
-            <Text {...TextProps}>{idx.name}</Text>
-            <Text
-              category="c2"
-              style={{
-                marginHorizontal: TextProps.style[1].marginHorizontal,
-              }}>
-              {idx.desc}
-            </Text>
-          </Layout>
-        )}
-      />
-    ));
-
   return (
-    <>
+    <Layout style={{flex: 1}}>
+      <Layout
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          alignSelf: 'center',
+          flex: 1,
+          zIndex: 1,
+          borderRadius: 100,
+          flexDirection: 'row',
+          marginHorizontal: 20,
+        }}>
+        <Button
+          style={{borderRadius: 100, flex: 1}}
+          onPress={() => {
+            navigation.navigate('CreateOrder_CustomerListScreen');
+          }}>
+          Tambah Jasa
+        </Button>
+
+        <Layout style={{marginHorizontal: 4}} />
+
+        <Button
+          style={{borderRadius: 100, flex: 1}}
+          onPress={() => {
+            navigation.navigate('CreateOrder_CustomerListScreen');
+          }}>
+          Selesai
+        </Button>
+      </Layout>
+
       <TopNavigation
         accessoryLeft={BackAction(navigation)}
-        title="Pilih Layanan"
+        title="Buat Order"
         navigation={navigation}
       />
 
@@ -119,7 +120,7 @@ export function CreateOrderScreen({navigation}) {
           multiline={true}
           value="Jl. Pedesaan"
           disabled={true}
-          textStyle={{minHeight: 100}}
+          textStyle={{minHeight: 80}}
           label={TextProps => {
             TextProps.style[0].color = '#8F9BB3';
             TextProps.style[0].fontWeight = '600';
@@ -132,6 +133,17 @@ export function CreateOrderScreen({navigation}) {
         />
 
         <Layout style={{marginVertical: 4}} />
+
+        <Layout style={{flex: 1}}>
+          <List
+            data={data}
+            renderItem={PackageItems}
+            style={{backgroundColor: 'white'}}
+            ItemSeparatorComponent={Divider}
+          />
+        </Layout>
+
+        {/* <Layout style={{marginVertical: 4}} />
 
         <Select
           placeholder={'Pilih service'}
@@ -166,8 +178,8 @@ export function CreateOrderScreen({navigation}) {
           value={showingItem(selectedPackage)}
           onSelect={index => setSelectedPackage(index)}>
           {renderItems()}
-        </Select>
+        </Select> */}
       </Layout>
-    </>
+    </Layout>
   );
 }
