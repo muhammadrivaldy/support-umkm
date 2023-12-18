@@ -66,7 +66,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
     <>
       <TopNavigation
         accessoryLeft={BackAction(navigation)}
-        title="Buat Order"
+        title="Pilih Pelanggan"
         navigation={navigation}
       />
 

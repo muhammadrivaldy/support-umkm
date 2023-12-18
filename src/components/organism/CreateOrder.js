@@ -70,7 +70,7 @@ export function CreateOrderScreen({navigation}) {
     <>
       <TopNavigation
         accessoryLeft={BackAction(navigation)}
-        title="Buat Order"
+        title="Pilih Layanan"
         navigation={navigation}
       />
 
@@ -108,6 +108,24 @@ export function CreateOrderScreen({navigation}) {
             return (
               <Text category="s1" {...TextProps}>
                 No HP
+              </Text>
+            );
+          }}
+        />
+
+        <Layout style={{marginVertical: 4}} />
+
+        <Input
+          multiline={true}
+          value="Jl. Pedesaan"
+          disabled={true}
+          textStyle={{minHeight: 100}}
+          label={TextProps => {
+            TextProps.style[0].color = '#8F9BB3';
+            TextProps.style[0].fontWeight = '600';
+            return (
+              <Text category="s1" {...TextProps}>
+                Alamat
               </Text>
             );
           }}
