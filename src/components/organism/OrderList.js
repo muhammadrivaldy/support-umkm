@@ -124,7 +124,7 @@ export function OrderListScreen({navigation}) {
           style={{borderRadius: 100}}
           accessoryLeft={PlusIcon}
           onPress={() => {
-            navigation.navigate('CreateOrderScreen');
+            navigation.navigate('CreateOrder_CustomerListScreen');
           }}>
           Buat Order
         </Button>
@@ -139,7 +139,6 @@ export function OrderListScreen({navigation}) {
 
       <Layout style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
         <Select
-          children={{}}
           style={{flex: 1, marginRight: 3}}
           multiSelect={true}
           placeholder="Filter pencarian kamu disini"
