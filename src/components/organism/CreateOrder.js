@@ -28,12 +28,25 @@ const BackAction = navigation => {
 };
 
 const data = new Array(10).fill({
-  title: 'Item',
-  description: 'Description for Item',
+  title: 'Cuci kering setrika',
+  package: 'Package 1 (Rp. 24.000/Kg)',
+  estimatedTime: 'Estimasi pengerjaan 2 Hari 3 Jam',
 });
 
 const PackageItems = ({item, index}) => (
-  <ListItem title={item.title} description={item.description} />
+  <ListItem
+    title={item.title}
+    description={TextProps => (
+      <>
+        <Text category="s1" {...TextProps}>
+          {item.package}
+        </Text>
+        <Text category="s1" {...TextProps}>
+          {item.estimatedTime}
+        </Text>
+      </>
+    )}
+  />
 );
 
 export function CreateOrderScreen({navigation}) {
