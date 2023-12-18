@@ -120,7 +120,12 @@ export function OrderListScreen({navigation}) {
           zIndex: 1,
           borderRadius: 100,
         }}>
-        <Button style={{borderRadius: 100}} accessoryLeft={PlusIcon}>
+        <Button
+          style={{borderRadius: 100}}
+          accessoryLeft={PlusIcon}
+          onPress={() => {
+            navigation.navigate('CreateOrderScreen');
+          }}>
           Buat Order
         </Button>
       </Layout>
@@ -164,7 +169,7 @@ export function OrderListScreen({navigation}) {
           data={data}
           style={{backgroundColor: 'transparent'}}
           renderItem={info => (
-            <Card style={{marginVertical: 4}}>
+            <Card style={{marginBottom: 8}}>
               <Layout
                 style={{
                   flexDirection: 'row',
@@ -231,14 +236,6 @@ export function OrderListScreen({navigation}) {
           )}
         />
       </Layout>
-
-      {/* <Layout style={{marginVertical: 8}} />
-
-      <Layout>
-        <Button accessoryLeft={PlusIcon}>Buat Order Baru</Button>
-      </Layout>
-
-      <Layout style={{marginVertical: 4}} /> */}
     </Layout>
   );
 }

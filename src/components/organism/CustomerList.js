@@ -57,7 +57,12 @@ Jl. Address`}
           zIndex: 1,
           borderRadius: 100,
         }}>
-        <Button style={{borderRadius: 100}} accessoryLeft={PlusIcon}>
+        <Button
+          style={{borderRadius: 100}}
+          accessoryLeft={PlusIcon}
+          onPress={() => {
+            navigation.navigate('CreateCustomerScreen');
+          }}>
           Tambah Pelanggan
         </Button>
       </Layout>

@@ -10,6 +10,8 @@ import {MapsScreen} from '../components/organism/Maps';
 import {OrderListScreen} from '../components/organism/OrderList';
 import {CustomerListScreen} from '../components/organism/CustomerList';
 import {ProfileScreen} from '../components/organism/Profile';
+import {CreateOrderScreen} from '../components/organism/CreateOrder';
+import {CreateCustomerScreen} from '../components/organism/CreateCustomer';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,11 @@ const Navigation = () => (
         component={ForgotPasswordScreen}
       />
       <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
+      <Stack.Screen name="CreateOrderScreen" component={CreateOrderScreen} />
+      <Stack.Screen
+        name="CreateCustomerScreen"
+        component={CreateCustomerScreen}
+      />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="MapsScreen" component={MapsScreen} />
       <Stack.Screen name="OrderListScreen" component={OrderListScreen} />
