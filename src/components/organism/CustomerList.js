@@ -87,7 +87,11 @@ Jl. Address`}
         />
 
         <Button status="info" size="small">
-          Cari
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            return <Text {...TextProps}>Cari</Text>;
+          }}
         </Button>
       </Layout>
 

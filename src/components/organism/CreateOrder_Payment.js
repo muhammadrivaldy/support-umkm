@@ -49,7 +49,11 @@ export function CreateOrder_PaymentScreen({navigation}) {
           <Text style={{textAlign: 'center'}}>Order berhasil dibuat ya 😄</Text>
           <Layout style={{marginVertical: 6}} />
           <Button onPress={() => navigation.navigate('HomeScreen')}>
-            Menu Utama
+            {TextProps => {
+              TextProps.style.fontFamily = 'Raleway-Bold';
+              TextProps.style.fontWeight = '600';
+              return <Text {...TextProps}>Menu Utama</Text>;
+            }}
           </Button>
         </Card>
       </Modal>
