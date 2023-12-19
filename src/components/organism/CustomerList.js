@@ -12,7 +12,7 @@ import {
   Text,
 } from '@ui-kitten/components';
 import {Dimensions, RefreshControl} from 'react-native';
-import {GetCustomersAPI} from '../../stores/Services';
+import {DeleteCustomersAPI, GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
@@ -61,11 +61,29 @@ export function CustomerListScreen({navigation}) {
     setOnceEffect,
   ]);
 
-  const renderItemAccessory = () => (
-    <Button size="tiny" status="danger">
-      Hapus
-    </Button>
-  );
+  // const renderItemAccessory = () => (
+  //   <Button size="tiny" status="danger">
+  //     Hapus
+  //   </Button>
+  // );
+
+  const renderItemAccessory = customerId => {
+    return () => (
+      <Button
+        size="tiny"
+        status="danger"
+        onPress={async () => {
+          await GetToken().then(async responseToken => {
+            if (responseToken !== null) {
+              await DeleteCustomersAPI(responseToken, customerId);
+              setOnceEffect(true);
+            }
+          });
+        }}>
+        Hapus
+      </Button>
+    );
+  };
 
   const renderItemIcon = props => <Icon {...props} name="person" />;
 
@@ -79,7 +97,7 @@ export function CustomerListScreen({navigation}) {
         </>
       )}
       accessoryLeft={renderItemIcon}
-      accessoryRight={renderItemAccessory}
+      accessoryRight={renderItemAccessory(item.id)}
     />
   );
 
