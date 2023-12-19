@@ -2,6 +2,8 @@
 import React from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
+import Toast from 'react-native-toast-message';
+import {LoginAPI} from '../../stores/services';
 
 export function LoginScreen({navigation}) {
   const [emailValue, setEmailValue] = React.useState('');
@@ -119,13 +121,20 @@ export function LoginScreen({navigation}) {
     return (
       <Layout style={{flexDirection: 'row'}}>
         <Button
-          onPress={navigateToHome}
+          onPress={() => {
+            Toast.show({
+              type: 'info',
+              text1: 'Maaf, feature ini belum siap 🙏🏼',
+              text2: 'Semoga feature ini bisa selesai tepat waktu ya',
+              position: 'bottom',
+            });
+          }}
           accessoryLeft={iconGoogle}
           style={{flex: 1}}
         />
         <View style={{marginHorizontal: 5}} />
         <Button
-          onPress={navigateToHome}
+          onPress={loginProcess}
           accessoryLeft={iconLogin}
           style={{flex: 1}}>
           {TextProps => {
@@ -139,11 +148,31 @@ export function LoginScreen({navigation}) {
     );
   };
 
-  const navigateToHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'HomeScreen'}],
-    });
+  const loginProcess = () => {
+    const doFunc = async () => {
+      var result = await LoginAPI(emailValue, passwordValue);
+      if (result.code === 200) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'HomeScreen'}],
+        });
+        Toast.show({
+          type: 'info',
+          text1: 'Berhasil masuk',
+          text2: 'Selamat menikmati aplikasi kami 😄',
+          position: 'bottom',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Terjadi kesalahan',
+          text2: result.message,
+          position: 'bottom',
+        });
+      }
+    };
+
+    doFunc();
   };
 
   const navigateToForgotPassword = () => {
