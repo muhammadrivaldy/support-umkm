@@ -128,7 +128,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
         {TextProps => {
           TextProps.style.fontFamily = 'Raleway-Bold';
           TextProps.style.fontWeight = '600';
-          return <Text {...TextProps}>Selesai</Text>;
+          return <Text {...TextProps}>Tambahkan Jasa</Text>;
         }}
       </Button>
     </Layout>

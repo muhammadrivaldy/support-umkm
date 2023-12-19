@@ -14,6 +14,7 @@ import {CreateOrderScreen} from '../components/organism/CreateOrder';
 import {CreateCustomerScreen} from '../components/organism/CreateCustomer';
 import {CreateOrder_CustomerListScreen} from '../components/organism/CreateOrder_CustomerList';
 import {CreateOrder_AddingServiceScreen} from '../components/organism/CreateOrder_AddingService';
+import {CreateOrder_PaymentScreen} from '../components/organism/CreateOrder_Payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,10 @@ const Navigation = () => (
       <Stack.Screen
         name="CreateOrder_CustomerListScreen"
         component={CreateOrder_CustomerListScreen}
+      />
+      <Stack.Screen
+        name="CreateOrder_PaymentScreen"
+        component={CreateOrder_PaymentScreen}
       />
       <Stack.Screen
         name="CreateCustomerScreen"

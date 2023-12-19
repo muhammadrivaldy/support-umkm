@@ -101,7 +101,7 @@ export function OrderListScreen({navigation}) {
 
   return (
     <Layout
-      level="2"
+      level="1"
       style={{
         flex: 1,
         paddingHorizontal: 8,
@@ -164,7 +164,13 @@ export function OrderListScreen({navigation}) {
 
       <Layout style={{marginVertical: 4}} />
 
-      <Button status="info">Cari</Button>
+      <Button status="info">
+        {TextProps => {
+          TextProps.style.fontFamily = 'Raleway-Bold';
+          TextProps.style.fontWeight = '600';
+          return <Text {...TextProps}>Cari</Text>;
+        }}
+      </Button>
 
       <Layout style={{marginVertical: 8}} />
 
@@ -173,7 +179,7 @@ export function OrderListScreen({navigation}) {
           data={data}
           style={{backgroundColor: 'transparent'}}
           renderItem={info => (
-            <Card style={{marginBottom: 8}}>
+            <Card status="primary" style={{marginBottom: 8}}>
               <Layout
                 style={{
                   flexDirection: 'row',

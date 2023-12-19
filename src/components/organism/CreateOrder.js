@@ -12,6 +12,7 @@ import {
   ListItem,
   List,
   Button,
+  Card,
 } from '@ui-kitten/components';
 
 const BackIcon = props => <Icon {...props} name="arrow-back" />;
@@ -86,12 +87,12 @@ export function CreateOrderScreen({navigation}) {
         <Button
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            navigation.navigate('CreateOrder_CustomerListScreen');
+            navigation.navigate('CreateOrder_PaymentScreen');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
             TextProps.style.fontWeight = '600';
-            return <Text {...TextProps}>Selesai</Text>;
+            return <Text {...TextProps}>Bayar</Text>;
           }}
         </Button>
       </Layout>
@@ -109,57 +110,31 @@ export function CreateOrderScreen({navigation}) {
         style={{
           flex: 1,
           paddingHorizontal: 8,
-          paddingTop: 8,
+          paddingTop: 4,
         }}>
-        <Input
-          value="Muhammad Rivaldy"
-          disabled={true}
-          textStyle={{color: 'black'}}
-          label={TextProps => {
-            TextProps.style[0].color = '#8F9BB3';
-            TextProps.style[0].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                Nama Pelanggan
+        <Card status="primary">
+          <Layout
+            style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
+            <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
+              <Text category="p2">Nama</Text>
+              <Text category="s1">Muhammad Rivaldy</Text>
+
+              <Layout style={{marginVertical: 6}} />
+
+              <Text category="p2">No HP</Text>
+              <Text category="s1">081399839201</Text>
+            </Layout>
+
+            <Layout style={{marginHorizontal: 10}} />
+
+            <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
+              <Text category="p2">Address</Text>
+              <Text category="s1">
+                Jl. Kemerdekaan selatan bagian depok no. 72
               </Text>
-            );
-          }}
-        />
-
-        <Layout style={{marginVertical: 4}} />
-
-        <Input
-          value="0877823712319"
-          disabled={true}
-          textStyle={{color: 'black'}}
-          label={TextProps => {
-            TextProps.style[0].color = '#8F9BB3';
-            TextProps.style[0].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                No HP
-              </Text>
-            );
-          }}
-        />
-
-        <Layout style={{marginVertical: 4}} />
-
-        <Input
-          multiline={true}
-          value="Jl. Pedesaan"
-          disabled={true}
-          textStyle={{color: 'black', minHeight: 60}}
-          label={TextProps => {
-            TextProps.style[0].color = '#8F9BB3';
-            TextProps.style[0].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                Alamat
-              </Text>
-            );
-          }}
-        />
+            </Layout>
+          </Layout>
+        </Card>
 
         <Layout style={{marginVertical: 4}} />
 
