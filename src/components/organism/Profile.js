@@ -82,7 +82,14 @@ export function ProfileScreen({navigation}) {
       <Divider />
       <Layout style={{marginVertical: 8}} />
 
-      <Button status="danger">
+      <Button
+        status="danger"
+        onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'LoginScreen'}],
+          });
+        }}>
         {TextProps => {
           TextProps.style.fontFamily = 'Raleway-Bold';
           TextProps.style.fontWeight = '600';

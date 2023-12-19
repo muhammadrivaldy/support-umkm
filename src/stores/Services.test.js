@@ -1,4 +1,4 @@
-import {LoginAPI} from './services';
+import {LoginAPI} from './Services';
 
 describe('Login API', () => {
   test('Login Success', async () => {

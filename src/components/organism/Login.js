@@ -3,7 +3,8 @@ import React from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {LoginAPI} from '../../stores/services';
+import {LoginAPI} from '../../stores/Services';
+import {StoreToken} from '../../stores/Storages';
 
 export function LoginScreen({navigation}) {
   const [emailValue, setEmailValue] = React.useState('');
@@ -156,17 +157,20 @@ export function LoginScreen({navigation}) {
           index: 0,
           routes: [{name: 'HomeScreen'}],
         });
+
         Toast.show({
           type: 'info',
           text1: 'Berhasil masuk',
           text2: 'Selamat menikmati aplikasi kami 😄',
           position: 'bottom',
         });
+
+        StoreToken(result.data.token);
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Terjadi kesalahan',
-          text2: result.message,
+          text1: 'Maaf, terjadi kesalahan 🙏🏼',
+          text2: 'Silahkan hubungi kami untuk menyelesaikan masalah anda',
           position: 'bottom',
         });
       }
