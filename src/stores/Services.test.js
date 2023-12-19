@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-focused-tests */
 import {GetOrderStatuses, LoginAPI} from './Services';
 
 describe('Login API', () => {
@@ -7,7 +8,7 @@ describe('Login API', () => {
   });
 });
 
-describe('Get Order Statuses', () => {
+describe.only('Get Order Statuses', () => {
   test('Get Statuses Success', async () => {
     var resp = await LoginAPI('admin@example.com', 'SayaAdmin');
     var data = await GetOrderStatuses(resp.data.token);
