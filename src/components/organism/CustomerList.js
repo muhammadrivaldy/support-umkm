@@ -32,6 +32,7 @@ export function CustomerListScreen({navigation}) {
         if (responseToken !== null) {
           await GetCustomersAPI(responseToken, search, 1, 10).then(
             responseCustomers => {
+              setCustomerPage(1);
               if (responseCustomers.data.pagination.total_data > 0) {
                 setMaxPage(responseCustomers.data.pagination.total_page);
                 let dataCust = [];
@@ -114,7 +115,9 @@ export function CustomerListScreen({navigation}) {
           style={{borderRadius: 100}}
           accessoryLeft={PlusIcon}
           onPress={() => {
-            navigation.navigate('CreateCustomerScreen');
+            console.log(customerPage);
+            console.log(maxPage);
+            // navigation.navigate('CreateCustomerScreen');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
