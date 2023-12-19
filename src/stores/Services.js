@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-const baseURL = 'https://resolusilaundry.com';
+const baseURL = 'https://dev.resolusilaundry.com';
 
 export async function LoginAPI(email, password) {
   let result = {

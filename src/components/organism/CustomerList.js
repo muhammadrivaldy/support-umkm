@@ -1,5 +1,6 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   Divider,
@@ -11,16 +12,48 @@ import {
   Text,
 } from '@ui-kitten/components';
 import {Dimensions} from 'react-native';
-
-const data = new Array(18).fill({
-  title: 'Title for Item',
-  description: 'Description for Item',
-});
+import {GetCustomersAPI} from '../../stores/Services';
+import {GetToken} from '../../stores/Storages';
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
 export function CustomerListScreen({navigation}) {
+  const [data, setData] = React.useState([]);
+  const [onceEffect, setOnceEffect] = React.useState(true);
+  const [maxPage, setMaxPage] = React.useState(0);
+  const [customerPage, setCustomerPage] = React.useState(1);
+  const [search, setSearch] = React.useState(null);
+
+  useEffect(() => {
+    if (onceEffect) {
+      GetToken().then(async responseToken => {
+        if (responseToken !== null) {
+          await GetCustomersAPI(responseToken, null, customerPage, 10).then(
+            responseCustomers => {
+              setMaxPage(responseCustomers.data.pagination.total_page);
+              let dataCust = data;
+              responseCustomers.data.customers.map(idx => {
+                dataCust.push(idx);
+              });
+              setData(dataCust);
+            },
+          );
+        }
+      });
+
+      setOnceEffect(false);
+    }
+  }, [
+    data,
+    onceEffect,
+    maxPage,
+    customerPage,
+    setData,
+    setMaxPage,
+    setOnceEffect,
+  ]);
+
   const renderItemAccessory = () => (
     <Button size="tiny" status="danger">
       Hapus
@@ -31,9 +64,13 @@ export function CustomerListScreen({navigation}) {
 
   const renderItem = ({item, index}) => (
     <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`087787231231
-Jl. Address`}
+      title={item.name}
+      description={TextProps => (
+        <>
+          <Text {...TextProps}>{item.phone_number}</Text>
+          <Text {...TextProps}>{item.address}</Text>
+        </>
+      )}
       accessoryLeft={renderItemIcon}
       accessoryRight={renderItemAccessory}
     />
@@ -81,12 +118,37 @@ Jl. Address`}
           marginHorizontal: 8,
         }}>
         <Input
-          placeholder="Nama, No hp, Alamat ..."
+          placeholder="Nama atau no hp ..."
           accessoryRight={SearchIcon}
+          onChangeText={text => setSearch(text)}
           style={{flex: 1, marginRight: 8}}
         />
 
-        <Button status="info" size="small">
+        <Button
+          status="info"
+          size="small"
+          onPress={async () => {
+            setCustomerPage(1);
+
+            await GetToken().then(async responseToken => {
+              if (responseToken !== null) {
+                await GetCustomersAPI(responseToken, search, 1, 10).then(
+                  responseCustomers => {
+                    if (responseCustomers.data.pagination.total_data > 0) {
+                      setMaxPage(responseCustomers.data.pagination.total_page);
+                      let dataCust = [];
+                      responseCustomers.data.customers.map(idx => {
+                        dataCust.push(idx);
+                      });
+                      setData(dataCust);
+                    } else {
+                      setData([]);
+                    }
+                  },
+                );
+              }
+            });
+          }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
             TextProps.style.fontWeight = '600';
@@ -101,6 +163,28 @@ Jl. Address`}
         <List
           data={data}
           renderItem={renderItem}
+          onScrollEndDrag={async () => {
+            if (customerPage < maxPage) {
+              GetToken().then(async responseToken => {
+                if (responseToken !== null) {
+                  await GetCustomersAPI(
+                    responseToken,
+                    search,
+                    customerPage + 1,
+                    10,
+                  ).then(responseCustomers => {
+                    let dataCust = data;
+                    responseCustomers.data.customers.map(idx => {
+                      dataCust.push(idx);
+                    });
+                    setData(dataCust);
+                  });
+                }
+              });
+
+              setCustomerPage(customerPage + 1);
+            }
+          }}
           style={{backgroundColor: 'white'}}
           ItemSeparatorComponent={Divider}
         />
