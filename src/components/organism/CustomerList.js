@@ -11,7 +11,7 @@ import {
   ListItem,
   Text,
 } from '@ui-kitten/components';
-import {Dimensions} from 'react-native';
+import {Dimensions, RefreshControl} from 'react-native';
 import {GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
 
@@ -24,19 +24,24 @@ export function CustomerListScreen({navigation}) {
   const [maxPage, setMaxPage] = React.useState(0);
   const [customerPage, setCustomerPage] = React.useState(1);
   const [search, setSearch] = React.useState(null);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     if (onceEffect) {
       GetToken().then(async responseToken => {
         if (responseToken !== null) {
-          await GetCustomersAPI(responseToken, null, customerPage, 10).then(
+          await GetCustomersAPI(responseToken, search, 1, 10).then(
             responseCustomers => {
-              setMaxPage(responseCustomers.data.pagination.total_page);
-              let dataCust = data;
-              responseCustomers.data.customers.map(idx => {
-                dataCust.push(idx);
-              });
-              setData(dataCust);
+              if (responseCustomers.data.pagination.total_data > 0) {
+                setMaxPage(responseCustomers.data.pagination.total_page);
+                let dataCust = [];
+                responseCustomers.data.customers.map(idx => {
+                  dataCust.push(idx);
+                });
+                setData(dataCust);
+              } else {
+                setData([]);
+              }
             },
           );
         }
@@ -49,6 +54,7 @@ export function CustomerListScreen({navigation}) {
     onceEffect,
     maxPage,
     customerPage,
+    search,
     setData,
     setMaxPage,
     setOnceEffect,
@@ -75,6 +81,14 @@ export function CustomerListScreen({navigation}) {
       accessoryRight={renderItemAccessory}
     />
   );
+
+  const onRefresh = React.useCallback(() => {
+    setOnceEffect(true);
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   return (
     <Layout
@@ -185,6 +199,9 @@ export function CustomerListScreen({navigation}) {
               setCustomerPage(customerPage + 1);
             }
           }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           style={{backgroundColor: 'white'}}
           ItemSeparatorComponent={Divider}
         />
