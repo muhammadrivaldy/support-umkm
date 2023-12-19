@@ -36,6 +36,7 @@ const data = new Array(10).fill({
   title: 'Cuci kering setrika',
   package: 'Package 1 (Rp. 24.000/Kg)',
   estimatedTime: 'Estimasi pengerjaan 2 Hari 3 Jam',
+  totalPrice: 'Rp. 20.000',
 });
 
 const PackageItems = ({item, index}) => (
@@ -48,6 +49,9 @@ const PackageItems = ({item, index}) => (
         </Text>
         <Text category="s1" {...TextProps}>
           {item.estimatedTime}
+        </Text>
+        <Text category="s1" {...TextProps}>
+          Harga total {item.totalPrice}
         </Text>
       </>
     )}
