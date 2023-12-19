@@ -9,6 +9,7 @@ import {
   Icon,
   Input,
   Layout,
+  Modal,
   Radio,
   RadioGroup,
   Text,
@@ -30,6 +31,7 @@ const BackAction = navigation => {
 
 export function CreateOrder_PaymentScreen({navigation}) {
   const [selectedPayment, setSelectedPayment] = React.useState(0);
+  const [visible, setVisible] = React.useState(false);
 
   return (
     <Layout style={{flex: 1}}>
@@ -38,6 +40,19 @@ export function CreateOrder_PaymentScreen({navigation}) {
         title="Bayar"
         navigation={navigation}
       />
+
+      <Modal
+        visible={visible}
+        backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+        onBackdropPress={() => setVisible(false)}>
+        <Card disabled={true}>
+          <Text style={{textAlign: 'center'}}>Order berhasil dibuat ya 😄</Text>
+          <Layout style={{marginVertical: 6}} />
+          <Button onPress={() => navigation.navigate('HomeScreen')}>
+            Menu Utama
+          </Button>
+        </Card>
+      </Modal>
 
       <Divider />
 
@@ -135,7 +150,7 @@ export function CreateOrder_PaymentScreen({navigation}) {
           marginBottom: 8,
         }}
         onPress={() => {
-          navigation.navigate('CreateOrderScreen');
+          setVisible(true);
         }}>
         {TextProps => {
           TextProps.style.fontFamily = 'Raleway-Bold';

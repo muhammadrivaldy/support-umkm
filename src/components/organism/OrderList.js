@@ -179,7 +179,7 @@ export function OrderListScreen({navigation}) {
           data={data}
           style={{backgroundColor: 'transparent'}}
           renderItem={info => (
-            <Card status="primary" style={{marginBottom: 8}}>
+            <Card status="basic" style={{marginBottom: 8}}>
               <Layout
                 style={{
                   flexDirection: 'row',
