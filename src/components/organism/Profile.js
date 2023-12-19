@@ -12,6 +12,7 @@ import {
   Text,
 } from '@ui-kitten/components';
 import {Dimensions} from 'react-native';
+import {RemoveRefreshToken, RemoveToken} from '../../stores/Storages';
 
 const SmartphoneIcon = props => <Icon {...props} name="smartphone-outline" />;
 const ShoppingIcon = props => <Icon {...props} name="shopping-bag-outline" />;
@@ -84,7 +85,10 @@ export function ProfileScreen({navigation}) {
 
       <Button
         status="danger"
-        onPress={() => {
+        onPress={async () => {
+          await RemoveToken();
+          await RemoveRefreshToken();
+
           navigation.reset({
             index: 0,
             routes: [{name: 'LoginScreen'}],

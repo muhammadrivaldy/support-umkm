@@ -1,15 +1,36 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {LoginAPI} from '../../stores/Services';
-import {StoreToken} from '../../stores/Storages';
+import {
+  GetOrderPaymentStatusesAPI,
+  GetOrderStatusesAPI,
+  LoginAPI,
+  RefreshTokenAPI,
+} from '../../stores/Services';
+import {
+  GetRefreshToken,
+  StoreRefreshToken,
+  StoreToken,
+} from '../../stores/Storages';
+import {GroupedData, MapPaymentStatus, MapStatus} from './OrderList';
 
 export function LoginScreen({navigation}) {
   const [emailValue, setEmailValue] = React.useState('');
   const [passwordValue, setPasswordValue] = React.useState('');
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+
+  useEffect(() => {
+    init().then(response => {
+      if (response !== null) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'HomeScreen'}],
+        });
+      }
+    });
+  });
 
   const index = () => {
     return (
@@ -153,6 +174,8 @@ export function LoginScreen({navigation}) {
     const doFunc = async () => {
       var result = await LoginAPI(emailValue, passwordValue);
       if (result.code === 200) {
+        await initStatuses(result.data.token);
+
         navigation.reset({
           index: 0,
           routes: [{name: 'HomeScreen'}],
@@ -166,11 +189,12 @@ export function LoginScreen({navigation}) {
         });
 
         StoreToken(result.data.token);
+        StoreRefreshToken(result.data.refresh_token);
       } else {
         Toast.show({
           type: 'error',
           text1: 'Maaf, terjadi kesalahan 🙏🏼',
-          text2: 'Silahkan hubungi kami untuk menyelesaikan masalah anda',
+          text2: 'Silahkan hubungi kami untuk menanyakan masalah anda',
           position: 'bottom',
         });
       }
@@ -185,6 +209,51 @@ export function LoginScreen({navigation}) {
 
   const navigateToRegistration = () => {
     navigation.navigate('RegistrationScreen');
+  };
+
+  const init = async () => {
+    var token = null;
+
+    await initAuth().then(async response => {
+      if (response !== null) {
+        await initStatuses(response);
+        token = response;
+      }
+    });
+
+    return token;
+  };
+
+  const initStatuses = async token => {
+    await GetOrderStatusesAPI(token).then(response => {
+      response.data.map(idx => {
+        GroupedData.Pembayaran.push(idx.name);
+        MapStatus[idx.name] = idx.id;
+      });
+    });
+
+    await GetOrderPaymentStatusesAPI(token).then(response => {
+      response.data.map(idx => {
+        GroupedData.Status.push(idx.name);
+        MapPaymentStatus[idx.name] = idx.id;
+      });
+    });
+  };
+
+  const initAuth = async () => {
+    var token = null;
+
+    await GetRefreshToken().then(async refreshToken => {
+      if (refreshToken !== null) {
+        await RefreshTokenAPI(refreshToken).then(response => {
+          StoreToken(response.data.token);
+          StoreRefreshToken(response.data.refresh_token);
+          token = response.data.token;
+        });
+      }
+    });
+
+    return token;
   };
 
   return index();

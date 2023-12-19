@@ -71,15 +71,11 @@ const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
-const groupedData = {
-  Status: [
-    'Menunggu',
-    'Sedang Dikerjakan',
-    'Siap Diambil',
-    'Selesai',
-    'Dibatalkan',
-  ],
-  Pembayaran: ['Belum Bayar', 'DP', 'Lunas'],
+export var MapStatus = {};
+export var MapPaymentStatus = {};
+export var GroupedData = {
+  Status: [],
+  Pembayaran: [],
 };
 
 export function OrderListScreen({navigation}) {
@@ -87,15 +83,15 @@ export function OrderListScreen({navigation}) {
   const [range, setRange] = React.useState({});
 
   const groupDisplayValues = multiSelectedIndex.map(index => {
-    const groupTitle = Object.keys(groupedData)[index.section];
-    return groupedData[groupTitle][index.row];
+    const groupTitle = Object.keys(GroupedData)[index.section];
+    return GroupedData[groupTitle][index.row];
   });
 
   const renderOption = title => <SelectItem title={title} key={title} />;
 
   const renderGroup = title => (
     <SelectGroup title={title} key={title}>
-      {groupedData[title].map(renderOption)}
+      {GroupedData[title].map(renderOption)}
     </SelectGroup>
   );
 
@@ -150,7 +146,7 @@ export function OrderListScreen({navigation}) {
           value={groupDisplayValues.join(', ')}
           selectedIndex={multiSelectedIndex}
           onSelect={index => setMultiSelectedIndex(index)}>
-          {Object.keys(groupedData).map(renderGroup)}
+          {Object.keys(GroupedData).map(renderGroup)}
         </Select>
 
         <RangeDatepicker
