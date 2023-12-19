@@ -44,7 +44,7 @@ export function CreateOrder_PaymentScreen({navigation}) {
       <Modal
         visible={visible}
         backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
-        onBackdropPress={() => setVisible(false)}>
+        onBackdropPress={() => navigation.navigate('HomeScreen')}>
         <Card disabled={true}>
           <Text style={{textAlign: 'center'}}>Order berhasil dibuat ya 😄</Text>
           <Layout style={{marginVertical: 6}} />
