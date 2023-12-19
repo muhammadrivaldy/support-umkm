@@ -82,7 +82,13 @@ export function ProfileScreen({navigation}) {
       <Divider />
       <Layout style={{marginVertical: 8}} />
 
-      <Button status="danger">Logout</Button>
+      <Button status="danger">
+        {TextProps => {
+          TextProps.style.fontFamily = 'Raleway-Bold';
+          TextProps.style.fontWeight = '600';
+          return <Text {...TextProps}>Logout</Text>;
+        }}
+      </Button>
       <Text category="c2" style={{alignSelf: 'center', marginTop: 4}}>
         Versi 1.0.0
       </Text>

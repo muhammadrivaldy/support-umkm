@@ -13,7 +13,6 @@ import {
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
-import {Dimensions} from 'react-native';
 
 const data = new Array(18).fill({
   title: 'Title for Item',
@@ -95,7 +94,12 @@ export function CreateOrder_CustomerListScreen({navigation}) {
             onPress={() => {
               navigation.navigate('CreateCustomerScreen');
             }}>
-            Tambah Pelanggan
+            {TextProps => {
+              TextProps.style.fontFamily = 'Raleway-Bold';
+              TextProps.style.fontWeight = '600';
+              TextProps.style.marginTop = -3;
+              return <Text {...TextProps}>Tambah Pelanggan</Text>;
+            }}
           </Button>
         </Layout>
 

@@ -15,6 +15,11 @@ import {
 } from '@ui-kitten/components';
 
 const BackIcon = props => <Icon {...props} name="arrow-back" />;
+const TrashIcon = props => <Icon {...props} name="trash-outline" />;
+
+const DeleteAction = () => (
+  <Button status="danger" size="tiny" accessoryRight={TrashIcon} />
+);
 
 const BackAction = navigation => {
   return () => (
@@ -46,6 +51,7 @@ const PackageItems = ({item, index}) => (
         </Text>
       </>
     )}
+    accessoryRight={DeleteAction}
   />
 );
 
@@ -66,9 +72,13 @@ export function CreateOrderScreen({navigation}) {
         <Button
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            navigation.navigate('CreateOrder_CustomerListScreen');
+            navigation.navigate('CreateOrder_AddingServiceScreen');
           }}>
-          Tambah Jasa
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            return <Text {...TextProps}>Tambah Jasa</Text>;
+          }}
         </Button>
 
         <Layout style={{marginHorizontal: 4}} />
@@ -78,7 +88,11 @@ export function CreateOrderScreen({navigation}) {
           onPress={() => {
             navigation.navigate('CreateOrder_CustomerListScreen');
           }}>
-          Selesai
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            return <Text {...TextProps}>Selesai</Text>;
+          }}
         </Button>
       </Layout>
 
@@ -100,6 +114,7 @@ export function CreateOrderScreen({navigation}) {
         <Input
           value="Muhammad Rivaldy"
           disabled={true}
+          textStyle={{color: 'black'}}
           label={TextProps => {
             TextProps.style[0].color = '#8F9BB3';
             TextProps.style[0].fontWeight = '600';
@@ -116,6 +131,7 @@ export function CreateOrderScreen({navigation}) {
         <Input
           value="0877823712319"
           disabled={true}
+          textStyle={{color: 'black'}}
           label={TextProps => {
             TextProps.style[0].color = '#8F9BB3';
             TextProps.style[0].fontWeight = '600';
@@ -133,7 +149,7 @@ export function CreateOrderScreen({navigation}) {
           multiline={true}
           value="Jl. Pedesaan"
           disabled={true}
-          textStyle={{minHeight: 80}}
+          textStyle={{color: 'black', minHeight: 60}}
           label={TextProps => {
             TextProps.style[0].color = '#8F9BB3';
             TextProps.style[0].fontWeight = '600';
@@ -155,43 +171,6 @@ export function CreateOrderScreen({navigation}) {
             ItemSeparatorComponent={Divider}
           />
         </Layout>
-
-        {/* <Layout style={{marginVertical: 4}} />
-
-        <Select
-          placeholder={'Pilih service'}
-          label={TextProps => {
-            TextProps.style[1].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                Service
-              </Text>
-            );
-          }}
-          selectedIndex={selectedServiceName}
-          onSelect={index => setSelectedServiceName(index)}>
-          <SelectItem title="Option 1" />
-          <SelectItem title="Option 2" />
-          <SelectItem title="Option 3" />
-        </Select>
-
-        <Layout style={{marginVertical: 4}} />
-
-        <Select
-          selectedIndex={selectedPackage}
-          placeholder={'Pilih paket nya'}
-          label={TextProps => {
-            TextProps.style[1].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                Paket
-              </Text>
-            );
-          }}
-          value={showingItem(selectedPackage)}
-          onSelect={index => setSelectedPackage(index)}>
-          {renderItems()}
-        </Select> */}
       </Layout>
     </Layout>
   );

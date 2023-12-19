@@ -128,11 +128,11 @@ export function LoginScreen({navigation}) {
           onPress={navigateToHome}
           accessoryLeft={iconLogin}
           style={{flex: 1}}>
-          {evaProps => {
-            evaProps.style.fontFamily = 'Raleway-Bold';
-            evaProps.style.fontWeight = '600';
-            evaProps.style.marginTop = -2;
-            return <Text {...evaProps}>Login</Text>;
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            TextProps.style.marginTop = -3;
+            return <Text {...TextProps}>Login</Text>;
           }}
         </Button>
       </Layout>

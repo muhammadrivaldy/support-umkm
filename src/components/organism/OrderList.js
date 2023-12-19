@@ -126,7 +126,12 @@ export function OrderListScreen({navigation}) {
           onPress={() => {
             navigation.navigate('CreateOrder_CustomerListScreen');
           }}>
-          Buat Order
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            TextProps.style.marginTop = -3;
+            return <Text {...TextProps}>Buat Order</Text>;
+          }}
         </Button>
       </Layout>
 

@@ -8,6 +8,7 @@ import {
   Layout,
   List,
   ListItem,
+  Text,
 } from '@ui-kitten/components';
 import {Dimensions} from 'react-native';
 
@@ -64,7 +65,12 @@ Jl. Address`}
           onPress={() => {
             navigation.navigate('CreateCustomerScreen');
           }}>
-          Tambah Pelanggan
+          {TextProps => {
+            TextProps.style.fontFamily = 'Raleway-Bold';
+            TextProps.style.fontWeight = '600';
+            TextProps.style.marginTop = -3;
+            return <Text {...TextProps}>Tambah Pelanggan</Text>;
+          }}
         </Button>
       </Layout>
 
