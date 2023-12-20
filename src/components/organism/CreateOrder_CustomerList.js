@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   Button,
   Divider,
   Icon,
   Input,
   Layout,
-  List,
   ListItem,
   Text,
   TopNavigation,
@@ -16,6 +15,7 @@ import {
 import {GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
 import {RefreshControl} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
@@ -31,37 +31,47 @@ const BackAction = navigation => {
   );
 };
 
+var tempData = new Map();
+
 export function CreateOrder_CustomerListScreen({navigation}) {
   const [data, setData] = React.useState([]);
   const [onceEffect, setOnceEffect] = React.useState(true);
   const [maxPage, setMaxPage] = React.useState(0);
-  const [customerPage, setCustomerPage] = React.useState(1);
+  const [customerPage, setCustomerPage] = React.useState(0);
   const [search, setSearch] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     if (onceEffect) {
-      GetToken().then(async responseToken => {
-        if (responseToken !== null) {
-          await GetCustomersAPI(responseToken, search, 1, 10).then(
-            responseCustomers => {
-              setCustomerPage(1);
-              if (responseCustomers.data.pagination.total_data > 0) {
+      if (customerPage + 1 < maxPage || maxPage === 0) {
+        GetToken().then(async responseToken => {
+          if (responseToken !== null) {
+            await GetCustomersAPI(
+              responseToken,
+              search,
+              customerPage + 1,
+              10,
+            ).then(responseCustomers => {
+              if (
+                responseCustomers.code === 200 &&
+                responseCustomers.data.pagination.total_data > 0
+              ) {
+                setCustomerPage(customerPage + 1);
                 setMaxPage(responseCustomers.data.pagination.total_page);
-                let dataCust = [];
                 responseCustomers.data.customers.map(idx => {
-                  dataCust.push(idx);
+                  tempData.set(idx.id, idx);
                 });
-                setData(dataCust);
-              } else {
-                setData([]);
-              }
-            },
-          );
-        }
-      });
 
-      setOnceEffect(false);
+                setData(
+                  Array.from(tempData, ([name, value]) => ({name, value})),
+                );
+              }
+            });
+          }
+        });
+
+        setOnceEffect(false);
+      }
     }
   }, [
     data,
@@ -74,44 +84,53 @@ export function CreateOrder_CustomerListScreen({navigation}) {
     setOnceEffect,
   ]);
 
-  const renderItemAccessory = (id, name, phoneNumber, address) => {
-    return () => (
-      <Button
-        size="tiny"
-        status="info"
-        onPress={() => {
-          navigation.navigate('CreateOrderScreen', {
-            id: id,
-            name: name,
-            phoneNumber: phoneNumber,
-            address: address,
-          });
-        }}>
-        Pilih
-      </Button>
-    );
-  };
+  const renderItemAccessory = useCallback(
+    (id, name, phoneNumber, address) => {
+      return () => (
+        <Button
+          size="tiny"
+          status="info"
+          onPress={() => {
+            navigation.navigate('CreateOrderScreen', {
+              id: id,
+              name: name,
+              phoneNumber: phoneNumber,
+              address: address,
+            });
+          }}>
+          Pilih
+        </Button>
+      );
+    },
+    [navigation],
+  );
 
-  const renderItemIcon = props => <Icon {...props} name="person" />;
+  const renderItemIcon = useCallback(
+    props => <Icon {...props} name="person" />,
+    [],
+  );
 
-  const renderItem = ({item, index}) => (
-    <ListItem
-      key={item.name}
-      title={item.name}
-      description={TextProps => (
-        <>
-          <Text {...TextProps}>{item.phone_number}</Text>
-          <Text {...TextProps}>{item.address}</Text>
-        </>
-      )}
-      accessoryLeft={renderItemIcon}
-      accessoryRight={renderItemAccessory(
-        item.id,
-        item.name,
-        item.phone_number,
-        item.address,
-      )}
-    />
+  const renderItem = useCallback(
+    ({item, index}) => (
+      <ListItem
+        key={item.name}
+        title={item.value.name}
+        description={TextProps => (
+          <>
+            <Text {...TextProps}>{item.value.phone_number}</Text>
+            <Text {...TextProps}>{item.value.address}</Text>
+          </>
+        )}
+        accessoryLeft={renderItemIcon}
+        accessoryRight={renderItemAccessory(
+          item.value.id,
+          item.value.name,
+          item.value.phone_number,
+          item.value.address,
+        )}
+      />
+    ),
+    [renderItemIcon, renderItemAccessory],
   );
 
   const onRefresh = React.useCallback(() => {
@@ -181,28 +200,10 @@ export function CreateOrder_CustomerListScreen({navigation}) {
             status="info"
             size="small"
             onPress={async () => {
-              setCustomerPage(1);
-
-              await GetToken().then(async responseToken => {
-                if (responseToken !== null) {
-                  await GetCustomersAPI(responseToken, search, 1, 10).then(
-                    responseCustomers => {
-                      if (responseCustomers.data.pagination.total_data > 0) {
-                        setMaxPage(
-                          responseCustomers.data.pagination.total_page,
-                        );
-                        let dataCust = [];
-                        responseCustomers.data.customers.map(idx => {
-                          dataCust.push(idx);
-                        });
-                        setData(dataCust);
-                      } else {
-                        setData([]);
-                      }
-                    },
-                  );
-                }
-              });
+              tempData = new Map();
+              setCustomerPage(0);
+              setMaxPage(0);
+              setOnceEffect(true);
             }}>
             {TextProps => {
               TextProps.style.fontFamily = 'Raleway-Bold';
@@ -215,36 +216,16 @@ export function CreateOrder_CustomerListScreen({navigation}) {
         <Layout style={{marginVertical: 4}} />
 
         <Layout style={{flex: 1}}>
-          <List
+          <FlashList
             data={data}
             renderItem={renderItem}
-            onScrollEndDrag={async () => {
-              if (customerPage < maxPage) {
-                GetToken().then(async responseToken => {
-                  if (responseToken !== null) {
-                    await GetCustomersAPI(
-                      responseToken,
-                      search,
-                      customerPage + 1,
-                      10,
-                    ).then(responseCustomers => {
-                      let dataCust = data;
-                      responseCustomers.data.customers.map(idx => {
-                        dataCust.push(idx);
-                      });
-                      setData(dataCust);
-                    });
-                  }
-                });
-
-                setCustomerPage(customerPage + 1);
-              }
-            }}
+            onScrollEndDrag={async () => setOnceEffect(true)}
+            ItemSeparatorComponent={Divider}
+            removeClippedSubviews={true}
+            estimatedItemSize={50}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            style={{backgroundColor: 'white'}}
-            ItemSeparatorComponent={Divider}
           />
         </Layout>
       </Layout>
