@@ -97,10 +97,7 @@ export function CreateCustomerScreen({navigation}) {
                   address,
                 ).then(response => {
                   if (response.code === 201) {
-                    navigation.reset({
-                      index: 0,
-                      routes: [{name: 'CustomerListScreen'}],
-                    });
+                    navigation.goBack();
 
                     Toast.show({
                       position: 'bottom',

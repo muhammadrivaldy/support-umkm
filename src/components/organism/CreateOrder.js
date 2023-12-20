@@ -59,7 +59,9 @@ const PackageItems = ({item, index}) => (
   />
 );
 
-export function CreateOrderScreen({navigation}) {
+export function CreateOrderScreen({route, navigation}) {
+  const {name, phoneNumber, address} = route.params;
+
   return (
     <Layout style={{flex: 1}}>
       <Layout
@@ -120,21 +122,19 @@ export function CreateOrderScreen({navigation}) {
             style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Nama</Text>
-              <Text category="s1">Muhammad Rivaldy</Text>
+              <Text category="s1">{name}</Text>
 
               <Layout style={{marginVertical: 6}} />
 
               <Text category="p2">No HP</Text>
-              <Text category="s1">081399839201</Text>
+              <Text category="s1">{phoneNumber}</Text>
             </Layout>
 
             <Layout style={{marginHorizontal: 10}} />
 
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Address</Text>
-              <Text category="s1">
-                Jl. Kemerdekaan selatan bagian depok no. 72
-              </Text>
+              <Text category="s1">{address}</Text>
             </Layout>
           </Layout>
         </Card>
