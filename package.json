@@ -24,6 +24,7 @@
     "base-64": "^1.0.0",
     "react": "18.2.0",
     "react-native": "0.72.7",
+    "react-native-contacts": "^7.0.8",
     "react-native-gesture-handler": "^2.14.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-maps": "^1.8.0",

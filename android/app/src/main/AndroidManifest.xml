@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" android:required="true"/> <!-- https://github.com/morenoh149/react-native-contacts/tree/master -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" android:required="true"/> <!-- https://github.com/morenoh149/react-native-contacts/tree/master -->
 
     <application
       android:name=".MainApplication"

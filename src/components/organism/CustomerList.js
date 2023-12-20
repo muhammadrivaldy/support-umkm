@@ -11,7 +11,7 @@ import {
   ListItem,
   Text,
 } from '@ui-kitten/components';
-import {Dimensions, RefreshControl} from 'react-native';
+import {RefreshControl} from 'react-native';
 import {DeleteCustomersAPI, GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
 
@@ -30,7 +30,7 @@ export function CustomerListScreen({navigation}) {
     if (onceEffect) {
       GetToken().then(async responseToken => {
         if (responseToken !== null) {
-          await GetCustomersAPI(responseToken, search, 1, 10).then(
+          await GetCustomersAPI(responseToken, search, 1, 20).then(
             responseCustomers => {
               setCustomerPage(1);
               if (responseCustomers.data.pagination.total_data > 0) {
@@ -60,12 +60,6 @@ export function CustomerListScreen({navigation}) {
     setMaxPage,
     setOnceEffect,
   ]);
-
-  // const renderItemAccessory = () => (
-  //   <Button size="tiny" status="danger">
-  //     Hapus
-  //   </Button>
-  // );
 
   const renderItemAccessory = customerId => {
     return () => (
@@ -115,8 +109,6 @@ export function CustomerListScreen({navigation}) {
         flex: 1,
         paddingHorizontal: 8,
         paddingVertical: 4,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
       }}>
       <Layout style={{marginVertical: 4}} />
 
@@ -133,9 +125,7 @@ export function CustomerListScreen({navigation}) {
           style={{borderRadius: 100}}
           accessoryLeft={PlusIcon}
           onPress={() => {
-            console.log(customerPage);
-            console.log(maxPage);
-            // navigation.navigate('CreateCustomerScreen');
+            navigation.navigate('CreateCustomerScreen');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
@@ -167,7 +157,7 @@ export function CustomerListScreen({navigation}) {
 
             await GetToken().then(async responseToken => {
               if (responseToken !== null) {
-                await GetCustomersAPI(responseToken, search, 1, 10).then(
+                await GetCustomersAPI(responseToken, search, 1, 20).then(
                   responseCustomers => {
                     if (responseCustomers.data.pagination.total_data > 0) {
                       setMaxPage(responseCustomers.data.pagination.total_page);
@@ -206,7 +196,7 @@ export function CustomerListScreen({navigation}) {
                     responseToken,
                     search,
                     customerPage + 1,
-                    10,
+                    20,
                   ).then(responseCustomers => {
                     let dataCust = data;
                     responseCustomers.data.customers.map(idx => {

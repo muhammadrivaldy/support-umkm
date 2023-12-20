@@ -105,7 +105,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
         <Input
           multiline={true}
           placeholder="Masukkan detail order"
-          textStyle={{minHeight: 60}}
+          textStyle={{minHeight: 100}}
           label={TextProps => {
             TextProps.style[0].fontWeight = '600';
             return (

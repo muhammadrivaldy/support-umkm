@@ -147,7 +147,9 @@ export function LoginScreen({navigation}) {
             Toast.show({
               type: 'info',
               text1: 'Maaf, feature ini belum siap 🙏🏼',
+              text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
               text2: 'Semoga feature ini bisa selesai tepat waktu ya',
+              text2Style: {fontFamily: 'Raleway-Regular'},
               position: 'bottom',
             });
           }}
@@ -182,9 +184,10 @@ export function LoginScreen({navigation}) {
         });
 
         Toast.show({
-          type: 'info',
           text1: 'Berhasil masuk',
-          text2: 'Selamat menikmati aplikasi kami 😄',
+          text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+          text2: 'Selamat menggunakan aplikasi kami 😄',
+          text2Style: {fontFamily: 'Raleway-Regular'},
           position: 'bottom',
         });
 
@@ -193,8 +196,10 @@ export function LoginScreen({navigation}) {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Maaf, terjadi kesalahan 🙏🏼',
+          text1: 'Maaf, terjadi kesalahan 😭',
+          text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
           text2: 'Silahkan hubungi kami untuk menanyakan masalah anda',
+          text2Style: {fontFamily: 'Raleway-Regular'},
           position: 'bottom',
         });
       }
