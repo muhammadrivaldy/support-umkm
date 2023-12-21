@@ -84,14 +84,7 @@ export function CustomerListScreen({navigation}) {
           await GetToken().then(async responseToken => {
             if (responseToken !== null) {
               await DeleteCustomersAPI(responseToken, customerId).then(() => {
-                tempData = new Map();
-                pageState.onceEffect = true;
-                pageState.customerPage = 0;
-                pageState.maxPage = 0;
-                setPageState(pageState);
-
-                onRefresh();
-
+                onRefreshAndReset();
                 Toast.show({
                   type: 'info',
                   position: 'bottom',
@@ -136,8 +129,17 @@ export function CustomerListScreen({navigation}) {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 1500);
   }, []);
+
+  const onRefreshAndReset = React.useCallback(() => {
+    tempData = new Map();
+    pageState.onceEffect = true;
+    pageState.customerPage = 0;
+    pageState.maxPage = 0;
+    setPageState(pageState);
+    onRefresh();
+  });
 
   return (
     <Layout
@@ -185,19 +187,7 @@ export function CustomerListScreen({navigation}) {
           style={{flex: 1, marginRight: 8}}
         />
 
-        <Button
-          status="info"
-          size="small"
-          onPress={() => {
-            tempData = new Map();
-
-            pageState.onceEffect = true;
-            pageState.customerPage = 0;
-            pageState.maxPage = 0;
-            setPageState(pageState);
-
-            onRefresh();
-          }}>
+        <Button status="info" size="small" onPress={() => onRefreshAndReset()}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
             TextProps.style.fontWeight = '600';
@@ -221,7 +211,10 @@ export function CustomerListScreen({navigation}) {
         removeClippedSubviews={true}
         estimatedItemSize={500}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshAndReset}
+          />
         }
       />
     </Layout>
