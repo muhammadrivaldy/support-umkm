@@ -82,6 +82,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
     setData,
     setMaxPage,
     setOnceEffect,
+    setCustomerPage,
   ]);
 
   const renderItemAccessory = useCallback(
@@ -134,6 +135,9 @@ export function CreateOrder_CustomerListScreen({navigation}) {
   );
 
   const onRefresh = React.useCallback(() => {
+    tempData = new Map();
+    setCustomerPage(0);
+    setMaxPage(0);
     setOnceEffect(true);
     setRefreshing(true);
     setTimeout(() => {
@@ -219,7 +223,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
           <FlashList
             data={data}
             renderItem={renderItem}
-            onScrollEndDrag={async () => setOnceEffect(true)}
+            onEndReached={async () => setOnceEffect(true)}
             ItemSeparatorComponent={Divider}
             removeClippedSubviews={true}
             estimatedItemSize={50}

@@ -1,67 +1,81 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   Button,
   Divider,
   Icon,
   Input,
   Layout,
-  List,
   ListItem,
   Text,
 } from '@ui-kitten/components';
 import {RefreshControl} from 'react-native';
 import {DeleteCustomersAPI, GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
+import {FlashList} from '@shopify/flash-list';
+import Toast from 'react-native-toast-message';
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
+var tempData = new Map();
+
 export function CustomerListScreen({navigation}) {
   const [data, setData] = React.useState([]);
-  const [onceEffect, setOnceEffect] = React.useState(true);
-  const [maxPage, setMaxPage] = React.useState(0);
-  const [customerPage, setCustomerPage] = React.useState(1);
   const [search, setSearch] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [pageState, setPageState] = React.useState({
+    onceEffect: true,
+    customerPage: 0,
+    maxPage: 0,
+    search: null,
+  });
 
   useEffect(() => {
-    if (onceEffect) {
-      GetToken().then(async responseToken => {
-        if (responseToken !== null) {
-          await GetCustomersAPI(responseToken, search, 1, 20).then(
-            responseCustomers => {
-              setCustomerPage(1);
-              if (responseCustomers.data.pagination.total_data > 0) {
-                setMaxPage(responseCustomers.data.pagination.total_page);
-                let dataCust = [];
+    if (pageState.onceEffect) {
+      if (
+        pageState.customerPage + 1 < pageState.maxPage ||
+        pageState.maxPage === 0
+      ) {
+        GetToken().then(async responseToken => {
+          if (responseToken !== null) {
+            await GetCustomersAPI(
+              responseToken,
+              search,
+              pageState.customerPage + 1,
+              10,
+            ).then(responseCustomers => {
+              if (
+                responseCustomers.code === 200 &&
+                responseCustomers.data.pagination.total_data > 0
+              ) {
+                pageState.onceEffect = false;
+                pageState.customerPage = pageState.customerPage + 1;
+                pageState.maxPage =
+                  responseCustomers.data.pagination.total_page;
+
                 responseCustomers.data.customers.map(idx => {
-                  dataCust.push(idx);
+                  tempData.set(idx.id, idx);
                 });
-                setData(dataCust);
+
+                setPageState(pageState);
+
+                setData(
+                  Array.from(tempData, ([name, value]) => ({name, value})),
+                );
               } else {
                 setData([]);
               }
-            },
-          );
-        }
-      });
-
-      setOnceEffect(false);
+            });
+          }
+        });
+      }
     }
-  }, [
-    data,
-    onceEffect,
-    maxPage,
-    customerPage,
-    search,
-    setData,
-    setMaxPage,
-    setOnceEffect,
-  ]);
+  }, [refreshing]);
 
-  const renderItemAccessory = customerId => {
+  const renderItemAccessory = useCallback(customerId => {
     return () => (
       <Button
         size="tiny"
@@ -69,38 +83,60 @@ export function CustomerListScreen({navigation}) {
         onPress={async () => {
           await GetToken().then(async responseToken => {
             if (responseToken !== null) {
-              await DeleteCustomersAPI(responseToken, customerId);
-              setOnceEffect(true);
+              await DeleteCustomersAPI(responseToken, customerId).then(() => {
+                tempData = new Map();
+                pageState.onceEffect = true;
+                pageState.customerPage = 0;
+                pageState.maxPage = 0;
+                setPageState(pageState);
+
+                onRefresh();
+
+                Toast.show({
+                  type: 'info',
+                  position: 'bottom',
+                  text1: 'Customer berhasil dihapus',
+                  text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+                  text2: 'Kasihan banget customer nya dihapus 🥲',
+                  text2Style: {fontFamily: 'Raleway-Bold'},
+                });
+              });
             }
           });
         }}>
         Hapus
       </Button>
     );
-  };
+  }, []);
 
-  const renderItemIcon = props => <Icon {...props} name="person" />;
+  const renderItemIcon = useCallback(
+    props => <Icon {...props} name="person" />,
+    [],
+  );
 
-  const renderItem = ({item, index}) => (
-    <ListItem
-      title={item.name}
-      description={TextProps => (
-        <>
-          <Text {...TextProps}>{item.phone_number}</Text>
-          <Text {...TextProps}>{item.address}</Text>
-        </>
-      )}
-      accessoryLeft={renderItemIcon}
-      accessoryRight={renderItemAccessory(item.id)}
-    />
+  const renderItem = useCallback(
+    ({item, index}) => (
+      <ListItem
+        key={item.name}
+        title={item.value.name}
+        description={TextProps => (
+          <>
+            <Text {...TextProps}>{item.value.phone_number}</Text>
+            <Text {...TextProps}>{item.value.address}</Text>
+          </>
+        )}
+        accessoryLeft={renderItemIcon}
+        accessoryRight={renderItemAccessory(item.value.id)}
+      />
+    ),
+    [],
   );
 
   const onRefresh = React.useCallback(() => {
-    setOnceEffect(true);
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000);
+    }, 2000);
   }, []);
 
   return (
@@ -152,27 +188,15 @@ export function CustomerListScreen({navigation}) {
         <Button
           status="info"
           size="small"
-          onPress={async () => {
-            setCustomerPage(1);
+          onPress={() => {
+            tempData = new Map();
 
-            await GetToken().then(async responseToken => {
-              if (responseToken !== null) {
-                await GetCustomersAPI(responseToken, search, 1, 20).then(
-                  responseCustomers => {
-                    if (responseCustomers.data.pagination.total_data > 0) {
-                      setMaxPage(responseCustomers.data.pagination.total_page);
-                      let dataCust = [];
-                      responseCustomers.data.customers.map(idx => {
-                        dataCust.push(idx);
-                      });
-                      setData(dataCust);
-                    } else {
-                      setData([]);
-                    }
-                  },
-                );
-              }
-            });
+            pageState.onceEffect = true;
+            pageState.customerPage = 0;
+            pageState.maxPage = 0;
+            setPageState(pageState);
+
+            onRefresh();
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
@@ -185,36 +209,20 @@ export function CustomerListScreen({navigation}) {
       <Layout style={{marginVertical: 4}} />
 
       <Layout style={{flex: 1}}>
-        <List
+        <FlashList
           data={data}
           renderItem={renderItem}
-          onScrollEndDrag={async () => {
-            if (customerPage < maxPage) {
-              GetToken().then(async responseToken => {
-                if (responseToken !== null) {
-                  await GetCustomersAPI(
-                    responseToken,
-                    search,
-                    customerPage + 1,
-                    20,
-                  ).then(responseCustomers => {
-                    let dataCust = data;
-                    responseCustomers.data.customers.map(idx => {
-                      dataCust.push(idx);
-                    });
-                    setData(dataCust);
-                  });
-                }
-              });
-
-              setCustomerPage(customerPage + 1);
-            }
+          onEndReached={() => {
+            pageState.onceEffect = true;
+            setPageState(pageState);
+            onRefresh();
           }}
+          ItemSeparatorComponent={Divider}
+          removeClippedSubviews={true}
+          estimatedItemSize={50}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          style={{backgroundColor: 'white'}}
-          ItemSeparatorComponent={Divider}
         />
       </Layout>
     </Layout>
