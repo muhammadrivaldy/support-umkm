@@ -45,7 +45,7 @@ export function CustomerListScreen({navigation}) {
               responseToken,
               search,
               pageState.customerPage + 1,
-              10,
+              50,
             ).then(responseCustomers => {
               if (
                 responseCustomers.code === 200 &&
@@ -208,23 +208,22 @@ export function CustomerListScreen({navigation}) {
 
       <Layout style={{marginVertical: 4}} />
 
-      <Layout style={{flex: 1}}>
-        <FlashList
-          data={data}
-          renderItem={renderItem}
-          onEndReached={() => {
-            pageState.onceEffect = true;
-            setPageState(pageState);
-            onRefresh();
-          }}
-          ItemSeparatorComponent={Divider}
-          removeClippedSubviews={true}
-          estimatedItemSize={50}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      </Layout>
+      <FlashList
+        data={data}
+        renderItem={renderItem}
+        onEndReachedThreshold={1}
+        onEndReached={() => {
+          pageState.onceEffect = true;
+          setPageState(pageState);
+          onRefresh();
+        }}
+        ItemSeparatorComponent={Divider}
+        removeClippedSubviews={true}
+        estimatedItemSize={500}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
     </Layout>
   );
 }
