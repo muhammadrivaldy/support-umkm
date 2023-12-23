@@ -14,9 +14,9 @@ export function TasksReducer(tasks, action) {
         },
       ];
     }
-    case 'delete': {
+    case 'deleted': {
       return tasks.filter(t => {
-        t.id !== action.id;
+        return t.id !== action.id;
       });
     }
     default: {

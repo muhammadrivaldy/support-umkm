@@ -19,10 +19,6 @@ import {UUID} from 'uuidjs';
 const BackIcon = props => <Icon {...props} name="arrow-back" />;
 const TrashIcon = props => <Icon {...props} name="trash-outline" />;
 
-const DeleteAction = () => (
-  <Button status="danger" size="tiny" accessoryRight={TrashIcon} />
-);
-
 const BackAction = navigation => {
   return () => (
     <TopNavigationAction
@@ -41,28 +37,45 @@ const data = new Array(10).fill({
   totalPrice: 'Rp. 20.000',
 });
 
-const PackageItems = ({item, index}) => (
-  <ListItem
-    title={item.serviceName}
-    description={TextProps => (
-      <>
-        <Text category="s1" {...TextProps}>
-          {item.package}
-        </Text>
-        <Text category="s1" {...TextProps}>
-          {item.estimation}
-        </Text>
-        <Text category="s1" {...TextProps}>
-          Harga total {item.totalPrice}
-        </Text>
-      </>
-    )}
-    accessoryRight={DeleteAction}
-  />
-);
-
 export function CreateOrderScreen({route, navigation}) {
   const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
+
+  const deleteAction = id => {
+    console.log(id);
+    return () => (
+      <Button
+        status="danger"
+        size="tiny"
+        accessoryRight={TrashIcon}
+        onPress={() => {
+          dispatch({
+            type: 'deleted',
+            id: id,
+          });
+        }}
+      />
+    );
+  };
+
+  const packageItems = ({item, index}) => (
+    <ListItem
+      title={item.serviceName}
+      description={TextProps => (
+        <>
+          <Text category="s1" {...TextProps}>
+            {item.package}
+          </Text>
+          <Text category="s1" {...TextProps}>
+            {item.estimation}
+          </Text>
+          <Text category="s1" {...TextProps}>
+            Harga total {item.totalPrice}
+          </Text>
+        </>
+      )}
+      accessoryRight={deleteAction(item.id)}
+    />
+  );
 
   console.log(tasks);
 
@@ -158,7 +171,7 @@ export function CreateOrderScreen({route, navigation}) {
         <Layout style={{flex: 1}}>
           <List
             data={tasks}
-            renderItem={PackageItems}
+            renderItem={packageItems}
             style={{backgroundColor: 'white'}}
             ItemSeparatorComponent={Divider}
           />
