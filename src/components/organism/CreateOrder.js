@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useReducer} from 'react';
 import {
   Divider,
   Icon,
@@ -13,6 +13,8 @@ import {
   Button,
   Card,
 } from '@ui-kitten/components';
+import {InitialReducer, TasksReducer} from '../../stores/Reducers';
+import {UUID} from 'uuidjs';
 
 const BackIcon = props => <Icon {...props} name="arrow-back" />;
 const TrashIcon = props => <Icon {...props} name="trash-outline" />;
@@ -41,14 +43,14 @@ const data = new Array(10).fill({
 
 const PackageItems = ({item, index}) => (
   <ListItem
-    title={item.title}
+    title={item.serviceName}
     description={TextProps => (
       <>
         <Text category="s1" {...TextProps}>
           {item.package}
         </Text>
         <Text category="s1" {...TextProps}>
-          {item.estimatedTime}
+          {item.estimation}
         </Text>
         <Text category="s1" {...TextProps}>
           Harga total {item.totalPrice}
@@ -60,6 +62,10 @@ const PackageItems = ({item, index}) => (
 );
 
 export function CreateOrderScreen({route, navigation}) {
+  const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
+
+  console.log(tasks);
+
   const {name, phoneNumber, address} = route.params;
 
   return (
@@ -92,7 +98,15 @@ export function CreateOrderScreen({route, navigation}) {
         <Button
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            navigation.navigate('CreateOrder_PaymentScreen');
+            dispatch({
+              type: 'added',
+              id: UUID.generate(),
+              serviceName: 'Just testing',
+              package: 'Just package testing',
+              estimation: 'Mungkin 3 hari lagi',
+              totalPrice: 'Rp 20.000',
+            });
+            // navigation.navigate('CreateOrder_PaymentScreen');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
@@ -143,7 +157,7 @@ export function CreateOrderScreen({route, navigation}) {
 
         <Layout style={{flex: 1}}>
           <List
-            data={data}
+            data={tasks}
             renderItem={PackageItems}
             style={{backgroundColor: 'white'}}
             ItemSeparatorComponent={Divider}
