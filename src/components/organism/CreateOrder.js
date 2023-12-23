@@ -17,7 +17,6 @@ import {InitialReducer, TasksReducer} from '../../stores/Reducers';
 
 export function CreateOrderScreen({route, navigation}) {
   const {name, phoneNumber, address} = route.params;
-
   const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
 
   const backIcon = props => <Icon {...props} name="arrow-back" />;

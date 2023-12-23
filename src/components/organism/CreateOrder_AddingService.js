@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useReducer} from 'react';
 import {
   Button,
   Divider,
@@ -25,6 +25,8 @@ import {
   StaticPriceXSquareMeter,
   StaticPriceXWeight,
 } from '../../models/Price_Types';
+import {InitialReducer, TasksReducer} from '../../stores/Reducers';
+import {UUID} from 'uuidjs';
 
 export function CreateOrder_AddingServiceScreen({navigation}) {
   const [selectedServiceName, setSelectedServiceName] = React.useState(null);
@@ -34,6 +36,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [priceType, setPriceType] = React.useState(null);
   const [quantity, setQuantity] = React.useState(0);
   const [description, setDescription] = React.useState('');
+  const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
 
   const backIcon = props => <Icon {...props} name="arrow-back" />;
 
@@ -261,6 +264,15 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
               position: 'bottom',
             });
           } else {
+            dispatch({
+              type: 'added',
+              id: UUID.generate(),
+              serviceName: services[selectedServiceName.row].string,
+              package: packages[selectedPackage.row].name,
+              estimation: packages[selectedPackage.row].estimation_in_string,
+              totalPrice: packages[selectedPackage.row].price, // this is the wrong implementation, will update later
+            });
+
             navigation.goBack();
           }
         }}>
