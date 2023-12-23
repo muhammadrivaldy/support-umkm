@@ -19,6 +19,14 @@ export function StoreRefreshToken(token) {
   doFunc();
 }
 
+export function StoreLaundryInfo(payload) {
+  const doFunc = async () => {
+    await AsyncStorage.setItem('laundry-info', JSON.stringify(payload));
+  };
+
+  doFunc();
+}
+
 export function GetToken() {
   const doFunc = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -37,6 +45,19 @@ export function GetRefreshToken() {
     var token = await AsyncStorage.getItem('refresh-token');
     if (token !== null) {
       return token;
+    }
+
+    return null;
+  };
+
+  return doFunc();
+}
+
+export function GetLaundryInfo() {
+  const doFunc = async () => {
+    var data = await AsyncStorage.getItem('laundry-info');
+    if (data !== null) {
+      return JSON.parse(data);
     }
 
     return null;

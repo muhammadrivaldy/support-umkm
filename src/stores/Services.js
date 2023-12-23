@@ -232,3 +232,65 @@ export async function PostCustomersAPI(token, name, phone_number, address) {
 
   return result;
 }
+
+export async function GetStoresByUserIdAPI(token, userId) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  await axios
+    .get(baseURL + `/api/v1/stores/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}
+
+export async function GetServicesByStoreIdAPI(token, storeId) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  await axios
+    .get(baseURL + `/api/v1/packages/services/stores/${storeId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}

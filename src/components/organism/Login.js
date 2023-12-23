@@ -6,15 +6,18 @@ import Toast from 'react-native-toast-message';
 import {
   GetOrderPaymentStatusesAPI,
   GetOrderStatusesAPI,
+  GetStoresByUserIdAPI,
   LoginAPI,
   RefreshTokenAPI,
 } from '../../stores/Services';
 import {
   GetRefreshToken,
+  StoreLaundryInfo,
   StoreRefreshToken,
   StoreToken,
 } from '../../stores/Storages';
 import {GroupedData, MapPaymentStatus, MapStatus} from './OrderList';
+import {jwtDecode} from 'jwt-decode';
 
 export function LoginScreen({navigation}) {
   const [emailValue, setEmailValue] = React.useState('');
@@ -222,6 +225,7 @@ export function LoginScreen({navigation}) {
     await initAuth().then(async response => {
       if (response !== null) {
         await initStatuses(response);
+        initStoreLaundryInfo(response);
         token = response;
       }
     });
@@ -242,6 +246,14 @@ export function LoginScreen({navigation}) {
         GroupedData.Status.push(idx.name);
         MapPaymentStatus[idx.name] = idx.id;
       });
+    });
+  };
+
+  const initStoreLaundryInfo = token => {
+    GetStoresByUserIdAPI(token, jwtDecode(token).user_id).then(response => {
+      if (response.code === 200) {
+        StoreLaundryInfo(response.data);
+      }
     });
   };
 

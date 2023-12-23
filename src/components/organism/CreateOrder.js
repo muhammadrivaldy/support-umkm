@@ -14,39 +14,30 @@ import {
   Card,
 } from '@ui-kitten/components';
 import {InitialReducer, TasksReducer} from '../../stores/Reducers';
-import {UUID} from 'uuidjs';
 
-const BackIcon = props => <Icon {...props} name="arrow-back" />;
-const TrashIcon = props => <Icon {...props} name="trash-outline" />;
+export function CreateOrderScreen({route, navigation}) {
+  const {name, phoneNumber, address} = route.params;
 
-const BackAction = navigation => {
-  return () => (
+  const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
+
+  const backIcon = props => <Icon {...props} name="arrow-back" />;
+  const trashIcon = props => <Icon {...props} name="trash-outline" />;
+
+  const backAction = () => (
     <TopNavigationAction
-      icon={BackIcon}
+      icon={backIcon}
       onPress={() => {
         navigation.goBack();
       }}
     />
   );
-};
-
-const data = new Array(10).fill({
-  title: 'Cuci kering setrika',
-  package: 'Package 1 (Rp. 24.000/Kg)',
-  estimatedTime: 'Estimasi pengerjaan 2 Hari 3 Jam',
-  totalPrice: 'Rp. 20.000',
-});
-
-export function CreateOrderScreen({route, navigation}) {
-  const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
 
   const deleteAction = id => {
-    console.log(id);
     return () => (
       <Button
         status="danger"
         size="tiny"
-        accessoryRight={TrashIcon}
+        accessoryRight={trashIcon}
         onPress={() => {
           dispatch({
             type: 'deleted',
@@ -76,10 +67,6 @@ export function CreateOrderScreen({route, navigation}) {
       accessoryRight={deleteAction(item.id)}
     />
   );
-
-  console.log(tasks);
-
-  const {name, phoneNumber, address} = route.params;
 
   return (
     <Layout style={{flex: 1}}>
@@ -111,15 +98,7 @@ export function CreateOrderScreen({route, navigation}) {
         <Button
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            dispatch({
-              type: 'added',
-              id: UUID.generate(),
-              serviceName: 'Just testing',
-              package: 'Just package testing',
-              estimation: 'Mungkin 3 hari lagi',
-              totalPrice: 'Rp 20.000',
-            });
-            // navigation.navigate('CreateOrder_PaymentScreen');
+            navigation.navigate('CreateOrder_PaymentScreen');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
@@ -130,7 +109,7 @@ export function CreateOrderScreen({route, navigation}) {
       </Layout>
 
       <TopNavigation
-        accessoryLeft={BackAction(navigation)}
+        accessoryLeft={backAction}
         title="Buat Order"
         navigation={navigation}
       />
