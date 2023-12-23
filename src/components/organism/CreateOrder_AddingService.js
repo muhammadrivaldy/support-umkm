@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
@@ -22,46 +21,41 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [selectedServiceName, setSelectedServiceName] = React.useState(null);
   const [selectedPackage, setSelectedPackage] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [services, setServices] = React.useState(null);
+  const [services, setServices] = React.useState([]);
 
-  useEffect(() => {
-    if (services === null) {
+  const initServices = () => {
+    if (services.length === 0) {
       GetToken().then(async token => {
         await GetLaundryInfo().then(async responseLaundryInfo => {
           await GetServicesByStoreIdAPI(token, responseLaundryInfo.id).then(
             responseServices => {
-              setServices(responseServices);
+              if (responseServices.code === 200) {
+                setServices(responseServices.data);
+              }
             },
           );
         });
       });
     }
-  }, [refreshing]);
-
-  // const onRefresh = React.useCallback(() => {
-  //   setRefreshing(true);
-  //   setTimeout(() => {
-  //     setRefreshing(false);
-  //   }, 1500);
-  // }, []);
-
-  const serviceItems = () => {
-    var items = [];
-
-    if (services !== null) {
-      services.data.map(idx => {
-        items.push(<SelectItem title={idx.string} key={idx.id} />);
-      });
-    }
-
-    return items;
   };
 
+  initServices();
+
+  useEffect(() => {}, [refreshing]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      {/* refreshControl={
+    <ScrollView
+      contentContainerStyle={{flexGrow: 1}}
+      refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }> */}
+      }>
       <Layout style={{flex: 1}}>
         <TopNavigation
           title="Tambah Jasa"
@@ -89,9 +83,16 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
                 </Text>
               );
             }}
+            value={
+              selectedServiceName !== null
+                ? services[selectedServiceName.row].string
+                : null
+            }
             selectedIndex={selectedServiceName}
             onSelect={index => setSelectedServiceName(index)}>
-            {serviceItems()}
+            {services.map(idx => (
+              <SelectItem title={idx.string} key={idx.id} />
+            ))}
           </Select>
 
           <Layout style={{marginVertical: 4}} />

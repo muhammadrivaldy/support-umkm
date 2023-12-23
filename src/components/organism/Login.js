@@ -235,6 +235,7 @@ export function LoginScreen({navigation}) {
 
   const initStatuses = async token => {
     await GetOrderStatusesAPI(token).then(response => {
+      GroupedData.Pembayaran = [];
       response.data.map(idx => {
         GroupedData.Pembayaran.push(idx.name);
         MapStatus[idx.name] = idx.id;
@@ -242,6 +243,7 @@ export function LoginScreen({navigation}) {
     });
 
     await GetOrderPaymentStatusesAPI(token).then(response => {
+      GroupedData.Status = [];
       response.data.map(idx => {
         GroupedData.Status.push(idx.name);
         MapPaymentStatus[idx.name] = idx.id;
