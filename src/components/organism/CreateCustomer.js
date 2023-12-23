@@ -85,7 +85,7 @@ export function CreateCustomerScreen({navigation}) {
             }}
           />
 
-          <Layout style={{marginVertical: 6}} />
+          <Layout style={{marginVertical: 10}} />
 
           <Button
             onPress={async () => {

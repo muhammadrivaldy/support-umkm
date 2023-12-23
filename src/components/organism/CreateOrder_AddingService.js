@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Button,
   Divider,
@@ -15,13 +15,31 @@ import {
 } from '@ui-kitten/components';
 import {RefreshControl, ScrollView} from 'react-native';
 import {GetLaundryInfo, GetToken} from '../../stores/Storages';
-import {GetServicesByStoreIdAPI} from '../../stores/Services';
+import {
+  GetPackagesByServiceIdAndStoreIdAPI,
+  GetServicesByStoreIdAPI,
+} from '../../stores/Services';
+import Toast from 'react-native-toast-message';
 
 export function CreateOrder_AddingServiceScreen({navigation}) {
   const [selectedServiceName, setSelectedServiceName] = React.useState(null);
   const [selectedPackage, setSelectedPackage] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
   const [services, setServices] = React.useState([]);
+  const [packages, setPackages] = React.useState([]);
+
+  const backIcon = props => <Icon {...props} name="arrow-back" />;
+
+  const backAction = () => {
+    return () => (
+      <TopNavigationAction
+        icon={backIcon}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+    );
+  };
 
   const initServices = () => {
     if (services.length === 0) {
@@ -41,7 +59,44 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
 
   initServices();
 
-  useEffect(() => {}, [refreshing]);
+  const initPackages = serviceId => {
+    GetToken().then(async token => {
+      await GetLaundryInfo().then(async responseLaundryInfo => {
+        await GetPackagesByServiceIdAndStoreIdAPI(
+          token,
+          serviceId,
+          responseLaundryInfo.id,
+        ).then(responseServices => {
+          if (responseServices.code === 200) {
+            if (responseServices.data.packages.length > 0) {
+              setPackages(responseServices.data.packages);
+            } else {
+              Toast.show({
+                type: 'error',
+                text1:
+                  'Service "' +
+                  responseServices.data.service_name +
+                  '" belum punya paket',
+                text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+                text2: 'Coba tambahin dulu paket-paket nya di menu profile',
+                text2Style: {fontFamily: 'Raleway-Regular'},
+                position: 'bottom',
+              });
+            }
+          } else {
+            Toast.show({
+              type: 'error',
+              text1: 'Maaf, terjadi kesalahan 😭',
+              text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+              text2: 'Silahkan hubungi kami untuk menanyakan masalah anda',
+              text2Style: {fontFamily: 'Raleway-Regular'},
+              position: 'bottom',
+            });
+          }
+        });
+      });
+    });
+  };
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -59,7 +114,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
       <Layout style={{flex: 1}}>
         <TopNavigation
           title="Tambah Jasa"
-          accessoryLeft={BackAction(navigation)}
+          accessoryLeft={backAction(navigation)}
           navigation={navigation}
         />
 
@@ -91,14 +146,20 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
             selectedIndex={selectedServiceName}
             onSelect={index => setSelectedServiceName(index)}>
             {services.map(idx => (
-              <SelectItem title={idx.string} key={idx.id} />
+              <SelectItem
+                title={idx.string}
+                key={idx.id}
+                onPressOut={() => {
+                  setSelectedPackage(null);
+                  initPackages(idx.id);
+                }}
+              />
             ))}
           </Select>
 
           <Layout style={{marginVertical: 4}} />
 
           <Select
-            selectedIndex={selectedPackage}
             placeholder={'Pilih paket nya'}
             label={TextProps => {
               TextProps.style[1].fontWeight = '600';
@@ -108,9 +169,16 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
                 </Text>
               );
             }}
-            value={ShowingItem(selectedPackage)}
+            value={
+              selectedPackage !== null
+                ? packages[selectedPackage.row].name
+                : null
+            }
+            selectedIndex={selectedPackage}
             onSelect={index => setSelectedPackage(index)}>
-            {RenderItems()}
+            {packages.map(idx => (
+              <SelectItem title={idx.name} key={idx.id} />
+            ))}
           </Select>
 
           <Layout style={{marginVertical: 4}} />
@@ -177,52 +245,3 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
     </ScrollView>
   );
 }
-
-const PackageList = [
-  {
-    name: 'Paket 1 (Rp. 30.000/Kg)',
-    desc: 'Estimasi waktu pengerjaan 2 hari',
-  },
-  {
-    name: 'Paket 2 (Rp. 25.000/Kg)',
-    desc: 'Estimasi waktu pengerjaan 3 hari',
-  },
-];
-
-const BackIcon = props => <Icon {...props} name="arrow-back" />;
-
-const BackAction = navigation => {
-  return () => (
-    <TopNavigationAction
-      icon={BackIcon}
-      onPress={() => {
-        navigation.goBack();
-      }}
-    />
-  );
-};
-
-const ShowingItem = selectedPackage => {
-  return selectedPackage !== undefined && selectedPackage !== null
-    ? PackageList[selectedPackage.row].name
-    : null;
-};
-
-const RenderItems = () =>
-  PackageList.map(idx => (
-    <SelectItem
-      key={idx.name}
-      title={TextProps => (
-        <Layout style={{backgroundColor: 'transparent'}}>
-          <Text {...TextProps}>{idx.name}</Text>
-          <Text
-            category="c2"
-            style={{
-              marginHorizontal: TextProps.style[1].marginHorizontal,
-            }}>
-            {idx.desc}
-          </Text>
-        </Layout>
-      )}
-    />
-  ));

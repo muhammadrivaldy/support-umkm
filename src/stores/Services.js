@@ -294,3 +294,38 @@ export async function GetServicesByStoreIdAPI(token, storeId) {
 
   return result;
 }
+
+export async function GetPackagesByServiceIdAndStoreIdAPI(
+  token,
+  serviceId,
+  storeId,
+) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  await axios
+    .get(baseURL + `/api/v1/packages/services/${serviceId}/stores/${storeId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}
