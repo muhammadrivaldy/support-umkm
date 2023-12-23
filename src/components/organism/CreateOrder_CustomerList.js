@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useCallback, useEffect} from 'react';
@@ -35,76 +36,74 @@ var tempData = new Map();
 
 export function CreateOrder_CustomerListScreen({navigation}) {
   const [data, setData] = React.useState([]);
-  const [onceEffect, setOnceEffect] = React.useState(true);
-  const [maxPage, setMaxPage] = React.useState(0);
-  const [customerPage, setCustomerPage] = React.useState(0);
   const [search, setSearch] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [pageState, setPageState] = React.useState({
+    onceEffect: true,
+    customerPage: 0,
+    maxPage: 0,
+    search: null,
+  });
 
   useEffect(() => {
-    if (onceEffect) {
-      if (customerPage + 1 < maxPage || maxPage === 0) {
+    if (pageState.onceEffect) {
+      if (
+        pageState.customerPage + 1 < pageState.maxPage ||
+        pageState.maxPage === 0
+      ) {
         GetToken().then(async responseToken => {
           if (responseToken !== null) {
             await GetCustomersAPI(
               responseToken,
               search,
-              customerPage + 1,
-              10,
+              pageState.customerPage + 1,
+              50,
             ).then(responseCustomers => {
               if (
                 responseCustomers.code === 200 &&
                 responseCustomers.data.pagination.total_data > 0
               ) {
-                setCustomerPage(customerPage + 1);
-                setMaxPage(responseCustomers.data.pagination.total_page);
+                pageState.onceEffect = false;
+                pageState.customerPage = pageState.customerPage + 1;
+                pageState.maxPage =
+                  responseCustomers.data.pagination.total_page;
+
                 responseCustomers.data.customers.map(idx => {
                   tempData.set(idx.id, idx);
                 });
 
+                setPageState(pageState);
+
                 setData(
                   Array.from(tempData, ([name, value]) => ({name, value})),
                 );
+              } else {
+                setData([]);
               }
             });
           }
         });
-
-        setOnceEffect(false);
       }
     }
-  }, [
-    data,
-    onceEffect,
-    maxPage,
-    customerPage,
-    search,
-    setData,
-    setMaxPage,
-    setOnceEffect,
-    setCustomerPage,
-  ]);
+  }, [refreshing]);
 
-  const renderItemAccessory = useCallback(
-    (id, name, phoneNumber, address) => {
-      return () => (
-        <Button
-          size="tiny"
-          status="info"
-          onPress={() => {
-            navigation.navigate('CreateOrderScreen', {
-              id: id,
-              name: name,
-              phoneNumber: phoneNumber,
-              address: address,
-            });
-          }}>
-          Pilih
-        </Button>
-      );
-    },
-    [navigation],
-  );
+  const renderItemAccessory = useCallback((id, name, phoneNumber, address) => {
+    return () => (
+      <Button
+        size="tiny"
+        status="info"
+        onPress={() => {
+          navigation.navigate('CreateOrderScreen', {
+            id: id,
+            name: name,
+            phoneNumber: phoneNumber,
+            address: address,
+          });
+        }}>
+        Pilih
+      </Button>
+    );
+  }, []);
 
   const renderItemIcon = useCallback(
     props => <Icon {...props} name="person" />,
@@ -131,19 +130,24 @@ export function CreateOrder_CustomerListScreen({navigation}) {
         )}
       />
     ),
-    [renderItemIcon, renderItemAccessory],
+    [],
   );
 
   const onRefresh = React.useCallback(() => {
-    tempData = new Map();
-    setCustomerPage(0);
-    setMaxPage(0);
-    setOnceEffect(true);
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000);
+    }, 1500);
   }, []);
+
+  const onRefreshAndReset = React.useCallback(() => {
+    tempData = new Map();
+    pageState.onceEffect = true;
+    pageState.customerPage = 0;
+    pageState.maxPage = 0;
+    setPageState(pageState);
+    onRefresh();
+  });
 
   return (
     <Layout style={{flex: 1}}>
@@ -203,12 +207,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
           <Button
             status="info"
             size="small"
-            onPress={async () => {
-              tempData = new Map();
-              setCustomerPage(0);
-              setMaxPage(0);
-              setOnceEffect(true);
-            }}>
+            onPress={() => onRefreshAndReset()}>
             {TextProps => {
               TextProps.style.fontFamily = 'Raleway-Bold';
               TextProps.style.fontWeight = '600';
@@ -223,12 +222,19 @@ export function CreateOrder_CustomerListScreen({navigation}) {
           <FlashList
             data={data}
             renderItem={renderItem}
-            onEndReached={async () => setOnceEffect(true)}
+            onEndReached={() => {
+              pageState.onceEffect = true;
+              setPageState(pageState);
+              onRefresh();
+            }}
             ItemSeparatorComponent={Divider}
             removeClippedSubviews={true}
             estimatedItemSize={50}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefreshAndReset}
+              />
             }
           />
         </Layout>
