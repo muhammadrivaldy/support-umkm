@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useReducer} from 'react';
+import React from 'react';
 import {
   Button,
   Divider,
@@ -25,8 +25,9 @@ import {
   StaticPriceXSquareMeter,
   StaticPriceXWeight,
 } from '../../models/Price_Types';
-import {InitialReducer, TasksReducer} from '../../stores/Reducers';
 import {UUID} from 'uuidjs';
+import {useDispatch} from 'react-redux';
+import {addItem} from '../../stores/redux/CreateOrderItems';
 
 export function CreateOrder_AddingServiceScreen({navigation}) {
   const [selectedServiceName, setSelectedServiceName] = React.useState(null);
@@ -36,7 +37,8 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [priceType, setPriceType] = React.useState(null);
   const [quantity, setQuantity] = React.useState(0);
   const [description, setDescription] = React.useState('');
-  const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
+
+  const dispatch = useDispatch();
 
   const backIcon = props => <Icon {...props} name="arrow-back" />;
 
@@ -120,6 +122,18 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
     }
 
     return false;
+  };
+
+  const calculateTotalPrice = price => {
+    if (
+      priceType === StaticPriceXPieces ||
+      priceType === StaticPriceXWeight ||
+      priceType === StaticPriceXSquareMeter
+    ) {
+      return price * quantity;
+    } else {
+      return price;
+    }
   };
 
   return (
@@ -264,15 +278,24 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
               position: 'bottom',
             });
           } else {
-            dispatch({
-              type: 'added',
-              id: UUID.generate(),
-              serviceName: services[selectedServiceName.row].string,
-              package: packages[selectedPackage.row].name,
-              estimation: packages[selectedPackage.row].estimation_in_string,
-              totalPrice: packages[selectedPackage.row].price, // this is the wrong implementation, will update later
-            });
+            dispatch(
+              addItem({
+                id: UUID.generate(),
+                serviceName: services[selectedServiceName.row].string,
+                package: packages[selectedPackage.row].name,
+                estimation: packages[selectedPackage.row].estimation_in_string,
+                totalPrice: calculateTotalPrice(
+                  packages[selectedPackage.row].price,
+                ),
+              }),
+            );
 
+            // navigation.navigate('CreateOrderScreen', {
+            //   id: 'id',
+            //   name: 'name',
+            //   phoneNumber: 'phoneNumber',
+            //   address: 'address',
+            // });
             navigation.goBack();
           }
         }}>

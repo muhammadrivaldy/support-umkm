@@ -17,6 +17,8 @@ import {enableLatestRenderer} from 'react-native-maps';
 import {PermissionsAndroid} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {decode, encode} from 'base-64'; // refer to https://stackoverflow.com/questions/42829838/react-native-atob-btoa-not-working-without-remote-js-debugging
+import {Provider} from 'react-redux';
+import configureStore from './src/stores/redux/Store';
 
 function App() {
   enableLatestRenderer();
@@ -31,7 +33,7 @@ function App() {
   }
 
   return (
-    <>
+    <Provider store={configureStore}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         {...eva}
@@ -40,7 +42,7 @@ function App() {
         <Navigation />
       </ApplicationProvider>
       <Toast />
-    </>
+    </Provider>
   );
 }
 
