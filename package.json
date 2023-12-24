@@ -37,6 +37,7 @@
     "react-native-svg": "^14.0.0",
     "react-native-toast-message": "^2.2.0",
     "react-native-ui-lib": "^7.11.1",
+    "react-redux": "^9.0.4",
     "uuidjs": "^5.0.1"
   },
   "devDependencies": {
