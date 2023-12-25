@@ -119,8 +119,9 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
     if (selectedServiceName !== null) {
       if (selectedPackage !== null) {
         if (
-          services[selectedServiceName.row].string === 'Belum Terdaftar' &&
-          customServiceName !== null
+          (services[selectedServiceName.row].string === 'Belum Terdaftar' &&
+            customServiceName !== null) ||
+          services[selectedServiceName.row].string !== 'Belum Terdaftar'
         ) {
           if (quantity > 0) {
             if (description !== '') {

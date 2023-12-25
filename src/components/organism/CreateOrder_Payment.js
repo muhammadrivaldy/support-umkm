@@ -31,8 +31,6 @@ const BackAction = navigation => {
 
 export function CreateOrder_PaymentScreen({navigation, route}) {
   const {totalItems, totalPrice} = route.params;
-  console.log(totalItems);
-  console.log(totalPrice);
   const [selectedPayment, setSelectedPayment] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
 
@@ -97,12 +95,12 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
 
         <Layout style={{paddingHorizontal: 20}}>
           <Text category="p1">Total Jasa</Text>
-          <Text category="h6">5 item</Text>
+          <Text category="h6">{totalItems} item</Text>
 
           <Layout style={{marginVertical: 6}} />
 
           <Text category="p1">Total yang harus dibayar</Text>
-          <Text category="h6">Rp. 170000</Text>
+          <Text category="h6">Rp. {totalPrice}</Text>
 
           <Layout style={{marginVertical: 6}} />
 

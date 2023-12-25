@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 // import React, {useReducer} from 'react';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Divider,
   Icon,
@@ -24,9 +24,20 @@ export function CreateOrderScreen({route, navigation}) {
   const {name, phoneNumber, address} = route.params;
   const items = useSelector(SelectCreateOrderItems);
   const dispatch = useDispatch();
+  const [disablePayment, setDisablePayment] = React.useState(true);
 
   const backIcon = props => <Icon {...props} name="arrow-back" />;
   const trashIcon = props => <Icon {...props} name="trash-outline" />;
+
+  useEffect(() => {
+    if (items) {
+      if (items.length > 0) {
+        return setDisablePayment(false);
+      }
+    }
+
+    setDisablePayment(true);
+  }, [items]);
 
   const backAction = () => (
     <TopNavigationAction
@@ -98,11 +109,17 @@ export function CreateOrderScreen({route, navigation}) {
         <Layout style={{marginHorizontal: 4}} />
 
         <Button
+          disabled={disablePayment}
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
+            let calculated = 0;
+            items.map(idx => {
+              calculated += Number(idx.totalPrice);
+            });
+
             navigation.navigate('CreateOrder_PaymentScreen', {
-              totalItems: 5,
-              totalPrice: 40000,
+              totalItems: items.length,
+              totalPrice: calculated,
             });
           }}>
           {TextProps => {
