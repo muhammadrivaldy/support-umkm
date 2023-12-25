@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 // import React, {useReducer} from 'react';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Divider,
   Icon,
@@ -19,17 +19,11 @@ import {
   SelectCreateOrderItems,
   deleteItem,
 } from '../../stores/redux/CreateOrderItems';
-import {RefreshControl, ScrollView} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-// import {InitialReducer, TasksReducer} from '../../stores/Reducers';
 
 export function CreateOrderScreen({route, navigation}) {
   const {name, phoneNumber, address} = route.params;
-  // const [tasks, dispatch] = useReducer(TasksReducer, InitialReducer);
   const items = useSelector(SelectCreateOrderItems);
   const dispatch = useDispatch();
-
-  const [refreshing, setRefreshing] = React.useState(false);
 
   const backIcon = props => <Icon {...props} name="arrow-back" />;
   const trashIcon = props => <Icon {...props} name="trash-outline" />;
@@ -65,7 +59,7 @@ export function CreateOrderScreen({route, navigation}) {
             {item.package}
           </Text>
           <Text category="s1" {...TextProps}>
-            {item.estimation}
+            Estimasi pengerjaan {item.estimation}
           </Text>
           <Text category="s1" {...TextProps}>
             Harga total {item.totalPrice}
@@ -75,17 +69,6 @@ export function CreateOrderScreen({route, navigation}) {
       accessoryRight={deleteAction(item.id)}
     />
   );
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1500);
-  }, []);
-
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   return (
     <Layout style={{flex: 1}}>

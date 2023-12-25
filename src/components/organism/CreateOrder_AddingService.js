@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   Divider,
@@ -37,6 +38,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [priceType, setPriceType] = React.useState(null);
   const [quantity, setQuantity] = React.useState(0);
   const [description, setDescription] = React.useState('');
+  const [disablePackages, setDisablePackages] = React.useState(true);
 
   const dispatch = useDispatch();
 
@@ -132,9 +134,21 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
     ) {
       return price * quantity;
     } else {
-      return price;
+      return quantity;
     }
   };
+
+  useEffect(() => {
+    setSelectedPackage(null);
+    if (services && selectedServiceName) {
+      let service = services[selectedServiceName.row];
+      setPriceType(service.price_type);
+      initPackages(service.id);
+      service.total_packages > 0
+        ? setDisablePackages(false)
+        : setDisablePackages(true);
+    }
+  }, [selectedServiceName]);
 
   return (
     <Layout style={{flex: 1}}>
@@ -171,17 +185,32 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
           }
           selectedIndex={selectedServiceName}
           onSelect={index => setSelectedServiceName(index)}>
-          {services.map(idx => (
-            <SelectItem
-              title={idx.string}
-              key={idx.id}
-              onPressOut={() => {
-                setSelectedPackage(null);
-                setPriceType(idx.price_type);
-                initPackages(idx.id);
-              }}
-            />
-          ))}
+          {services.map(idx => {
+            return (
+              <SelectItem
+                key={idx.id}
+                title={props => {
+                  return (
+                    <Layout
+                      style={{
+                        flexDirection: 'column',
+                        backgroundColor: 'transparent',
+                      }}>
+                      <Text {...props}>{idx.string}</Text>
+                      <Text
+                        category="p2"
+                        style={{
+                          marginHorizontal: props.style[1].marginHorizontal,
+                        }}>
+                        Jasa ini punya {idx.total_packages} paket
+                        {' - ' + idx.price_type_name.id}
+                      </Text>
+                    </Layout>
+                  );
+                }}
+              />
+            );
+          })}
         </Select>
 
         <Layout style={{marginVertical: 4}} />
@@ -200,10 +229,33 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
             selectedPackage !== null ? packages[selectedPackage.row].name : null
           }
           selectedIndex={selectedPackage}
-          onSelect={index => setSelectedPackage(index)}>
-          {packages.map(idx => (
-            <SelectItem title={idx.name} key={idx.id} />
-          ))}
+          onSelect={index => setSelectedPackage(index)}
+          disabled={disablePackages}>
+          {packages.map(idx => {
+            return (
+              <SelectItem
+                title={props => {
+                  return (
+                    <Layout
+                      style={{
+                        flexDirection: 'column',
+                        backgroundColor: 'transparent',
+                      }}>
+                      <Text {...props}>{idx.name}</Text>
+                      <Text
+                        category="p2"
+                        style={{
+                          marginHorizontal: props.style[1].marginHorizontal,
+                        }}>
+                        Estimasi pengerjaan {idx.estimation_in_string}
+                      </Text>
+                    </Layout>
+                  );
+                }}
+                key={idx.id}
+              />
+            );
+          })}
         </Select>
 
         <Layout style={{marginVertical: 4}} />
@@ -290,12 +342,6 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
               }),
             );
 
-            // navigation.navigate('CreateOrderScreen', {
-            //   id: 'id',
-            //   name: 'name',
-            //   phoneNumber: 'phoneNumber',
-            //   address: 'address',
-            // });
             navigation.goBack();
           }
         }}>
