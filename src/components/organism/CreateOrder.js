@@ -100,7 +100,10 @@ export function CreateOrderScreen({route, navigation}) {
         <Button
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            navigation.navigate('CreateOrder_PaymentScreen');
+            navigation.navigate('CreateOrder_PaymentScreen', {
+              totalItems: 5,
+              totalPrice: 40000,
+            });
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';

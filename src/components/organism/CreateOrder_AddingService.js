@@ -118,9 +118,14 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const validateBeforeSubmit = () => {
     if (selectedServiceName !== null) {
       if (selectedPackage !== null) {
-        if (quantity > 0) {
-          if (description !== '') {
-            return true;
+        if (
+          services[selectedServiceName.row].string === 'Belum Terdaftar' &&
+          customServiceName !== null
+        ) {
+          if (quantity > 0) {
+            if (description !== '') {
+              return true;
+            }
           }
         }
       }
@@ -289,7 +294,6 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
         <Input
           placeholder="Masukkan ukuran order"
           inputMode="decimal"
-          value={quantity}
           onChangeText={text => setQuantity(text)}
           label={TextProps => {
             TextProps.style[0].fontWeight = '600';

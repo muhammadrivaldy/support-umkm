@@ -17,6 +17,8 @@ import {GetCustomersAPI} from '../../stores/Services';
 import {GetToken} from '../../stores/Storages';
 import {RefreshControl} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useDispatch} from 'react-redux';
+import {resetItems} from '../../stores/redux/CreateOrderItems';
 
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
@@ -44,6 +46,8 @@ export function CreateOrder_CustomerListScreen({navigation}) {
     maxPage: 0,
     search: null,
   });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (pageState.onceEffect) {
@@ -93,6 +97,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
         size="tiny"
         status="info"
         onPress={() => {
+          dispatch(resetItems());
           navigation.navigate('CreateOrderScreen', {
             id: id,
             name: name,

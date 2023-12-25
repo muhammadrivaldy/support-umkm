@@ -29,7 +29,10 @@ const BackAction = navigation => {
   );
 };
 
-export function CreateOrder_PaymentScreen({navigation}) {
+export function CreateOrder_PaymentScreen({navigation, route}) {
+  const {totalItems, totalPrice} = route.params;
+  console.log(totalItems);
+  console.log(totalPrice);
   const [selectedPayment, setSelectedPayment] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
 
