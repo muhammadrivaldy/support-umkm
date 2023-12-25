@@ -30,7 +30,7 @@ const BackAction = navigation => {
 };
 
 export function CreateOrder_PaymentScreen({navigation, route}) {
-  const {totalItems, totalPrice} = route.params;
+  const {totalItems, totalPrice, name, phoneNumber, address} = route.params;
   const [selectedPayment, setSelectedPayment] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
 
@@ -72,21 +72,19 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
             style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Nama</Text>
-              <Text category="s1">Muhammad Rivaldy</Text>
+              <Text category="s1">{name}</Text>
 
               <Layout style={{marginVertical: 6}} />
 
               <Text category="p2">No HP</Text>
-              <Text category="s1">081399839201</Text>
+              <Text category="s1">{phoneNumber}</Text>
             </Layout>
 
             <Layout style={{marginHorizontal: 10}} />
 
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Address</Text>
-              <Text category="s1">
-                Jl. Kemerdekaan selatan bagian depok no. 72
-              </Text>
+              <Text category="s1">{address}</Text>
             </Layout>
           </Layout>
         </Card>

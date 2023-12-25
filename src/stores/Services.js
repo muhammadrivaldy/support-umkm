@@ -329,3 +329,66 @@ export async function GetPackagesByServiceIdAndStoreIdAPI(
 
   return result;
 }
+
+export async function PostOrdersAPI(
+  token,
+  customerId,
+  totalPayment,
+  paidPayment,
+  paymentMethod,
+  packages,
+) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  var packagesForPayload = [];
+
+  packages.map(idx => {
+    packagesForPayload.push({
+      package_id: idx.packageId,
+      service_name: idx.serviceName,
+      quantity: idx.quantity,
+      package_price: idx.packagePrice,
+      final_price: idx.finalPrice,
+      member: idx.member,
+      note: idx.note,
+    });
+  });
+
+  await axios
+    .post(
+      baseURL + '/api/v1/orders',
+      {
+        customer_id: customerId,
+        total_payment: totalPayment,
+        paid_payment: paidPayment,
+        payment_method: paymentMethod,
+        packages: packagesForPayload,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}

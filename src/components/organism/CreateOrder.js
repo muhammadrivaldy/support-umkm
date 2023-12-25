@@ -21,7 +21,7 @@ import {
 } from '../../stores/redux/CreateOrderItems';
 
 export function CreateOrderScreen({route, navigation}) {
-  const {name, phoneNumber, address} = route.params;
+  const {id, name, phoneNumber, address} = route.params;
   const items = useSelector(SelectCreateOrderItems);
   const dispatch = useDispatch();
   const [disablePayment, setDisablePayment] = React.useState(true);
@@ -67,7 +67,7 @@ export function CreateOrderScreen({route, navigation}) {
       description={TextProps => (
         <>
           <Text category="s1" {...TextProps}>
-            {item.package}
+            {item.packageName}
           </Text>
           <Text category="s1" {...TextProps}>
             Estimasi pengerjaan {item.estimation}
@@ -120,6 +120,9 @@ export function CreateOrderScreen({route, navigation}) {
             navigation.navigate('CreateOrder_PaymentScreen', {
               totalItems: items.length,
               totalPrice: calculated,
+              name: name,
+              phoneNumber: phoneNumber,
+              address: address,
             });
           }}>
           {TextProps => {

@@ -40,6 +40,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [description, setDescription] = React.useState('');
   const [disablePackages, setDisablePackages] = React.useState(true);
   const [customServiceName, setCustomServiceName] = React.useState(null);
+  const [showInput, setShowInput] = React.useState(false);
   const [showCustomServiceName, setShowCustomServiceName] =
     React.useState(false);
 
@@ -153,6 +154,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
       let service = services[selectedServiceName.row];
       setPriceType(service.price_type);
       initPackages(service.id);
+      setShowInput(true);
       service.total_packages > 0
         ? setDisablePackages(false)
         : setDisablePackages(true);
@@ -290,43 +292,39 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
           })}
         </Select>
 
-        <Layout style={{marginVertical: 4}} />
+        {showInput ? (
+          <>
+            <Layout style={{marginVertical: 4}} />
 
-        <Input
-          placeholder="Masukkan ukuran order"
-          inputMode="decimal"
-          onChangeText={text => setQuantity(text)}
-          label={TextProps => {
-            TextProps.style[0].fontWeight = '600';
-            return (
-              <Text category="s1" {...TextProps}>
-                Ukuran
-              </Text>
-            );
-          }}
-          accessoryRight={() => {
-            return (
-              <Layout
-                style={{
-                  borderWidth: 0,
-                  minWidth: 40,
-                  backgroundColor: 'transparent',
-                }}>
-                <Text category="s2" style={{textAlign: 'center'}}>
-                  {priceType === StaticPriceXPieces
-                    ? 'pcs'
-                    : priceType === StaticPriceXWeight
-                    ? 'Kg'
-                    : priceType === CustomPrice
-                    ? 'Rp'
-                    : priceType === StaticPriceXSquareMeter
-                    ? 'M²'
-                    : null}
-                </Text>
-              </Layout>
-            );
-          }}
-        />
+            <Input
+              placeholder={placeholderOfQuantity(priceType)}
+              inputMode="decimal"
+              onChangeText={text => setQuantity(text)}
+              label={TextProps => {
+                TextProps.style[0].fontWeight = '600';
+                return (
+                  <Text category="s1" {...TextProps}>
+                    {titleOfQuantity(priceType)}
+                  </Text>
+                );
+              }}
+              accessoryRight={() => {
+                return (
+                  <Layout
+                    style={{
+                      borderWidth: 0,
+                      minWidth: 40,
+                      backgroundColor: 'transparent',
+                    }}>
+                    <Text category="s2" style={{textAlign: 'center'}}>
+                      {iconOfQuantity(priceType)}
+                    </Text>
+                  </Layout>
+                );
+              }}
+            />
+          </>
+        ) : null}
 
         <Layout style={{marginVertical: 4}} />
 
@@ -372,8 +370,12 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
                   serviceObj.string === 'Belum Terdaftar'
                     ? customServiceName
                     : serviceObj.string,
-                package: packageObj.name,
+                packageId: packageObj.id,
+                packageName: packageObj.name,
+                packagePrice: packageObj.price,
+                note: description,
                 estimation: packageObj.estimation_in_string,
+                quantity: serviceObj.price_type === CustomPrice ? 1 : quantity,
                 totalPrice: calculateTotalPrice(packageObj.price),
               }),
             );
@@ -389,4 +391,40 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
       </Button>
     </Layout>
   );
+}
+
+function titleOfQuantity(priceType) {
+  return priceType === StaticPriceXPieces
+    ? 'Jumlah'
+    : priceType === StaticPriceXWeight
+    ? 'Berat'
+    : priceType === CustomPrice
+    ? 'Harga'
+    : priceType === StaticPriceXSquareMeter
+    ? 'Ukuran'
+    : null;
+}
+
+function placeholderOfQuantity(priceType) {
+  return priceType === StaticPriceXPieces
+    ? 'Input jumlah disini'
+    : priceType === StaticPriceXWeight
+    ? 'Input berat disini'
+    : priceType === CustomPrice
+    ? 'Input harga disini'
+    : priceType === StaticPriceXSquareMeter
+    ? 'Input lebar disini'
+    : null;
+}
+
+function iconOfQuantity(priceType) {
+  return priceType === StaticPriceXPieces
+    ? 'pcs'
+    : priceType === StaticPriceXWeight
+    ? 'Kg'
+    : priceType === CustomPrice
+    ? 'Rp'
+    : priceType === StaticPriceXSquareMeter
+    ? 'M²'
+    : null;
 }
