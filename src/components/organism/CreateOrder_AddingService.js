@@ -39,6 +39,9 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
   const [quantity, setQuantity] = React.useState(0);
   const [description, setDescription] = React.useState('');
   const [disablePackages, setDisablePackages] = React.useState(true);
+  const [customServiceName, setCustomServiceName] = React.useState(null);
+  const [showCustomServiceName, setShowCustomServiceName] =
+    React.useState(false);
 
   const dispatch = useDispatch();
 
@@ -147,6 +150,9 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
       service.total_packages > 0
         ? setDisablePackages(false)
         : setDisablePackages(true);
+      service.string === 'Belum Terdaftar'
+        ? setShowCustomServiceName(true)
+        : setShowCustomServiceName(false);
     }
   }, [selectedServiceName]);
 
@@ -213,6 +219,26 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
           })}
         </Select>
 
+        {showCustomServiceName ? (
+          <>
+            <Layout style={{marginVertical: 4}} />
+
+            <Input
+              placeholder="Masukkan nama jasa"
+              value={customServiceName}
+              onChangeText={text => setCustomServiceName(text)}
+              label={TextProps => {
+                TextProps.style[0].fontWeight = '600';
+                return (
+                  <Text category="s1" {...TextProps}>
+                    Nama Jasa
+                  </Text>
+                );
+              }}
+            />
+          </>
+        ) : null}
+
         <Layout style={{marginVertical: 4}} />
 
         <Select
@@ -263,6 +289,7 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
         <Input
           placeholder="Masukkan ukuran order"
           inputMode="decimal"
+          value={quantity}
           onChangeText={text => setQuantity(text)}
           label={TextProps => {
             TextProps.style[0].fontWeight = '600';
@@ -330,15 +357,19 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
               position: 'bottom',
             });
           } else {
+            var serviceObj = services[selectedServiceName.row];
+            var packageObj = packages[selectedPackage.row];
+
             dispatch(
               addItem({
                 id: UUID.generate(),
-                serviceName: services[selectedServiceName.row].string,
-                package: packages[selectedPackage.row].name,
-                estimation: packages[selectedPackage.row].estimation_in_string,
-                totalPrice: calculateTotalPrice(
-                  packages[selectedPackage.row].price,
-                ),
+                serviceName:
+                  serviceObj.string === 'Belum Terdaftar'
+                    ? customServiceName
+                    : serviceObj.string,
+                package: packageObj.name,
+                estimation: packageObj.estimation_in_string,
+                totalPrice: calculateTotalPrice(packageObj.price),
               }),
             );
 
