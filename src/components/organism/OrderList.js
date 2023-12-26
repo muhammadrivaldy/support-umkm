@@ -45,6 +45,8 @@ export function OrderListScreen({navigation}) {
   const [mapStatus, setMapStatus] = React.useState(new Map());
   const [visibleUpdatePayment, setVisibleUpdatePayment] = React.useState(false);
   const [selectedPayment, setSelectedPayment] = React.useState(0);
+  const [selectedStatus, setSelectedStatus] = React.useState(null);
+  const [inputNominal, setInputNominal] = React.useState(null);
   const [visibleUpdateOrderStatus, setVisibleUpdateOrderStatus] =
     React.useState(false);
   const [mapPaymentStatus, setMapPaymentStatus] = React.useState(new Map());
@@ -56,6 +58,8 @@ export function OrderListScreen({navigation}) {
     totalPayment: 0,
     paidPayment: 0,
     orderNo: '',
+    status: 0,
+    statusName: '',
   });
   const [pageState, setPageState] = React.useState({
     onceEffect: true,
@@ -315,21 +319,29 @@ export function OrderListScreen({navigation}) {
                 orderData.orderNo = order.order_no;
                 orderData.paidPayment = order.paid_payment;
                 orderData.totalPayment = order.total_payment;
+                orderData.status = order.status;
+                orderData.statusName = order.status_name;
                 setOrderData(orderData);
+                setSelectedStatus(null);
                 setVisibleUpdatePayment(true);
               }}>
-              Pembayaran
+              Bayar
             </Button>
             <View style={{marginVertical: 4}} />
             <Button
               status="primary"
               size="tiny"
-              onPress={() => setVisibleUpdateOrderStatus(true)}>
+              onPress={() => {
+                orderData.orderNo = order.order_no;
+                orderData.paidPayment = order.paid_payment;
+                orderData.totalPayment = order.total_payment;
+                orderData.status = order.status;
+                orderData.statusName = order.status_name;
+                setOrderData(orderData);
+                setSelectedStatus(null);
+                setVisibleUpdateOrderStatus(true);
+              }}>
               Status Order
-            </Button>
-            <View style={{marginVertical: 4}} />
-            <Button status="danger" size="tiny">
-              Batal
             </Button>
           </Layout>
         </Layout>
@@ -351,10 +363,16 @@ export function OrderListScreen({navigation}) {
         selectedPayment,
         setSelectedPayment,
         orderData,
+        inputNominal,
+        setInputNominal,
       )}
       {modalOfUpdateOrderStatus(
         visibleUpdateOrderStatus,
         setVisibleUpdateOrderStatus,
+        orderData,
+        selectedStatus,
+        setSelectedStatus,
+        groupedData.Status,
       )}
 
       <Layout style={{marginVertical: 4}} />
@@ -479,6 +497,8 @@ function modalOfUpdatePayment(
   selectedPayment,
   setSelectedPayment,
   orderData,
+  inputNominal,
+  setInputNominal,
 ) {
   return (
     <Modal
@@ -486,7 +506,7 @@ function modalOfUpdatePayment(
       backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
       onBackdropPress={() => setVisibleUpdatePayment(false)}>
       <Card disabled={true}>
-        <Text category="h6">Update pembayaran</Text>
+        <Text category="h6">Update Pembayaran</Text>
 
         <Layout style={{marginVertical: 6}} />
 
@@ -510,6 +530,7 @@ function modalOfUpdatePayment(
 
         <Input
           placeholder="Input nominal"
+          onChangeText={text => setInputNominal(text)}
           accessoryLeft={() => {
             return (
               <Layout
@@ -528,10 +549,12 @@ function modalOfUpdatePayment(
         <Layout style={{marginVertical: 6}} />
 
         <Layout style={{flexDirection: 'row'}}>
-          <Button style={{minWidth: 110}}>Update</Button>
+          <Button style={{flexGrow: 1}} disabled={inputNominal ? false : true}>
+            Update
+          </Button>
           <Layout style={{marginHorizontal: 6}} />
           <Button
-            style={{minWidth: 110}}
+            style={{flexGrow: 1}}
             status="danger"
             onPress={() => setVisibleUpdatePayment(false)}>
             Ga jadi
@@ -545,6 +568,10 @@ function modalOfUpdatePayment(
 function modalOfUpdateOrderStatus(
   visibleUpdateOrderStatus,
   setVisibleUpdateOrderStatus,
+  orderData,
+  selectedStatus,
+  setSelectedStatus,
+  orderStatuses,
 ) {
   return (
     <Modal
@@ -552,7 +579,42 @@ function modalOfUpdateOrderStatus(
       backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
       onBackdropPress={() => setVisibleUpdateOrderStatus(false)}>
       <Card disabled={true}>
-        <Text>Hello World for Update Order Status</Text>
+        <Text category="h6">Update Status Order</Text>
+
+        <Layout style={{marginVertical: 6}} />
+
+        <Text>
+          Status saat ini: <Text category="s1">{orderData.statusName}</Text>
+        </Text>
+
+        <Layout style={{marginVertical: 6}} />
+
+        <Select
+          placeholder={'Pilih status nya ...'}
+          selectedIndex={selectedStatus}
+          value={selectedStatus ? orderStatuses[selectedStatus.row] : null}
+          onSelect={index => setSelectedStatus(index)}>
+          {orderStatuses.map(val => (
+            <SelectItem title={val} key={val} />
+          ))}
+        </Select>
+
+        <Layout style={{marginVertical: 6}} />
+
+        <Layout style={{flexDirection: 'row'}}>
+          <Button
+            style={{flexGrow: 1}}
+            disabled={selectedStatus ? false : true}>
+            Update
+          </Button>
+          <Layout style={{marginHorizontal: 6}} />
+          <Button
+            style={{flexGrow: 1}}
+            status="danger"
+            onPress={() => setVisibleUpdateOrderStatus(false)}>
+            Ga jadi
+          </Button>
+        </Layout>
       </Card>
     </Modal>
   );
