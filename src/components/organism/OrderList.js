@@ -14,7 +14,7 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
-import {RefreshControl, View} from 'react-native';
+import {Linking, RefreshControl, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {GetToken} from '../../stores/Storages';
 import {
@@ -84,7 +84,6 @@ export function OrderListScreen({navigation}) {
     return result;
   };
 
-  // use effect for rendering data orders
   useEffect(() => {
     if (pageState.onceEffect) {
       if (
@@ -242,6 +241,18 @@ export function OrderListScreen({navigation}) {
           <Button
             status="info"
             accessoryLeft={StarIcon}
+            onPress={() => {
+              Linking.openURL(
+                `whatsapp://send?text=${textToWhatsApp(
+                  order.short_order_no,
+                  order.customer_name,
+                  order.status_name,
+                  order.payment_status_name,
+                  order.created_at,
+                  order.total_payment,
+                )}&phone=${order.customer_phone}`,
+              );
+            }}
             style={{maxHeight: 40, maxWidth: 40}}
           />
         </Layout>
@@ -403,4 +414,23 @@ export function OrderListScreen({navigation}) {
       </Layout>
     </Layout>
   );
+}
+
+function textToWhatsApp(
+  orderNo,
+  name,
+  status,
+  paymentStatus,
+  createdAt,
+  totalPrice,
+) {
+  return `Nomor order kamu adalah *${orderNo}* atas nama *${name}*
+
+Berikut ini update terbaru dari order kamu
+Status: *${status}*
+Pembayaran: *${paymentStatus}*
+Dibuat: *${GenerateTimestampToDate(createdAt)}*
+Biaya: *Rp. ${totalPrice}*
+
+Terima kasih karena sudah mempercayakan laundry kami 😄`;
 }

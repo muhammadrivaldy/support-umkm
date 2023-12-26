@@ -164,7 +164,7 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
         }}
         onPress={() => {
           if (paidPayment === null) {
-            Toast.show({
+            return Toast.show({
               type: 'error',
               text1: 'Lengkapi dulu dong 😡',
               text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},

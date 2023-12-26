@@ -372,7 +372,10 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
                     : serviceObj.string,
                 packageId: packageObj.id,
                 packageName: packageObj.name,
-                packagePrice: packageObj.price,
+                packagePrice:
+                  serviceObj.price_type === CustomPrice
+                    ? quantity
+                    : packageObj.price,
                 note: description,
                 estimation: packageObj.estimation_in_string,
                 quantity: Number(

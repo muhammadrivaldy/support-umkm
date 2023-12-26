@@ -184,11 +184,11 @@ function payloadForPayment(userId, name, phoneNumber, address, items) {
   items.map(idx => {
     totalPayment += Number(idx.totalPrice);
     packages.push({
-      packageId: idx.packageId,
+      packageId: Number(idx.packageId),
       serviceName: idx.serviceName,
-      quantity: idx.quantity,
-      packagePrice: idx.packagePrice,
-      finalPrice: idx.totalPrice,
+      quantity: Number(idx.quantity),
+      packagePrice: Number(idx.packagePrice),
+      finalPrice: Number(idx.totalPrice),
       member: false,
       note: idx.note,
     });
