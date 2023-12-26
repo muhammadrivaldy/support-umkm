@@ -16,28 +16,22 @@ import {
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
+import {PostOrdersAPI} from '../../stores/Services';
+import {GetToken} from '../../stores/Storages';
+import Toast from 'react-native-toast-message';
 
-const BackIcon = props => <Icon {...props} name="arrow-back" />;
-const BackAction = navigation => {
-  return () => (
-    <TopNavigationAction
-      icon={BackIcon}
-      onPress={() => {
-        navigation.goBack();
-      }}
-    />
-  );
-};
+const paymentMethods = ['cash', 'transfer'];
 
 export function CreateOrder_PaymentScreen({navigation, route}) {
-  const {totalItems, totalPrice, name, phoneNumber, address} = route.params;
+  const {customer, totalItems, totalPayment, packages} = route.params;
   const [selectedPayment, setSelectedPayment] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
+  const [paidPayment, setPaidPayment] = React.useState(null);
 
   return (
     <Layout style={{flex: 1}}>
       <TopNavigation
-        accessoryLeft={BackAction(navigation)}
+        accessoryLeft={backAction(navigation)}
         title="Bayar"
         navigation={navigation}
       />
@@ -72,19 +66,19 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
             style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Nama</Text>
-              <Text category="s1">{name}</Text>
+              <Text category="s1">{customer.name}</Text>
 
               <Layout style={{marginVertical: 6}} />
 
               <Text category="p2">No HP</Text>
-              <Text category="s1">{phoneNumber}</Text>
+              <Text category="s1">{customer.phoneNumber}</Text>
             </Layout>
 
             <Layout style={{marginHorizontal: 10}} />
 
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
               <Text category="p2">Address</Text>
-              <Text category="s1">{address}</Text>
+              <Text category="s1">{customer.address}</Text>
             </Layout>
           </Layout>
         </Card>
@@ -98,7 +92,7 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
           <Layout style={{marginVertical: 6}} />
 
           <Text category="p1">Total yang harus dibayar</Text>
-          <Text category="h6">Rp. {totalPrice}</Text>
+          <Text category="h6">Rp. {totalPayment}</Text>
 
           <Layout style={{marginVertical: 6}} />
 
@@ -120,6 +114,7 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
           <Input
             inputMode="numeric"
             placeholder="Input nominal yang ingin dibayarkan"
+            onChangeText={text => setPaidPayment(text)}
             label={TextProps => {
               TextProps.style[0].color = '#8F9BB3';
               TextProps.style[0].fontWeight = '600';
@@ -153,7 +148,45 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
           marginBottom: 8,
         }}
         onPress={() => {
-          setVisible(true);
+          if (paidPayment === null) {
+            Toast.show({
+              type: 'error',
+              text1: 'Lengkapi dulu dong 😡',
+              text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+              text2: 'Tolong nominal pembayaran yang diinginkan',
+              text2Style: {fontFamily: 'Raleway-Regular'},
+              position: 'bottom',
+            });
+          }
+
+          GetToken().then(async token => {
+            await PostOrdersAPI(
+              token,
+              customer.id,
+              totalPayment,
+              Number(paidPayment),
+              paymentMethods[selectedPayment],
+              packages,
+            ).then(response => {
+              console.log(response);
+
+              if (response.code === 201) {
+                setVisible(true);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  position: 'bottom',
+                  text1: 'Maaf, terjadi kesalahan 😭',
+                  text1Style: {
+                    fontFamily: 'Raleway-Bold',
+                    fontWeight: '600',
+                  },
+                  text2: 'Silahkan hubungi kami untuk menanyakan masalah anda',
+                  text2Style: {fontFamily: 'Raleway-Regular'},
+                });
+              }
+            });
+          });
         }}>
         {TextProps => {
           TextProps.style.fontFamily = 'Raleway-Bold';
@@ -162,5 +195,20 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
         }}
       </Button>
     </Layout>
+  );
+}
+
+function backIcon(props) {
+  <Icon {...props} name="arrow-back" />;
+}
+
+function backAction(navigation) {
+  return () => (
+    <TopNavigationAction
+      icon={backIcon}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   );
 }

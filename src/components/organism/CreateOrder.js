@@ -48,14 +48,14 @@ export function CreateOrderScreen({route, navigation}) {
     />
   );
 
-  const deleteAction = id => {
+  const deleteAction = itemId => {
     return () => (
       <Button
         status="danger"
         size="tiny"
         accessoryRight={trashIcon}
         onPress={() => {
-          dispatch(deleteItem(id));
+          dispatch(deleteItem(itemId));
         }}
       />
     );
@@ -112,18 +112,10 @@ export function CreateOrderScreen({route, navigation}) {
           disabled={disablePayment}
           style={{borderRadius: 100, flex: 1}}
           onPress={() => {
-            let calculated = 0;
-            items.map(idx => {
-              calculated += Number(idx.totalPrice);
-            });
-
-            navigation.navigate('CreateOrder_PaymentScreen', {
-              totalItems: items.length,
-              totalPrice: calculated,
-              name: name,
-              phoneNumber: phoneNumber,
-              address: address,
-            });
+            navigation.navigate(
+              'CreateOrder_PaymentScreen',
+              payloadForPayment(id, name, phoneNumber, address, items),
+            );
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
@@ -183,4 +175,36 @@ export function CreateOrderScreen({route, navigation}) {
       </Layout>
     </Layout>
   );
+}
+
+function payloadForPayment(userId, name, phoneNumber, address, items) {
+  let totalPayment = 0;
+  let packages = [];
+
+  items.map(idx => {
+    totalPayment += Number(idx.totalPrice);
+    packages.push({
+      packageId: idx.packageId,
+      serviceName: idx.serviceName,
+      quantity: idx.quantity,
+      packagePrice: idx.packagePrice,
+      finalPrice: idx.totalPrice,
+      member: false,
+      note: idx.note,
+    });
+  });
+
+  console.log(packages);
+
+  return {
+    customer: {
+      id: userId,
+      name: name,
+      phoneNumber: phoneNumber,
+      address: address,
+    },
+    totalItems: items.length,
+    totalPayment: totalPayment,
+    packages: packages,
+  };
 }

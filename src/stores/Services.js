@@ -1,5 +1,6 @@
 const axios = require('axios').default;
-const baseURL = 'https://dev.resolusilaundry.com';
+// const baseURL = 'https://dev.resolusilaundry.com';
+const baseURL = 'https://cb12-103-149-34-9.ngrok-free.app';
 
 export async function LoginAPI(email, password) {
   let result = {

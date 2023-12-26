@@ -375,7 +375,9 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
                 packagePrice: packageObj.price,
                 note: description,
                 estimation: packageObj.estimation_in_string,
-                quantity: serviceObj.price_type === CustomPrice ? 1 : quantity,
+                quantity: Number(
+                  serviceObj.price_type === CustomPrice ? 1 : quantity,
+                ),
                 totalPrice: calculateTotalPrice(packageObj.price),
               }),
             );
