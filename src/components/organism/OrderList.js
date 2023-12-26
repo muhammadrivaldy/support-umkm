@@ -8,6 +8,9 @@ import {
   Icon,
   Input,
   Layout,
+  Modal,
+  Radio,
+  RadioGroup,
   RangeDatepicker,
   Select,
   SelectGroup,
@@ -25,6 +28,7 @@ import {
 import {GenerateTimestampToDate} from '../../utils/Time';
 import {DefaultErrorToast} from '../../utils/DefaultToast';
 import Toast from 'react-native-toast-message';
+import {Paid} from '../../models/PaymentStatuses';
 
 const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
@@ -39,10 +43,19 @@ export function OrderListScreen({navigation}) {
   const [search, setSearch] = React.useState('');
   const [refreshing, setRefreshing] = React.useState(true);
   const [mapStatus, setMapStatus] = React.useState(new Map());
+  const [visibleUpdatePayment, setVisibleUpdatePayment] = React.useState(false);
+  const [selectedPayment, setSelectedPayment] = React.useState(0);
+  const [visibleUpdateOrderStatus, setVisibleUpdateOrderStatus] =
+    React.useState(false);
   const [mapPaymentStatus, setMapPaymentStatus] = React.useState(new Map());
   const [groupedData, setGroupedData] = React.useState({
     Status: [],
     Pembayaran: [],
+  });
+  const [orderData, setOrderData] = React.useState({
+    totalPayment: 0,
+    paidPayment: 0,
+    orderNo: '',
   });
   const [pageState, setPageState] = React.useState({
     onceEffect: true,
@@ -294,12 +307,25 @@ export function OrderListScreen({navigation}) {
           </Layout>
 
           <Layout style={{backgroundColor: 'transparent'}}>
-            <Button status="primary" size="tiny" disabled={true}>
-              Lunas
+            <Button
+              status="primary"
+              size="tiny"
+              disabled={order.payment_status === Paid ? true : false}
+              onPress={() => {
+                orderData.orderNo = order.order_no;
+                orderData.paidPayment = order.paid_payment;
+                orderData.totalPayment = order.total_payment;
+                setOrderData(orderData);
+                setVisibleUpdatePayment(true);
+              }}>
+              Pembayaran
             </Button>
             <View style={{marginVertical: 4}} />
-            <Button status="primary" size="tiny">
-              Selesai
+            <Button
+              status="primary"
+              size="tiny"
+              onPress={() => setVisibleUpdateOrderStatus(true)}>
+              Status Order
             </Button>
             <View style={{marginVertical: 4}} />
             <Button status="danger" size="tiny">
@@ -319,6 +345,18 @@ export function OrderListScreen({navigation}) {
         paddingHorizontal: 8,
         paddingVertical: 4,
       }}>
+      {modalOfUpdatePayment(
+        visibleUpdatePayment,
+        setVisibleUpdatePayment,
+        selectedPayment,
+        setSelectedPayment,
+        orderData,
+      )}
+      {modalOfUpdateOrderStatus(
+        visibleUpdateOrderStatus,
+        setVisibleUpdateOrderStatus,
+      )}
+
       <Layout style={{marginVertical: 4}} />
 
       <Layout
@@ -433,4 +471,89 @@ Dibuat: *${GenerateTimestampToDate(createdAt)}*
 Biaya: *Rp. ${totalPrice}*
 
 Terima kasih karena sudah mempercayakan laundry kami 😄`;
+}
+
+function modalOfUpdatePayment(
+  visibleUpdatePayment,
+  setVisibleUpdatePayment,
+  selectedPayment,
+  setSelectedPayment,
+  orderData,
+) {
+  return (
+    <Modal
+      visible={visibleUpdatePayment}
+      backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+      onBackdropPress={() => setVisibleUpdatePayment(false)}>
+      <Card disabled={true}>
+        <Text category="h6">Update pembayaran</Text>
+
+        <Layout style={{marginVertical: 6}} />
+
+        <Text>
+          Total harga: <Text category="s1">Rp. {orderData.totalPayment}</Text>
+        </Text>
+        <Text>
+          Terbayar: <Text category="s1">Rp. {orderData.paidPayment}</Text>
+        </Text>
+
+        <Text category="p1">Pembayaran melalui</Text>
+        <RadioGroup
+          style={{flexDirection: 'row'}}
+          selectedIndex={selectedPayment}
+          onChange={index => setSelectedPayment(index)}>
+          <Radio>Cash</Radio>
+          <Radio>Transfer</Radio>
+        </RadioGroup>
+
+        <Layout style={{marginVertical: 6}} />
+
+        <Input
+          placeholder="Input nominal"
+          accessoryLeft={() => {
+            return (
+              <Layout
+                style={{
+                  borderWidth: 0,
+                  minWidth: 40,
+                  backgroundColor: 'transparent',
+                }}>
+                <Text category="s2" style={{textAlign: 'center'}}>
+                  Rp
+                </Text>
+              </Layout>
+            );
+          }}
+        />
+        <Layout style={{marginVertical: 6}} />
+
+        <Layout style={{flexDirection: 'row'}}>
+          <Button style={{minWidth: 110}}>Update</Button>
+          <Layout style={{marginHorizontal: 6}} />
+          <Button
+            style={{minWidth: 110}}
+            status="danger"
+            onPress={() => setVisibleUpdatePayment(false)}>
+            Ga jadi
+          </Button>
+        </Layout>
+      </Card>
+    </Modal>
+  );
+}
+
+function modalOfUpdateOrderStatus(
+  visibleUpdateOrderStatus,
+  setVisibleUpdateOrderStatus,
+) {
+  return (
+    <Modal
+      visible={visibleUpdateOrderStatus}
+      backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+      onBackdropPress={() => setVisibleUpdateOrderStatus(false)}>
+      <Card disabled={true}>
+        <Text>Hello World for Update Order Status</Text>
+      </Card>
+    </Modal>
+  );
 }

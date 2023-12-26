@@ -73,7 +73,7 @@ export function CreateOrderScreen({route, navigation}) {
             Estimasi pengerjaan {item.estimation}
           </Text>
           <Text category="s1" {...TextProps}>
-            Harga total Rp. {item.totalPrice}
+            Total harga Rp. {item.totalPrice}
           </Text>
         </>
       )}

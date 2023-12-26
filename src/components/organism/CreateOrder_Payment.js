@@ -56,7 +56,9 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
         backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
         onBackdropPress={() => navigation.navigate('HomeScreen')}>
         <Card disabled={true}>
-          <Text style={{textAlign: 'center'}}>Order berhasil dibuat ya 😄</Text>
+          <Text style={{textAlign: 'center'}}>
+            Order berhasil dibuat ya, silahkan kembali kemenu utama
+          </Text>
           <Layout style={{marginVertical: 6}} />
           <Button onPress={() => navigation.navigate('HomeScreen')}>
             {TextProps => {

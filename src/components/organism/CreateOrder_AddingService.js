@@ -25,7 +25,7 @@ import {
   StaticPriceXPieces,
   StaticPriceXSquareMeter,
   StaticPriceXWeight,
-} from '../../models/Price_Types';
+} from '../../models/PriceTypes';
 import {UUID} from 'uuidjs';
 import {useDispatch} from 'react-redux';
 import {addItem} from '../../stores/redux/CreateOrderItems';
@@ -424,7 +424,7 @@ function placeholderOfQuantity(priceType) {
 
 function iconOfQuantity(priceType) {
   return priceType === StaticPriceXPieces
-    ? 'pcs'
+    ? 'Pcs'
     : priceType === StaticPriceXWeight
     ? 'Kg'
     : priceType === CustomPrice
