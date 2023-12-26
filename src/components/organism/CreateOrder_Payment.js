@@ -22,6 +22,21 @@ import Toast from 'react-native-toast-message';
 
 const paymentMethods = ['cash', 'transfer'];
 
+function backIcon(props) {
+  <Icon {...props} name="arrow-back" />;
+}
+
+function backAction(navigation) {
+  return () => (
+    <TopNavigationAction
+      icon={backIcon}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  );
+}
+
 export function CreateOrder_PaymentScreen({navigation, route}) {
   const {customer, totalItems, totalPayment, packages} = route.params;
   const [selectedPayment, setSelectedPayment] = React.useState(0);
@@ -168,8 +183,6 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
               paymentMethods[selectedPayment],
               packages,
             ).then(response => {
-              console.log(response);
-
               if (response.code === 201) {
                 setVisible(true);
               } else {
@@ -195,20 +208,5 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
         }}
       </Button>
     </Layout>
-  );
-}
-
-function backIcon(props) {
-  <Icon {...props} name="arrow-back" />;
-}
-
-function backAction(navigation) {
-  return () => (
-    <TopNavigationAction
-      icon={backIcon}
-      onPress={() => {
-        navigation.goBack();
-      }}
-    />
   );
 }

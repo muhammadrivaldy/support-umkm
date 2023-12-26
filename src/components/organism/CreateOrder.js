@@ -194,8 +194,6 @@ function payloadForPayment(userId, name, phoneNumber, address, items) {
     });
   });
 
-  console.log(packages);
-
   return {
     customer: {
       id: userId,

@@ -4,8 +4,6 @@ import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 import {SafeAreaView, TouchableWithoutFeedback, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {
-  GetOrderPaymentStatusesAPI,
-  GetOrderStatusesAPI,
   GetStoresByUserIdAPI,
   LoginAPI,
   RefreshTokenAPI,
@@ -16,7 +14,6 @@ import {
   StoreRefreshToken,
   StoreToken,
 } from '../../stores/Storages';
-import {GroupedData, MapPaymentStatus, MapStatus} from './OrderList';
 import {jwtDecode} from 'jwt-decode';
 
 export function LoginScreen({navigation}) {
@@ -179,8 +176,6 @@ export function LoginScreen({navigation}) {
     const doFunc = async () => {
       var result = await LoginAPI(emailValue, passwordValue);
       if (result.code === 200) {
-        await initStatuses(result.data.token);
-
         navigation.reset({
           index: 0,
           routes: [{name: 'HomeScreen'}],
@@ -224,31 +219,12 @@ export function LoginScreen({navigation}) {
 
     await initAuth().then(async response => {
       if (response !== null) {
-        await initStatuses(response);
-        initStoreLaundryInfo(response);
+        await initStoreLaundryInfo(response);
         token = response;
       }
     });
 
     return token;
-  };
-
-  const initStatuses = async token => {
-    await GetOrderStatusesAPI(token).then(response => {
-      GroupedData.Pembayaran = [];
-      response.data.map(idx => {
-        GroupedData.Pembayaran.push(idx.name);
-        MapStatus[idx.name] = idx.id;
-      });
-    });
-
-    await GetOrderPaymentStatusesAPI(token).then(response => {
-      GroupedData.Status = [];
-      response.data.map(idx => {
-        GroupedData.Status.push(idx.name);
-        MapPaymentStatus[idx.name] = idx.id;
-      });
-    });
   };
 
   const initStoreLaundryInfo = token => {
