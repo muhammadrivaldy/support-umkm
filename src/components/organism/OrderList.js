@@ -22,6 +22,7 @@ import {
   GetOrderStatusesAPI,
   GetOrdersAPI,
 } from '../../stores/Services';
+import {GenerateTimestampToDate} from '../../utils/Time';
 
 const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
@@ -131,6 +132,30 @@ export function OrderListScreen({navigation}) {
     return groupedData[groupTitle][idx.row];
   });
 
+  const generateRemainingTime = (remainingTime, remainingTimeDetails) => {
+    var result = '';
+
+    if (remainingTime === 0) {
+      result = 'Habis';
+    } else {
+      if (remainingTimeDetails.day > 0) {
+        result += `${remainingTimeDetails.day} Hari`;
+      }
+
+      if (remainingTimeDetails.hour > 0) {
+        result = result !== '' ? result + ' ' : result;
+        result += `${remainingTimeDetails.hour} Jam`;
+      }
+
+      if (remainingTimeDetails.minute > 0) {
+        result = result !== '' ? result + ' ' : result;
+        result += `${remainingTimeDetails.minute} Menit`;
+      }
+    }
+
+    return result;
+  };
+
   const renderItem = useCallback(({item, index}) => {
     var order = item.value;
 
@@ -175,12 +200,21 @@ export function OrderListScreen({navigation}) {
             <Text category="p2">
               Pembayaran: <Text category="s2">{order.payment_status_name}</Text>{' '}
             </Text>
-            {/* <Text category="p2">
-              Tenggat Waktu: <Text category="s2">{info.item.deadline}</Text>{' '}
+            <Text category="p2">
+              Tenggat Waktu:{' '}
+              <Text category="s2">
+                {generateRemainingTime(
+                  order.remaining_time,
+                  order.remaining_time_details,
+                )}
+              </Text>{' '}
             </Text>
             <Text category="p2">
-              Dibuat: <Text category="s2">{info.item.createdAt}</Text>{' '}
-            </Text> */}
+              Dibuat:{' '}
+              <Text category="s2">
+                {GenerateTimestampToDate(order.estimated_at)}
+              </Text>{' '}
+            </Text>
           </Layout>
 
           <Layout style={{backgroundColor: 'transparent'}}>
