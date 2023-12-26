@@ -1,5 +1,6 @@
 const axios = require('axios').default;
-const baseURL = 'https://dev.resolusilaundry.com';
+// const baseURL = 'https://dev.resolusilaundry.com';
+const baseURL = 'https://e101-103-149-34-9.ngrok-free.app';
 
 export async function LoginAPI(email, password) {
   let result = {
@@ -330,25 +331,56 @@ export async function GetPackagesByServiceIdAndStoreIdAPI(
   return result;
 }
 
-export async function GetOrdersAPI(token) {
+export async function GetOrdersAPI(
+  token,
+  search,
+  page,
+  limit,
+  startDate,
+  endDate,
+  orderStatus,
+  paymentStatus,
+) {
   let result = {
     code: 500,
     message: 'unexpected error',
     data: null,
   };
 
+  let params = [];
+  params.push({page: page});
+  params.push({limit: limit});
+  search !== '' ? params.push({search: search}) : null;
+  startDate > 0 ? params.push({start_date: startDate}) : null;
+  endDate > 0 ? params.push({end_date: endDate}) : null;
+  orderStatus.length > 0
+    ? orderStatus.map(val => {
+        params.push({order_status: val});
+      })
+    : null;
+  paymentStatus.length > 0
+    ? paymentStatus.map(val => {
+        params.push({payment_status: val});
+      })
+    : null;
+
+  let queryParams = '';
+  params.map(val => {
+    let key = Object.keys(val)[0];
+    let value = val[key];
+    queryParams +=
+      queryParams !== '' ? '&' + key + '=' + value : key + '=' + value;
+  });
+
+  var buildPathURL = '/api/v1/orders';
+  if (queryParams !== '') {
+    buildPathURL += '?' + queryParams;
+  }
+
   await axios
-    .get(baseURL + '/api/v1/orders', {
+    .get(baseURL + buildPathURL, {
       headers: {
         Authorization: `Bearer ${token}`,
-      },
-      params: {
-        // order_status: [-1, 1, 2, 3, 4],
-        // payment_status: [1, 2, 3],
-        // start_date: 1640497184,
-        // end_date: 1703569184,
-        page: 1,
-        limit: 50,
       },
     })
     .then(response => {

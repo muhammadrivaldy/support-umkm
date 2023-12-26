@@ -23,13 +23,13 @@ import {
   GetOrdersAPI,
 } from '../../stores/Services';
 import {GenerateTimestampToDate} from '../../utils/Time';
+import {DefaultErrorToast} from '../../utils/DefaultToast';
+import Toast from 'react-native-toast-message';
 
 const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
 const PlusIcon = props => <Icon {...props} name="plus-outline" />;
 
-var mapStatus = {};
-var mapPaymentStatus = {};
 var tempData = new Map();
 
 export function OrderListScreen({navigation}) {
@@ -38,6 +38,8 @@ export function OrderListScreen({navigation}) {
   const [range, setRange] = React.useState({});
   const [search, setSearch] = React.useState('');
   const [refreshing, setRefreshing] = React.useState(true);
+  const [mapStatus, setMapStatus] = React.useState(new Map());
+  const [mapPaymentStatus, setMapPaymentStatus] = React.useState(new Map());
   const [groupedData, setGroupedData] = React.useState({
     Status: [],
     Pembayaran: [],
@@ -46,12 +48,41 @@ export function OrderListScreen({navigation}) {
     onceEffect: true,
     orderPage: 0,
     maxPage: 0,
-    search: '',
-    startDate: 0,
-    endDate: 0,
-    statusOrders: [],
-    statusPayments: [],
   });
+
+  const getStartDateFromRangeInTimestamp = () => {
+    return range.startDate ? Date.parse(range.startDate) / 1000 : 0;
+  };
+
+  const getEndDateFromRangeInTimestamp = () => {
+    return range.endDate ? Date.parse(range.endDate) / 1000 + 86400 : 0;
+  };
+
+  const getOrderStatusForFilter = () => {
+    let result = [];
+    if (multiSelectedIndex.length > 0) {
+      multiSelectedIndex.map(idx => {
+        if (Object.keys(groupedData)[idx.section] === 'Status') {
+          result.push(mapStatus[groupedData.Status[idx.row]]);
+        }
+      });
+    }
+
+    return result;
+  };
+
+  const getPaymentStatusForFilter = () => {
+    let result = [];
+    if (multiSelectedIndex.length > 0) {
+      multiSelectedIndex.map(idx => {
+        if (Object.keys(groupedData)[idx.section] === 'Pembayaran') {
+          result.push(mapPaymentStatus[groupedData.Pembayaran[idx.row]]);
+        }
+      });
+    }
+
+    return result;
+  };
 
   // use effect for rendering data orders
   useEffect(() => {
@@ -62,7 +93,16 @@ export function OrderListScreen({navigation}) {
       ) {
         GetToken().then(async responseToken => {
           if (responseToken !== null) {
-            await GetOrdersAPI(responseToken).then(response => {
+            await GetOrdersAPI(
+              responseToken,
+              search,
+              pageState.orderPage + 1,
+              10,
+              getStartDateFromRangeInTimestamp(),
+              getEndDateFromRangeInTimestamp(),
+              getOrderStatusForFilter(),
+              getPaymentStatusForFilter(),
+            ).then(response => {
               if (
                 response.code === 200 &&
                 response.data.pagination.total_data > 0
@@ -80,8 +120,22 @@ export function OrderListScreen({navigation}) {
                 setData(
                   Array.from(tempData, ([name, value]) => ({name, value})),
                 );
+              } else if (
+                response.code === 200 &&
+                response.data.pagination.total_data === 0
+              ) {
+                setData([]);
+                Toast.show({
+                  type: 'info',
+                  text1: 'Data yang kamu cari tidak ada 🤔',
+                  text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+                  text2: 'Coba disesuaikan lagi pencarian kamu',
+                  text2Style: {fontFamily: 'Raleway-Regular'},
+                  position: 'bottom',
+                });
               } else {
                 setData([]);
+                DefaultErrorToast();
               }
             });
           }
@@ -91,7 +145,7 @@ export function OrderListScreen({navigation}) {
   }, [refreshing]);
 
   const initServices = () => {
-    GetToken().then(async token => {
+    GetToken().then(token => {
       if (groupedData.Status.length === 0) {
         GetOrderStatusesAPI(token).then(response => {
           if (response.code === 200) {
@@ -99,6 +153,7 @@ export function OrderListScreen({navigation}) {
               mapStatus[idx.name] = idx.id;
               groupedData.Status.push(idx.name);
             });
+            setMapStatus(mapStatus);
             setGroupedData(groupedData);
           }
         });
@@ -111,6 +166,7 @@ export function OrderListScreen({navigation}) {
               mapPaymentStatus[idx.name] = idx.id;
               groupedData.Pembayaran.push(idx.name);
             });
+            setMapPaymentStatus(mapPaymentStatus);
             setGroupedData(groupedData);
           }
         });
@@ -126,6 +182,15 @@ export function OrderListScreen({navigation}) {
       setRefreshing(false);
     }, 1500);
   }, []);
+
+  const onRefreshAndReset = useCallback(() => {
+    tempData = new Map();
+    pageState.onceEffect = true;
+    pageState.orderPage = 0;
+    pageState.maxPage = 0;
+    setPageState(pageState);
+    onRefresh();
+  });
 
   const groupDisplayValues = multiSelectedIndex.map(idx => {
     const groupTitle = Object.keys(groupedData)[idx.section];
@@ -298,7 +363,7 @@ export function OrderListScreen({navigation}) {
         <RangeDatepicker
           style={{flex: 1, marginLeft: 3}}
           min={new Date('2023-12-01')}
-          max={new Date('2024-12-01')}
+          max={new Date('2030-12-01')}
           range={range}
           onSelect={nextRange => setRange(nextRange)}
         />
@@ -306,13 +371,7 @@ export function OrderListScreen({navigation}) {
 
       <Layout style={{marginVertical: 4}} />
 
-      <Button
-        status="info"
-        onPress={() => {
-          // console.log(search);
-          // console.log(multiSelectedIndex);
-          // console.log(range);
-        }}>
+      <Button status="info" onPress={onRefreshAndReset}>
         {TextProps => {
           TextProps.style.fontFamily = 'Raleway-Bold';
           TextProps.style.fontWeight = '600';
@@ -336,7 +395,7 @@ export function OrderListScreen({navigation}) {
                 setSearch('');
                 setMultiSelectedIndex([]);
                 setRange({});
-                onRefresh();
+                onRefreshAndReset();
               }}
             />
           }
