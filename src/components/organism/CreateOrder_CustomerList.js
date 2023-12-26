@@ -235,6 +235,7 @@ export function CreateOrder_CustomerListScreen({navigation}) {
             ItemSeparatorComponent={Divider}
             removeClippedSubviews={true}
             estimatedItemSize={50}
+            onEndReachedThreshold={0.5}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

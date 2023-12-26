@@ -201,7 +201,7 @@ export function CustomerListScreen({navigation}) {
       <FlashList
         data={data}
         renderItem={renderItem}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.5}
         onEndReached={() => {
           pageState.onceEffect = true;
           setPageState(pageState);

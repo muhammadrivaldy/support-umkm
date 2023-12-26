@@ -452,8 +452,12 @@ export function OrderListScreen({navigation}) {
         <FlashList
           data={data}
           renderItem={renderItem}
-          onEndReachedThreshold={1}
-          onEndReached={onRefresh}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            pageState.onceEffect = true;
+            setPageState(pageState);
+            onRefresh();
+          }}
           estimatedItemSize={50}
           refreshControl={
             <RefreshControl
