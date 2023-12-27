@@ -35,9 +35,10 @@ import {
   PaymentStatusPaid,
 } from '../../models/Const';
 
-const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
-const SearchIcon = props => <Icon {...props} name="search-outline" />;
-const PlusIcon = props => <Icon {...props} name="plus-outline" />;
+const starIcon = props => <Icon {...props} name="phone-call-outline" />;
+const searchIcon = props => <Icon {...props} name="search-outline" />;
+const plusIcon = props => <Icon {...props} name="plus-outline" />;
+const paymentMethods = ['cash', 'transfer'];
 
 var tempData = new Map();
 
@@ -169,7 +170,7 @@ export function OrderListScreen({navigation}) {
         });
       }
     }
-  }, [pageState, refreshing]);
+  }, [refreshing]);
 
   const initServices = () => {
     GetToken().then(token => {
@@ -276,7 +277,7 @@ export function OrderListScreen({navigation}) {
 
           <Button
             status="info"
-            accessoryLeft={StarIcon}
+            accessoryLeft={starIcon}
             onPress={() => {
               Linking.openURL(
                 `whatsapp://send?text=${textToWhatsApp(
@@ -439,7 +440,7 @@ export function OrderListScreen({navigation}) {
         }}>
         <Button
           style={{borderRadius: 100}}
-          accessoryLeft={PlusIcon}
+          accessoryLeft={plusIcon}
           onPress={() => {
             navigation.navigate('CreateOrder_CustomerListScreen');
           }}>
@@ -455,7 +456,7 @@ export function OrderListScreen({navigation}) {
       <Input
         placeholder="Nama atau No hp ..."
         value={search}
-        accessoryRight={SearchIcon}
+        accessoryRight={searchIcon}
         onChangeText={text => setSearch(text)}
       />
 
@@ -572,8 +573,20 @@ function modalOfUpdatePayment(
         <Text>
           Terbayar: <Text category="s1">Rp. {orderData.paidPayment}</Text>
         </Text>
+        <Text>
+          Kekurangan:{' '}
+          <Text category="s1">
+            Rp. {orderData.totalPayment - orderData.paidPayment}
+          </Text>
+        </Text>
 
-        <Text category="p1">Pembayaran melalui</Text>
+        <Layout style={{marginVertical: 6}} />
+
+        <Divider />
+
+        <Layout style={{marginVertical: 4}} />
+
+        <Text category="s1">Pembayaran melalui</Text>
         <RadioGroup
           style={{flexDirection: 'row'}}
           selectedIndex={selectedPayment}
