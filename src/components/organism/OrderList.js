@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useCallback, useEffect} from 'react';
@@ -25,6 +26,7 @@ import {
   GetOrderStatusesAPI,
   GetOrdersAPI,
   PatchOrderStatusAPI,
+  PatchPaymentStatusAPI,
 } from '../../stores/Services';
 import {GenerateTimestampToDate} from '../../utils/Time';
 import {DefaultErrorToast} from '../../utils/DefaultToast';
@@ -33,6 +35,7 @@ import {
   OrderStatusCanceled,
   OrderStatusCompleted,
   PaymentStatusPaid,
+  PaymentStatusPartiallyPaid,
 } from '../../models/Const';
 
 const starIcon = props => <Icon {...props} name="phone-call-outline" />;
@@ -73,6 +76,7 @@ export function OrderListScreen({navigation}) {
     orderPage: 0,
     maxPage: 0,
   });
+  const [disableButtonUpdate, setDisableButtonUpdate] = React.useState(true);
 
   const getStartDateFromRangeInTimestamp = () => {
     return range.startDate ? Date.parse(range.startDate) / 1000 : 0;
@@ -346,6 +350,8 @@ export function OrderListScreen({navigation}) {
                 setOrderData(orderData);
                 setSelectedStatus(null);
                 setVisibleUpdatePayment(true);
+                setInputNominal(null);
+                setDisableButtonUpdate(true);
               }}>
               Bayar
             </Button>
@@ -368,6 +374,8 @@ export function OrderListScreen({navigation}) {
                 setOrderData(orderData);
                 setSelectedStatus(null);
                 setVisibleUpdateOrderStatus(true);
+                setInputNominal(null);
+                setDisableButtonUpdate(true);
               }}>
               Status Order
             </Button>
@@ -397,6 +405,219 @@ export function OrderListScreen({navigation}) {
     });
   };
 
+  const patchPaymentStatusAPI = async (
+    orderNo,
+    status,
+    paid,
+    paymentMethod,
+  ) => {
+    await GetToken().then(async token => {
+      await PatchPaymentStatusAPI(
+        token,
+        orderNo,
+        status,
+        paid,
+        paymentMethod,
+      ).then(response => {
+        if (response.code === 200) {
+          setVisibleUpdatePayment(false);
+          Toast.show({
+            type: 'success',
+            text1: 'Berhasil update pembayaran 😄',
+            text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+            text2: 'Silahkan cek kembali',
+            text2Style: {fontFamily: 'Raleway-Regular'},
+            position: 'bottom',
+          });
+        } else {
+          DefaultErrorToast();
+        }
+      });
+    });
+  };
+
+  const modalOfUpdatePayment = () => {
+    const deficit = () => {
+      let value = orderData.totalPayment - orderData.paidPayment;
+      return value < 0 ? 0 : value;
+    };
+
+    const isDisableButton = () => {
+      if (disableButtonUpdate || inputNominal === null) {
+        return true;
+      }
+
+      return false;
+    };
+
+    return (
+      <Modal
+        visible={visibleUpdatePayment}
+        backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+        onBackdropPress={() => setVisibleUpdatePayment(false)}>
+        <Card disabled={true}>
+          <Text category="h6">Update Pembayaran</Text>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Text>
+            Total harga: <Text category="s1">Rp. {orderData.totalPayment}</Text>
+          </Text>
+          <Text>
+            Terbayar: <Text category="s1">Rp. {orderData.paidPayment}</Text>
+          </Text>
+          <Text>
+            Kekurangan: <Text category="s1">Rp. {deficit()}</Text>
+          </Text>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Divider />
+
+          <Layout style={{marginVertical: 4}} />
+
+          <Text category="s1">Pembayaran melalui</Text>
+          <RadioGroup
+            style={{flexDirection: 'row'}}
+            selectedIndex={selectedPayment}
+            onChange={index => setSelectedPayment(index)}>
+            <Radio>Cash</Radio>
+            <Radio>Transfer</Radio>
+          </RadioGroup>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Input
+            inputMode="numeric"
+            placeholder="Input nominal"
+            onChangeText={text => {
+              setDisableButtonUpdate(false);
+              setInputNominal(text);
+            }}
+            accessoryLeft={() => {
+              return (
+                <Layout
+                  style={{
+                    borderWidth: 0,
+                    minWidth: 40,
+                    backgroundColor: 'transparent',
+                  }}>
+                  <Text category="s2" style={{textAlign: 'center'}}>
+                    Rp
+                  </Text>
+                </Layout>
+              );
+            }}
+          />
+          <Layout style={{marginVertical: 6}} />
+
+          <Layout style={{flexDirection: 'row'}}>
+            <Button
+              style={{flexGrow: 1}}
+              disabled={isDisableButton()}
+              onPress={async () => {
+                setDisableButtonUpdate(true);
+
+                let status =
+                  inputNominal >= deficit()
+                    ? PaymentStatusPaid
+                    : PaymentStatusPartiallyPaid;
+
+                await patchPaymentStatusAPI(
+                  orderData.orderNo,
+                  status,
+                  Number(inputNominal),
+                  paymentMethods[selectedPayment],
+                );
+
+                onRefreshAndFetch();
+              }}>
+              Update
+            </Button>
+            <Layout style={{marginHorizontal: 6}} />
+            <Button
+              style={{flexGrow: 1}}
+              status="danger"
+              onPress={() => setVisibleUpdatePayment(false)}>
+              Ga jadi
+            </Button>
+          </Layout>
+        </Card>
+      </Modal>
+    );
+  };
+
+  const modalOfUpdateOrderStatus = () => {
+    const isDisableButton = () => {
+      if (disableButtonUpdate || selectedStatus === null) {
+        return true;
+      }
+
+      return false;
+    };
+
+    return (
+      <Modal
+        visible={visibleUpdateOrderStatus}
+        backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+        onBackdropPress={() => setVisibleUpdateOrderStatus(false)}>
+        <Card disabled={true}>
+          <Text category="h6">Update Status Order</Text>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Text>
+            Status saat ini: <Text category="s1">{orderData.statusName}</Text>
+          </Text>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Select
+            placeholder={'Pilih status nya ...'}
+            selectedIndex={selectedStatus}
+            value={
+              selectedStatus ? groupedData.Status[selectedStatus.row] : null
+            }
+            onSelect={index => {
+              setDisableButtonUpdate(false);
+              setSelectedStatus(index);
+            }}>
+            {groupedData.Status.map(val => (
+              <SelectItem title={val} key={val} />
+            ))}
+          </Select>
+
+          <Layout style={{marginVertical: 6}} />
+
+          <Layout style={{flexDirection: 'row'}}>
+            <Button
+              style={{flexGrow: 1}}
+              disabled={isDisableButton()}
+              onPress={async () => {
+                setDisableButtonUpdate(true);
+
+                await patchOrderStatusAPI(
+                  orderData.orderNo,
+                  mapStatus[groupedData.Status[selectedStatus.row]],
+                );
+
+                onRefreshAndFetch();
+              }}>
+              Update
+            </Button>
+            <Layout style={{marginHorizontal: 6}} />
+            <Button
+              style={{flexGrow: 1}}
+              status="danger"
+              onPress={() => setVisibleUpdateOrderStatus(false)}>
+              Ga jadi
+            </Button>
+          </Layout>
+        </Card>
+      </Modal>
+    );
+  };
+
   return (
     <Layout
       level="1"
@@ -405,27 +626,8 @@ export function OrderListScreen({navigation}) {
         paddingHorizontal: 8,
         paddingVertical: 4,
       }}>
-      {modalOfUpdatePayment(
-        visibleUpdatePayment,
-        setVisibleUpdatePayment,
-        selectedPayment,
-        setSelectedPayment,
-        orderData,
-        inputNominal,
-        setInputNominal,
-        onRefreshAndReset,
-      )}
-      {modalOfUpdateOrderStatus(
-        visibleUpdateOrderStatus,
-        setVisibleUpdateOrderStatus,
-        orderData,
-        selectedStatus,
-        setSelectedStatus,
-        groupedData.Status,
-        patchOrderStatusAPI,
-        mapStatus,
-        onRefreshAndFetch,
-      )}
+      {modalOfUpdatePayment()}
+      {modalOfUpdateOrderStatus()}
 
       <Layout style={{marginVertical: 4}} />
 
@@ -547,155 +749,175 @@ Biaya: *Rp. ${totalPrice}*
 Terima kasih karena sudah mempercayakan laundry kami 😄`;
 }
 
-function modalOfUpdatePayment(
-  visibleUpdatePayment,
-  setVisibleUpdatePayment,
-  selectedPayment,
-  setSelectedPayment,
-  orderData,
-  inputNominal,
-  setInputNominal,
-  onRefreshAndReset,
-) {
-  return (
-    <Modal
-      visible={visibleUpdatePayment}
-      backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
-      onBackdropPress={() => setVisibleUpdatePayment(false)}>
-      <Card disabled={true}>
-        <Text category="h6">Update Pembayaran</Text>
+// function modalOfUpdatePayment(
+//   visibleUpdatePayment,
+//   setVisibleUpdatePayment,
+//   selectedPayment,
+//   setSelectedPayment,
+//   orderData,
+//   inputNominal,
+//   setInputNominal,
+//   onRefreshAndFetch,
+//   patchPaymentStatusAPI,
+// ) {
+//   return (
+//     <Modal
+//       visible={visibleUpdatePayment}
+//       backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+//       onBackdropPress={() => setVisibleUpdatePayment(false)}>
+//       <Card disabled={true}>
+//         <Text category="h6">Update Pembayaran</Text>
 
-        <Layout style={{marginVertical: 6}} />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Text>
-          Total harga: <Text category="s1">Rp. {orderData.totalPayment}</Text>
-        </Text>
-        <Text>
-          Terbayar: <Text category="s1">Rp. {orderData.paidPayment}</Text>
-        </Text>
-        <Text>
-          Kekurangan:{' '}
-          <Text category="s1">
-            Rp. {orderData.totalPayment - orderData.paidPayment}
-          </Text>
-        </Text>
+//         <Text>
+//           Total harga: <Text category="s1">Rp. {orderData.totalPayment}</Text>
+//         </Text>
+//         <Text>
+//           Terbayar: <Text category="s1">Rp. {orderData.paidPayment}</Text>
+//         </Text>
+//         <Text>
+//           Kekurangan:{' '}
+//           <Text category="s1">
+//             Rp. {orderData.totalPayment - orderData.paidPayment}
+//           </Text>
+//         </Text>
 
-        <Layout style={{marginVertical: 6}} />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Divider />
+//         <Divider />
 
-        <Layout style={{marginVertical: 4}} />
+//         <Layout style={{marginVertical: 4}} />
 
-        <Text category="s1">Pembayaran melalui</Text>
-        <RadioGroup
-          style={{flexDirection: 'row'}}
-          selectedIndex={selectedPayment}
-          onChange={index => setSelectedPayment(index)}>
-          <Radio>Cash</Radio>
-          <Radio>Transfer</Radio>
-        </RadioGroup>
+//         <Text category="s1">Pembayaran melalui</Text>
+//         <RadioGroup
+//           style={{flexDirection: 'row'}}
+//           selectedIndex={selectedPayment}
+//           onChange={index => setSelectedPayment(index)}>
+//           <Radio>Cash</Radio>
+//           <Radio>Transfer</Radio>
+//         </RadioGroup>
 
-        <Layout style={{marginVertical: 6}} />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Input
-          placeholder="Input nominal"
-          onChangeText={text => setInputNominal(text)}
-          accessoryLeft={() => {
-            return (
-              <Layout
-                style={{
-                  borderWidth: 0,
-                  minWidth: 40,
-                  backgroundColor: 'transparent',
-                }}>
-                <Text category="s2" style={{textAlign: 'center'}}>
-                  Rp
-                </Text>
-              </Layout>
-            );
-          }}
-        />
-        <Layout style={{marginVertical: 6}} />
+//         <Input
+//           inputMode="numeric"
+//           placeholder="Input nominal"
+//           onChangeText={text => setInputNominal(text)}
+//           accessoryLeft={() => {
+//             return (
+//               <Layout
+//                 style={{
+//                   borderWidth: 0,
+//                   minWidth: 40,
+//                   backgroundColor: 'transparent',
+//                 }}>
+//                 <Text category="s2" style={{textAlign: 'center'}}>
+//                   Rp
+//                 </Text>
+//               </Layout>
+//             );
+//           }}
+//         />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Layout style={{flexDirection: 'row'}}>
-          <Button style={{flexGrow: 1}} disabled={inputNominal ? false : true}>
-            Update
-          </Button>
-          <Layout style={{marginHorizontal: 6}} />
-          <Button
-            style={{flexGrow: 1}}
-            status="danger"
-            onPress={() => setVisibleUpdatePayment(false)}>
-            Ga jadi
-          </Button>
-        </Layout>
-      </Card>
-    </Modal>
-  );
-}
+//         <Layout style={{flexDirection: 'row'}}>
+//           <Button
+//             style={{flexGrow: 1}}
+//             disabled={inputNominal ? false : true}
+//             onPress={async () => {
+//               let deficit = orderData.totalPayment - orderData.paidPayment;
+//               let status =
+//                 inputNominal > deficit
+//                   ? PaymentStatusPaid
+//                   : PaymentStatusPartiallyPaid;
 
-function modalOfUpdateOrderStatus(
-  visibleUpdateOrderStatus,
-  setVisibleUpdateOrderStatus,
-  orderData,
-  selectedStatus,
-  setSelectedStatus,
-  orderStatuses,
-  patchOrderStatusAPI,
-  mapStatus,
-  onRefreshAndFetch,
-) {
-  return (
-    <Modal
-      visible={visibleUpdateOrderStatus}
-      backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
-      onBackdropPress={() => setVisibleUpdateOrderStatus(false)}>
-      <Card disabled={true}>
-        <Text category="h6">Update Status Order</Text>
+//               await patchPaymentStatusAPI(
+//                 orderData.orderNo,
+//                 status,
+//                 Number(inputNominal),
+//                 paymentMethods[selectedPayment],
+//               );
 
-        <Layout style={{marginVertical: 6}} />
+//               onRefreshAndFetch();
+//             }}>
+//             Update
+//           </Button>
+//           <Layout style={{marginHorizontal: 6}} />
+//           <Button
+//             style={{flexGrow: 1}}
+//             status="danger"
+//             onPress={() => setVisibleUpdatePayment(false)}>
+//             Ga jadi
+//           </Button>
+//         </Layout>
+//       </Card>
+//     </Modal>
+//   );
+// }
 
-        <Text>
-          Status saat ini: <Text category="s1">{orderData.statusName}</Text>
-        </Text>
+// function modalOfUpdateOrderStatus(
+//   visibleUpdateOrderStatus,
+//   setVisibleUpdateOrderStatus,
+//   orderData,
+//   selectedStatus,
+//   setSelectedStatus,
+//   orderStatuses,
+//   patchOrderStatusAPI,
+//   mapStatus,
+//   onRefreshAndFetch,
+// ) {
+//   return (
+//     <Modal
+//       visible={visibleUpdateOrderStatus}
+//       backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
+//       onBackdropPress={() => setVisibleUpdateOrderStatus(false)}>
+//       <Card disabled={true}>
+//         <Text category="h6">Update Status Order</Text>
 
-        <Layout style={{marginVertical: 6}} />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Select
-          placeholder={'Pilih status nya ...'}
-          selectedIndex={selectedStatus}
-          value={selectedStatus ? orderStatuses[selectedStatus.row] : null}
-          onSelect={index => setSelectedStatus(index)}>
-          {orderStatuses.map(val => (
-            <SelectItem title={val} key={val} />
-          ))}
-        </Select>
+//         <Text>
+//           Status saat ini: <Text category="s1">{orderData.statusName}</Text>
+//         </Text>
 
-        <Layout style={{marginVertical: 6}} />
+//         <Layout style={{marginVertical: 6}} />
 
-        <Layout style={{flexDirection: 'row'}}>
-          <Button
-            style={{flexGrow: 1}}
-            disabled={selectedStatus ? false : true}
-            onPress={async () => {
-              await patchOrderStatusAPI(
-                orderData.orderNo,
-                mapStatus[orderStatuses[selectedStatus.row]],
-              );
+//         <Select
+//           placeholder={'Pilih status nya ...'}
+//           selectedIndex={selectedStatus}
+//           value={selectedStatus ? orderStatuses[selectedStatus.row] : null}
+//           onSelect={index => setSelectedStatus(index)}>
+//           {orderStatuses.map(val => (
+//             <SelectItem title={val} key={val} />
+//           ))}
+//         </Select>
 
-              onRefreshAndFetch();
-            }}>
-            Update
-          </Button>
-          <Layout style={{marginHorizontal: 6}} />
-          <Button
-            style={{flexGrow: 1}}
-            status="danger"
-            onPress={() => setVisibleUpdateOrderStatus(false)}>
-            Ga jadi
-          </Button>
-        </Layout>
-      </Card>
-    </Modal>
-  );
-}
+//         <Layout style={{marginVertical: 6}} />
+
+//         <Layout style={{flexDirection: 'row'}}>
+//           <Button
+//             style={{flexGrow: 1}}
+//             disabled={selectedStatus ? false : true}
+//             onPress={async () => {
+//               await patchOrderStatusAPI(
+//                 orderData.orderNo,
+//                 mapStatus[orderStatuses[selectedStatus.row]],
+//               );
+
+//               onRefreshAndFetch();
+//             }}>
+//             Update
+//           </Button>
+//           <Layout style={{marginHorizontal: 6}} />
+//           <Button
+//             style={{flexGrow: 1}}
+//             status="danger"
+//             onPress={() => setVisibleUpdateOrderStatus(false)}>
+//             Ga jadi
+//           </Button>
+//         </Layout>
+//       </Card>
+//     </Modal>
+//   );
+// }
