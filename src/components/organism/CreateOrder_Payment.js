@@ -22,14 +22,14 @@ import Toast from 'react-native-toast-message';
 
 const paymentMethods = ['cash', 'transfer'];
 
-function backIcon(props) {
+function BackIcon(props) {
   <Icon {...props} name="arrow-back" />;
 }
 
-function backAction(navigation) {
+function BackAction(navigation) {
   return () => (
     <TopNavigationAction
-      icon={backIcon}
+      icon={BackIcon}
       onPress={() => {
         navigation.goBack();
       }}
@@ -46,7 +46,7 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
   return (
     <Layout style={{flex: 1}}>
       <TopNavigation
-        accessoryLeft={backAction(navigation)}
+        accessoryLeft={BackAction(navigation)}
         title="Bayar"
         navigation={navigation}
       />
@@ -76,9 +76,9 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
         style={{
           flex: 1,
           paddingHorizontal: 8,
-          paddingVertical: 4,
+          paddingVertical: 8,
         }}>
-        <Card status="primary">
+        <Card status="primary" disabled={true}>
           <Layout
             style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
@@ -87,7 +87,7 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
 
               <Layout style={{marginVertical: 6}} />
 
-              <Text category="p2">No HP</Text>
+              <Text category="p2">No Hp</Text>
               <Text category="s1">{customer.phoneNumber}</Text>
             </Layout>
 
@@ -102,18 +102,18 @@ export function CreateOrder_PaymentScreen({navigation, route}) {
 
         <Layout style={{marginVertical: 10}} />
 
-        <Layout style={{paddingHorizontal: 20}}>
-          <Text category="p1">Total Jasa</Text>
-          <Text category="h6">{totalItems} item</Text>
+        <Layout style={{paddingHorizontal: 25}}>
+          <Text category="p2">Total Jasa</Text>
+          <Text category="s1">{totalItems} item</Text>
 
           <Layout style={{marginVertical: 6}} />
 
-          <Text category="p1">Total yang harus dibayar</Text>
-          <Text category="h6">Rp. {totalPayment}</Text>
+          <Text category="p2">Total yang harus dibayar</Text>
+          <Text category="s1">Rp. {totalPayment}</Text>
 
           <Layout style={{marginVertical: 6}} />
 
-          <Text category="p1">Pembayaran melalui</Text>
+          <Text category="p2">Pembayaran melalui</Text>
           <RadioGroup
             style={{flexDirection: 'row'}}
             selectedIndex={selectedPayment}

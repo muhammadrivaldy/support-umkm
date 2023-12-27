@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
@@ -20,8 +21,9 @@ import {
 } from '@ui-kitten/components';
 import {Linking, RefreshControl, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
-import {GetToken} from '../../stores/Storages';
+import {GetLaundryInfo, GetToken} from '../../stores/Storages';
 import {
+  GetCustomerByPhoneAndStore,
   GetOrderPaymentStatusesAPI,
   GetOrderStatusesAPI,
   GetOrdersAPI,
@@ -265,7 +267,54 @@ export function OrderListScreen({navigation}) {
     var order = item.value;
 
     return (
-      <Card status="basic" style={{marginBottom: 8}}>
+      <Card
+        status="basic"
+        style={{marginBottom: 8}}
+        onPress={() => {
+          GetLaundryInfo()
+            .then(response => {
+              let storeId = response.id;
+              let data = item.value;
+
+              GetToken()
+                .then(response => {
+                  GetCustomerByPhoneAndStore(
+                    response,
+                    data.customer_phone,
+                    storeId,
+                  )
+                    .then(response => {
+                      if (response.status === 200) {
+                        let customer = response.data.data;
+
+                        navigation.navigate('DetailOrderScreen', {
+                          customer: {
+                            name: customer.name,
+                            phoneNumber: customer.phone_number,
+                            address: customer.address,
+                          },
+                          totalItems: data.items.length,
+                          totalPayment: data.total_payment,
+                          paidPayment: data.paid_payment,
+                          statusPayment: data.payment_status_name,
+                          statusOrder: data.status_name,
+                          paymentMethod: data.payment_method,
+                          items: data.items,
+                        });
+                      }
+                    })
+                    .catch(error => {
+                      DefaultErrorToast();
+                    });
+                })
+                .catch(error => {
+                  DefaultErrorToast();
+                });
+            })
+            .catch(error => {
+              DefaultErrorToast();
+            });
+        }}>
         <Layout
           style={{
             flexDirection: 'row',

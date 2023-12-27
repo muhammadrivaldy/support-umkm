@@ -67,7 +67,7 @@ export function CreateCustomerScreen({navigation}) {
             onChangeText={text => setPhoneNumber(text)}
             label={TextProps => {
               TextProps.style[0].fontWeight = '600';
-              return <Text {...TextProps}>No HP</Text>;
+              return <Text {...TextProps}>No Hp</Text>;
             }}
           />
 

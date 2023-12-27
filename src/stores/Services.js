@@ -16,18 +16,15 @@ export async function LoginAPI(email, password) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -47,18 +44,15 @@ export async function RefreshTokenAPI(refreshToken) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -78,18 +72,15 @@ export async function GetOrderStatusesAPI(token) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -109,18 +100,15 @@ export async function GetOrderPaymentStatusesAPI(token) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -145,18 +133,15 @@ export async function GetCustomersAPI(token, search, page, limit) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -176,18 +161,15 @@ export async function DeleteCustomersAPI(token, customerId) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -216,18 +198,15 @@ export async function PostCustomersAPI(token, name, phone_number, address) {
       },
     )
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -247,18 +226,15 @@ export async function GetStoresByUserIdAPI(token, userId) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -278,18 +254,15 @@ export async function GetServicesByStoreIdAPI(token, storeId) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -313,18 +286,15 @@ export async function GetPackagesByServiceIdAndStoreIdAPI(
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -383,18 +353,15 @@ export async function GetOrdersAPI(
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -446,18 +413,15 @@ export async function PostOrdersAPI(
       },
     )
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -477,18 +441,15 @@ export async function PatchOrderStatusAPI(token, orderNo, status) {
       },
     })
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
@@ -522,19 +483,27 @@ export async function PatchPaymentStatusAPI(
       },
     )
     .then(response => {
-      if (typeof response.data !== 'undefined') {
-        result.code = response.data.code;
-        result.message = response.data.message;
-        result.data = response.data.data;
-      }
+      result.code = response.data.code;
+      result.message = response.data.message;
+      result.data =
+        typeof response.data !== 'undefined' ? response.data.data : null;
     })
     .catch(error => {
-      if (typeof error.response.data !== 'undefined') {
-        result.code = error.response.data.code;
-        result.message = error.response.data.message;
-        result.data = error.response.data.data;
-      }
+      result.code = error.response.data.code;
+      result.message = error.response.data.message;
+      result.data = null;
     });
 
   return result;
+}
+
+export function GetCustomerByPhoneAndStore(token, phone, storeId) {
+  return axios.get(
+    baseURL + `/api/v1/users/customers/phones/${phone}/stores/${storeId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
 }

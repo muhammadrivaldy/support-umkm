@@ -63,6 +63,7 @@ export function CreateOrderScreen({route, navigation}) {
 
   const packageItems = ({item, index}) => (
     <ListItem
+      disabled={true}
       title={item.serviceName}
       description={TextProps => (
         <>
@@ -138,9 +139,9 @@ export function CreateOrderScreen({route, navigation}) {
         style={{
           flex: 1,
           paddingHorizontal: 8,
-          paddingTop: 4,
+          paddingTop: 8,
         }}>
-        <Card status="primary">
+        <Card status="primary" disabled={true}>
           <Layout
             style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
             <Layout style={{flex: 1, backgroundColor: 'transparent'}}>
@@ -149,7 +150,7 @@ export function CreateOrderScreen({route, navigation}) {
 
               <Layout style={{marginVertical: 6}} />
 
-              <Text category="p2">No HP</Text>
+              <Text category="p2">No Hp</Text>
               <Text category="s1">{phoneNumber}</Text>
             </Layout>
 
@@ -164,7 +165,7 @@ export function CreateOrderScreen({route, navigation}) {
 
         <Layout style={{marginVertical: 4}} />
 
-        <Layout style={{flex: 1}}>
+        <Layout style={{flex: 1, marginHorizontal: 10}}>
           <List
             data={items}
             renderItem={packageItems}
