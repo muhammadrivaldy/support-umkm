@@ -13,7 +13,6 @@ import {
   TopNavigationAction,
 } from '@ui-kitten/components';
 import {ScrollView} from 'react-native';
-import {UUID} from 'uuidjs';
 
 export function DetailOrderScreen({navigation, route}) {
   const {
