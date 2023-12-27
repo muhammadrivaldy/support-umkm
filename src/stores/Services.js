@@ -462,3 +462,78 @@ export async function PostOrdersAPI(
 
   return result;
 }
+
+export async function PatchOrderStatusAPI(token, orderNo, status) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  await axios
+    .patch(baseURL + `/api/v1/orders/${orderNo}/status/${status}`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}
+
+export async function PatchPaymentStatusAPI(
+  token,
+  orderNo,
+  status,
+  paid,
+  paymentMethod,
+) {
+  let result = {
+    code: 500,
+    message: 'unexpected error',
+    data: null,
+  };
+
+  await axios
+    .patch(
+      baseURL + `/api/v1/orders/${orderNo}/payment/status/${status}`,
+      {
+        paid: paid,
+        payment_method: paymentMethod,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    .then(response => {
+      if (typeof response.data !== 'undefined') {
+        result.code = response.data.code;
+        result.message = response.data.message;
+        result.data = response.data.data;
+      }
+    })
+    .catch(error => {
+      if (typeof error.response.data !== 'undefined') {
+        result.code = error.response.data.code;
+        result.message = error.response.data.message;
+        result.data = error.response.data.data;
+      }
+    });
+
+  return result;
+}

@@ -24,11 +24,16 @@ import {
   GetOrderPaymentStatusesAPI,
   GetOrderStatusesAPI,
   GetOrdersAPI,
+  PatchOrderStatusAPI,
 } from '../../stores/Services';
 import {GenerateTimestampToDate} from '../../utils/Time';
 import {DefaultErrorToast} from '../../utils/DefaultToast';
 import Toast from 'react-native-toast-message';
-import {Paid} from '../../models/PaymentStatuses';
+import {
+  OrderStatusCanceled,
+  OrderStatusCompleted,
+  PaymentStatusPaid,
+} from '../../models/Const';
 
 const StarIcon = props => <Icon {...props} name="phone-call-outline" />;
 const SearchIcon = props => <Icon {...props} name="search-outline" />;
@@ -63,6 +68,7 @@ export function OrderListScreen({navigation}) {
   });
   const [pageState, setPageState] = React.useState({
     onceEffect: true,
+    fetch: false,
     orderPage: 0,
     maxPage: 0,
   });
@@ -102,7 +108,7 @@ export function OrderListScreen({navigation}) {
   };
 
   useEffect(() => {
-    if (pageState.onceEffect) {
+    if (pageState.onceEffect || pageState.fetch) {
       if (
         pageState.orderPage + 1 < pageState.maxPage ||
         pageState.maxPage === 0
@@ -113,7 +119,7 @@ export function OrderListScreen({navigation}) {
               responseToken,
               search,
               pageState.orderPage + 1,
-              10,
+              50,
               getStartDateFromRangeInTimestamp(),
               getEndDateFromRangeInTimestamp(),
               getOrderStatusForFilter(),
@@ -124,8 +130,13 @@ export function OrderListScreen({navigation}) {
                 response.data.pagination.total_data > 0
               ) {
                 pageState.onceEffect = false;
-                pageState.orderPage = pageState.orderPage + 1;
+                pageState.fetch = false;
+                pageState.orderPage = pageState.fetch
+                  ? pageState.orderPage
+                  : pageState.orderPage + 1;
                 pageState.maxPage = response.data.pagination.total_page;
+
+                tempData = new Map();
 
                 response.data.orders.map(idx => {
                   tempData.set(idx.order_id, idx);
@@ -158,7 +169,7 @@ export function OrderListScreen({navigation}) {
         });
       }
     }
-  }, [refreshing]);
+  }, [pageState, refreshing]);
 
   const initServices = () => {
     GetToken().then(token => {
@@ -202,6 +213,14 @@ export function OrderListScreen({navigation}) {
   const onRefreshAndReset = useCallback(() => {
     tempData = new Map();
     pageState.onceEffect = true;
+    pageState.orderPage = 0;
+    pageState.maxPage = 0;
+    setPageState(pageState);
+    onRefresh();
+  });
+
+  const onRefreshAndFetch = useCallback(() => {
+    pageState.fetch = true;
     pageState.orderPage = 0;
     pageState.maxPage = 0;
     setPageState(pageState);
@@ -314,7 +333,9 @@ export function OrderListScreen({navigation}) {
             <Button
               status="primary"
               size="tiny"
-              disabled={order.payment_status === Paid ? true : false}
+              disabled={
+                order.payment_status === PaymentStatusPaid ? true : false
+              }
               onPress={() => {
                 orderData.orderNo = order.order_no;
                 orderData.paidPayment = order.paid_payment;
@@ -331,6 +352,12 @@ export function OrderListScreen({navigation}) {
             <Button
               status="primary"
               size="tiny"
+              disabled={
+                order.status === OrderStatusCompleted ||
+                order.status === OrderStatusCanceled
+                  ? true
+                  : false
+              }
               onPress={() => {
                 orderData.orderNo = order.order_no;
                 orderData.paidPayment = order.paid_payment;
@@ -349,6 +376,26 @@ export function OrderListScreen({navigation}) {
     );
   }, []);
 
+  const patchOrderStatusAPI = async (orderNo, status) => {
+    await GetToken().then(async token => {
+      await PatchOrderStatusAPI(token, orderNo, status).then(response => {
+        if (response.code === 200) {
+          setVisibleUpdateOrderStatus(false);
+          Toast.show({
+            type: 'success',
+            text1: 'Berhasil update status order 😄',
+            text1Style: {fontFamily: 'Raleway-Bold', fontWeight: '600'},
+            text2: 'Silahkan cek kembali',
+            text2Style: {fontFamily: 'Raleway-Regular'},
+            position: 'bottom',
+          });
+        } else {
+          DefaultErrorToast();
+        }
+      });
+    });
+  };
+
   return (
     <Layout
       level="1"
@@ -365,6 +412,7 @@ export function OrderListScreen({navigation}) {
         orderData,
         inputNominal,
         setInputNominal,
+        onRefreshAndReset,
       )}
       {modalOfUpdateOrderStatus(
         visibleUpdateOrderStatus,
@@ -373,6 +421,9 @@ export function OrderListScreen({navigation}) {
         selectedStatus,
         setSelectedStatus,
         groupedData.Status,
+        patchOrderStatusAPI,
+        mapStatus,
+        onRefreshAndFetch,
       )}
 
       <Layout style={{marginVertical: 4}} />
@@ -458,7 +509,7 @@ export function OrderListScreen({navigation}) {
             setPageState(pageState);
             onRefresh();
           }}
-          estimatedItemSize={50}
+          estimatedItemSize={100}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -503,6 +554,7 @@ function modalOfUpdatePayment(
   orderData,
   inputNominal,
   setInputNominal,
+  onRefreshAndReset,
 ) {
   return (
     <Modal
@@ -576,6 +628,9 @@ function modalOfUpdateOrderStatus(
   selectedStatus,
   setSelectedStatus,
   orderStatuses,
+  patchOrderStatusAPI,
+  mapStatus,
+  onRefreshAndFetch,
 ) {
   return (
     <Modal
@@ -608,7 +663,15 @@ function modalOfUpdateOrderStatus(
         <Layout style={{flexDirection: 'row'}}>
           <Button
             style={{flexGrow: 1}}
-            disabled={selectedStatus ? false : true}>
+            disabled={selectedStatus ? false : true}
+            onPress={async () => {
+              await patchOrderStatusAPI(
+                orderData.orderNo,
+                mapStatus[orderStatuses[selectedStatus.row]],
+              );
+
+              onRefreshAndFetch();
+            }}>
             Update
           </Button>
           <Layout style={{marginHorizontal: 6}} />
