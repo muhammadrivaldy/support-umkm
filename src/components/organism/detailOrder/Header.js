@@ -13,7 +13,7 @@ export function Header({navigation}) {
           }}
         />
       )}
-      title="Bayar"
+      title="Detail Order"
       navigation={navigation}
     />
   );
