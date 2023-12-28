@@ -39,6 +39,7 @@ import {
   PaymentStatusPaid,
   PaymentStatusPartiallyPaid,
 } from '../../models/Const';
+import {GenerateRemainingTime} from '../../utils/Transform';
 
 const starIcon = props => <Icon {...props} name="phone-call-outline" />;
 const searchIcon = props => <Icon {...props} name="search-outline" />;
@@ -239,29 +240,29 @@ export function OrderListScreen({navigation}) {
     return groupedData[groupTitle][idx.row];
   });
 
-  const generateRemainingTime = (remainingTime, remainingTimeDetails) => {
-    var result = '';
+  // const generateRemainingTime = (remainingTime, remainingTimeDetails) => {
+  //   var result = '';
 
-    if (remainingTime === 0) {
-      result = 'Habis';
-    } else {
-      if (remainingTimeDetails.day > 0) {
-        result += `${remainingTimeDetails.day} Hari`;
-      }
+  //   if (remainingTime === 0) {
+  //     result = 'Habis';
+  //   } else {
+  //     if (remainingTimeDetails.day > 0) {
+  //       result += `${remainingTimeDetails.day} Hari`;
+  //     }
 
-      if (remainingTimeDetails.hour > 0) {
-        result = result !== '' ? result + ' ' : result;
-        result += `${remainingTimeDetails.hour} Jam`;
-      }
+  //     if (remainingTimeDetails.hour > 0) {
+  //       result = result !== '' ? result + ' ' : result;
+  //       result += `${remainingTimeDetails.hour} Jam`;
+  //     }
 
-      if (remainingTimeDetails.minute > 0) {
-        result = result !== '' ? result + ' ' : result;
-        result += `${remainingTimeDetails.minute} Menit`;
-      }
-    }
+  //     if (remainingTimeDetails.minute > 0) {
+  //       result = result !== '' ? result + ' ' : result;
+  //       result += `${remainingTimeDetails.minute} Menit`;
+  //     }
+  //   }
 
-    return result;
-  };
+  //   return result;
+  // };
 
   const renderItem = useCallback(({item, index}) => {
     var order = item.value;
@@ -369,10 +370,7 @@ export function OrderListScreen({navigation}) {
             <Text category="p2">
               Tenggat Waktu:{' '}
               <Text category="s2">
-                {generateRemainingTime(
-                  order.remaining_time,
-                  order.remaining_time_details,
-                )}
+                {GenerateRemainingTime(order.remaining_time_details)}
               </Text>{' '}
             </Text>
             <Text category="p2">
