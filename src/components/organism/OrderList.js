@@ -144,8 +144,6 @@ export function OrderListScreen({navigation}) {
                   : pageState.orderPage + 1;
                 pageState.maxPage = response.data.pagination.total_page;
 
-                tempData = new Map();
-
                 response.data.orders.map(idx => {
                   tempData.set(idx.order_id, idx);
                 });
@@ -239,30 +237,6 @@ export function OrderListScreen({navigation}) {
     const groupTitle = Object.keys(groupedData)[idx.section];
     return groupedData[groupTitle][idx.row];
   });
-
-  // const generateRemainingTime = (remainingTime, remainingTimeDetails) => {
-  //   var result = '';
-
-  //   if (remainingTime === 0) {
-  //     result = 'Habis';
-  //   } else {
-  //     if (remainingTimeDetails.day > 0) {
-  //       result += `${remainingTimeDetails.day} Hari`;
-  //     }
-
-  //     if (remainingTimeDetails.hour > 0) {
-  //       result = result !== '' ? result + ' ' : result;
-  //       result += `${remainingTimeDetails.hour} Jam`;
-  //     }
-
-  //     if (remainingTimeDetails.minute > 0) {
-  //       result = result !== '' ? result + ' ' : result;
-  //       result += `${remainingTimeDetails.minute} Menit`;
-  //     }
-  //   }
-
-  //   return result;
-  // };
 
   const renderItem = useCallback(({item, index}) => {
     var order = item.value;
@@ -690,7 +664,7 @@ export function OrderListScreen({navigation}) {
         <Button
           style={{borderRadius: 100}}
           accessoryLeft={plusIcon}
-          onPress={() => {
+          onPress={async () => {
             navigation.navigate('CreateOrder_CustomerListScreen');
           }}>
           {TextProps => {

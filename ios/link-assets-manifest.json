@@ -75,7 +75,11 @@
     },
     {
       "path": "src/assets/mapping.json",
-      "sha1": "414c516cc17a04b8c1c5082abd4f7fb33455ab14"
+      "sha1": "26d6c079a96a40fcdfaa96139ffdd49dded76d85"
+    },
+    {
+      "path": "src/assets/profile.png",
+      "sha1": "4d1244c8cd23f93c1a9d40fe9c4df8756afecddf"
     },
     {
       "path": "src/assets/theme.json",
