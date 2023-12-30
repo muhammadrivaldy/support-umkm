@@ -96,9 +96,9 @@ export function CustomerListScreen({navigation}) {
               });
             }
           });
-        }}>
-        Hapus
-      </Button>
+        }}
+        accessoryLeft={props => <Icon {...props} name={'trash-outline'} />}
+      />
     );
   }, []);
 
@@ -118,6 +118,7 @@ export function CustomerListScreen({navigation}) {
             <Text {...TextProps}>{item.value.address}</Text>
           </>
         )}
+        disabled={true}
         accessoryLeft={renderItemIcon}
         accessoryRight={renderItemAccessory(item.value.id)}
       />

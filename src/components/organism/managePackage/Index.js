@@ -33,6 +33,7 @@ export function ManagePackageScreen(props) {
                   id: value.id,
                   serviceName: value.string,
                   totalPackages: value.total_packages,
+                  storeId: value.store_id,
                 });
               });
 
@@ -48,7 +49,7 @@ export function ManagePackageScreen(props) {
       if (refreshing) {
         setTimeout(() => {
           setRefreshing(false);
-        }, 1000);
+        }, 5000);
       }
     }
   });
