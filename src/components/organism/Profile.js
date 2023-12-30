@@ -69,7 +69,7 @@ export function ProfileScreen({navigation}) {
               title="Atur Jasa & Paket"
               accessoryLeft={CorderIcon}
               onPress={() => {
-                navigation.navigate('ManagePackageScreen');
+                navigation.navigate('ManageServicesScreen');
               }}
             />
             <MenuItem title="Paket Member" accessoryLeft={CorderIcon} />

@@ -12,7 +12,7 @@ import {RenderItem} from './RenderItem';
 import {FlashList} from '@shopify/flash-list';
 import {RefreshControl} from 'react-native';
 
-export function ManagePackageScreen(props) {
+export function ManageServicesScreen(props) {
   const [once, setOnce] = useState(true);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
