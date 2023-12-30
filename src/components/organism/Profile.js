@@ -64,9 +64,15 @@ export function ProfileScreen({navigation}) {
             <MenuItem title="Nama" accessoryLeft={CorderIcon} />
             <MenuItem title="Logo" disabled={true} accessoryLeft={CorderIcon} />
           </MenuGroup>
-          <MenuGroup title="Paket Member" accessoryLeft={CubeIcon}>
-            <MenuItem title="Buat Baru" accessoryLeft={CorderIcon} />
-            <MenuItem title="List" accessoryLeft={CorderIcon} />
+          <MenuGroup title="Jasa & Paket" accessoryLeft={CubeIcon}>
+            <MenuItem
+              title="Atur Jasa & Paket"
+              accessoryLeft={CorderIcon}
+              onPress={() => {
+                navigation.navigate('ManagePackageScreen');
+              }}
+            />
+            <MenuItem title="Paket Member" accessoryLeft={CorderIcon} />
           </MenuGroup>
           <MenuItem
             title="Masukkan Dari Pelanggan"

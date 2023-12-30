@@ -16,6 +16,7 @@ import {CreateOrder_CustomerListScreen} from '../components/organism/CreateOrder
 import {CreateOrder_AddingServiceScreen} from '../components/organism/CreateOrder_AddingService';
 import {CreateOrder_PaymentScreen} from '../components/organism/CreateOrder_Payment';
 import {DetailOrderScreen} from '../components/organism/detailOrder/Index';
+import {ManagePackageScreen} from '../components/organism/managePackage/Index';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,10 @@ const Navigation = () => (
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="HomeScreen" component={HomeNavigator} />
       <Stack.Screen name="DetailOrderScreen" component={DetailOrderScreen} />
+      <Stack.Screen
+        name="ManagePackageScreen"
+        component={ManagePackageScreen}
+      />
     </Stack.Navigator>
   </NavigationContainer>
 );

@@ -37,8 +37,6 @@ export function DetailOrderScreen(props) {
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       {Header(props)}
 
-      <Divider />
-
       <Layout
         style={{
           flex: 1,

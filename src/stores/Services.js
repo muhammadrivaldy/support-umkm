@@ -497,7 +497,7 @@ export async function PatchPaymentStatusAPI(
   return result;
 }
 
-export function GetCustomerByPhoneAndStore(token, phone, storeId) {
+export function GetCustomerByPhoneAndStoreAPI(token, phone, storeId) {
   return axios.get(
     baseURL + `/api/v1/users/customers/phones/${phone}/stores/${storeId}`,
     {
@@ -506,4 +506,12 @@ export function GetCustomerByPhoneAndStore(token, phone, storeId) {
       },
     },
   );
+}
+
+export function GetServicesByStoreIdAPINew(token, storeId) {
+  return axios.get(baseURL + `/api/v1/packages/services/stores/${storeId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

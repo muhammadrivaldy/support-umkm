@@ -23,7 +23,7 @@ import {Linking, RefreshControl, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {GetLaundryInfo, GetToken} from '../../stores/Storages';
 import {
-  GetCustomerByPhoneAndStore,
+  GetCustomerByPhoneAndStoreAPI,
   GetOrderPaymentStatusesAPI,
   GetOrderStatusesAPI,
   GetOrdersAPI,
@@ -253,7 +253,7 @@ export function OrderListScreen({navigation}) {
 
               GetToken()
                 .then(response => {
-                  GetCustomerByPhoneAndStore(
+                  GetCustomerByPhoneAndStoreAPI(
                     response,
                     data.customer_phone,
                     storeId,

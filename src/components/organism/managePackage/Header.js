@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {
+  Button,
   Divider,
   Icon,
   TopNavigation,
@@ -11,6 +12,9 @@ export function Header({navigation}) {
   return (
     <>
       <TopNavigation
+        accessoryRight={() => {
+          <Button>Tambah Paket</Button>;
+        }}
         accessoryLeft={() => (
           <TopNavigationAction
             icon={props => <Icon {...props} name="arrow-back" />}
@@ -19,7 +23,7 @@ export function Header({navigation}) {
             }}
           />
         )}
-        title="Detail Order"
+        title="Atur Jasa & Paket"
         navigation={navigation}
       />
 
