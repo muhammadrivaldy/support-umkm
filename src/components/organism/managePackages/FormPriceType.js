@@ -13,7 +13,7 @@ import {
 const iconEdit = props => <Icon {...props} name="edit-outline" />;
 const iconSave = props => <Icon {...props} name="save-outline" />;
 
-export function FormServiceType(props) {
+export function FormPriceType(props) {
   const [save, setSave] = useState(false);
 
   return (

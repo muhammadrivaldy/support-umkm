@@ -497,6 +497,8 @@ export async function PatchPaymentStatusAPI(
   return result;
 }
 
+// ================== NEW APPROACH ==================
+
 export function GetCustomerByPhoneAndStoreAPI(token, phone, storeId) {
   return axios.get(
     baseURL + `/api/v1/users/customers/phones/${phone}/stores/${storeId}`,
@@ -510,6 +512,29 @@ export function GetCustomerByPhoneAndStoreAPI(token, phone, storeId) {
 
 export function GetServicesByStoreIdAPINew(token, storeId) {
   return axios.get(baseURL + `/api/v1/packages/services/stores/${storeId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function GetPackagesByServiceIdAndStoreIdAPINew(
+  token,
+  serviceId,
+  storeId,
+) {
+  return axios.get(
+    baseURL + `/api/v1/packages/services/${serviceId}/stores/${storeId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+}
+
+export async function GetPriceTypesAPI(token) {
+  return axios.get(baseURL + '/api/v1/packages/prices/types', {
     headers: {
       Authorization: `Bearer ${token}`,
     },

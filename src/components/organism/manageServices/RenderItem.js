@@ -19,7 +19,9 @@ export function RenderItem(props) {
               disabled={item.storeId === 0 ? true : false}
               accessoryLeft={props => <Icon {...props} name="edit-outline" />}
               onPress={() => {
-                props.navigation.navigate('ManagePackagesScreen');
+                props.navigation.navigate('ManagePackagesScreen', {
+                  serviceId: item.id,
+                });
               }}
             />
 
@@ -31,7 +33,9 @@ export function RenderItem(props) {
               disabled={item.storeId === 0 ? true : false}
               accessoryLeft={props => <Icon {...props} name="trash-outline" />}
               onPress={() => {
-                props.navigation.navigate('ManagePackagesScreen');
+                props.navigation.navigate('ManagePackagesScreen', {
+                  serviceId: item.id,
+                });
               }}
             />
           </Layout>
