@@ -1,14 +1,19 @@
-/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Icon, Input, Layout, Text} from '@ui-kitten/components';
 
+const iconEdit = props => <Icon {...props} name="edit-outline" />;
+const iconSave = props => <Icon {...props} name="save-outline" />;
+
 export function FormServiceName(props) {
+  const [save, setSave] = useState(false);
+
   return (
     <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
       <Input
         style={{flex: 1}}
+        disabled={!save}
         label={TextProps => {
           TextProps.style[0].fontWeight = '600';
           return (
@@ -23,8 +28,12 @@ export function FormServiceName(props) {
 
       <Button
         size="small"
+        status={save ? 'info' : 'primary'}
         style={{alignSelf: 'flex-end', minHeight: 40}}
-        accessoryLeft={props => <Icon {...props} name="edit-outline" />}
+        accessoryLeft={save ? iconSave : iconEdit}
+        onPress={() => {
+          save ? setSave(false) : setSave(true);
+        }}
       />
     </Layout>
   );

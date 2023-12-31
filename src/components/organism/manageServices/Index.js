@@ -1,9 +1,8 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {Divider, Layout} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 import {Header} from './Header';
 import {ButtonService} from './ButtonService';
 import {GetServicesByStoreIdAPINew} from '../../../stores/Services';
