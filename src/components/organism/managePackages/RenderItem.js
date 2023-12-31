@@ -6,10 +6,10 @@ import {Button, Icon, Layout, ListItem} from '@ui-kitten/components';
 export function RenderItem(props) {
   return ({item}) => (
     <ListItem
-      title={item.serviceName}
+      title={'item.serviceName'}
       description={`Jasa ini memiliki ${item.totalPackages} paket`}
       disabled={true}
-      accessoryLeft={<Icon {...props} name="cube-outline" />}
+      accessoryLeft={<Icon {...props} name="book-outline" />}
       accessoryRight={() => {
         return (
           <Layout>
