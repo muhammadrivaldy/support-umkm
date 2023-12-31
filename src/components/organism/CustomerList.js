@@ -178,7 +178,6 @@ export function CustomerListScreen({navigation}) {
       <Layout
         style={{
           flexDirection: 'row',
-          alignItems: 'center',
           marginHorizontal: 8,
         }}>
         <Input
@@ -187,7 +186,6 @@ export function CustomerListScreen({navigation}) {
           onChangeText={text => setSearch(text)}
           style={{flex: 1, marginRight: 8}}
         />
-
         <Button status="info" size="small" onPress={() => onRefreshAndReset()}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';

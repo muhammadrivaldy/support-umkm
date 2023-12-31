@@ -199,11 +199,10 @@ export function CreateOrder_CustomerListScreen({navigation}) {
         <Layout
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
             marginHorizontal: 8,
           }}>
           <Input
-            placeholder="Nama, No hp, Alamat ..."
+            placeholder="Nama atau no hp ..."
             accessoryRight={SearchIcon}
             onChangeText={text => setSearch(text)}
             style={{flex: 1, marginRight: 8}}

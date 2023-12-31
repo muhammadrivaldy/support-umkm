@@ -11,7 +11,6 @@ import {
   MenuItem,
   Text,
 } from '@ui-kitten/components';
-import {Dimensions} from 'react-native';
 import {RemoveRefreshToken, RemoveToken} from '../../stores/Storages';
 
 const SmartphoneIcon = props => <Icon {...props} name="smartphone-outline" />;
@@ -19,6 +18,7 @@ const ShoppingIcon = props => <Icon {...props} name="shopping-bag-outline" />;
 const CubeIcon = props => <Icon {...props} name="cube-outline" />;
 const EmailIcon = props => <Icon {...props} name="email-outline" />;
 const BookmarkIcon = props => <Icon {...props} name="bookmark-outline" />;
+const PeopleIcon = props => <Icon {...props} name="people-outline" />;
 const CorderIcon = props => (
   <Icon {...props} name="corner-down-right-outline" />
 );
@@ -32,8 +32,6 @@ export function ProfileScreen({navigation}) {
         flex: 1,
         paddingHorizontal: 8,
         paddingVertical: 4,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
       }}>
       <Layout
         style={{
@@ -64,16 +62,14 @@ export function ProfileScreen({navigation}) {
             <MenuItem title="Nama" accessoryLeft={CorderIcon} />
             <MenuItem title="Logo" disabled={true} accessoryLeft={CorderIcon} />
           </MenuGroup>
-          <MenuGroup title="Jasa & Paket" accessoryLeft={CubeIcon}>
-            <MenuItem
-              title="Atur Jasa & Paket"
-              accessoryLeft={CorderIcon}
-              onPress={() => {
-                navigation.navigate('ManageServicesScreen');
-              }}
-            />
-            <MenuItem title="Paket Member" accessoryLeft={CorderIcon} />
-          </MenuGroup>
+          <MenuItem
+            title="Jasa & Paket"
+            accessoryLeft={CubeIcon}
+            onPress={() => {
+              navigation.navigate('ManageServicesScreen');
+            }}
+          />
+          <MenuItem title="Paket Member" accessoryLeft={PeopleIcon} />
           <MenuItem
             title="Masukkan Dari Pelanggan"
             accessoryLeft={BookmarkIcon}

@@ -1,8 +1,9 @@
-/* eslint-disable no-shadow */
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {Layout} from '@ui-kitten/components';
+import {Divider, Layout} from '@ui-kitten/components';
 import {Header} from './Header';
 import {ButtonService} from './ButtonService';
 import {GetServicesByStoreIdAPINew} from '../../../stores/Services';
@@ -15,7 +16,7 @@ import {RefreshControl} from 'react-native';
 export function ManageServicesScreen(props) {
   const [once, setOnce] = useState(true);
   const [data, setData] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (once) {
@@ -41,24 +42,19 @@ export function ManageServicesScreen(props) {
               setRefreshing(false);
             } else {
               DefaultErrorToast();
+              setRefreshing(false);
             }
           });
         });
       });
-
-      if (refreshing) {
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 5000);
-      }
     }
-  });
+  }, [refreshing]);
 
   const mainContent = data => {
     return (
       <FlashList
         data={data.length === 0 ? [] : data}
-        renderItem={RenderItem}
+        renderItem={RenderItem(props)}
         estimatedItemSize={15}
         refreshControl={
           <RefreshControl

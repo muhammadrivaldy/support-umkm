@@ -23,7 +23,7 @@ export function Header({navigation}) {
             }}
           />
         )}
-        title="Jasa & Paket"
+        title="Ubah Jasa & Paket"
         navigation={navigation}
       />
 

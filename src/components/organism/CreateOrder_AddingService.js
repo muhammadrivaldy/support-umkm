@@ -174,8 +174,6 @@ export function CreateOrder_AddingServiceScreen({navigation}) {
 
       <Divider />
 
-      <Layout style={{marginVertical: 4}} />
-
       <Layout
         style={{
           flex: 1,
