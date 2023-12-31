@@ -7,8 +7,8 @@ import {Button, Icon, Layout, ListItem} from '@ui-kitten/components';
 export function RenderItem(props) {
   return ({item}) => (
     <ListItem
-      title={'item.serviceName'}
-      description={`Jasa ini memiliki ${item.totalPackages} paket`}
+      title={item.name}
+      description={`Estimasi pengerjaan ${item.estimation_in_string}`}
       disabled={true}
       accessoryLeft={<Icon {...props} name="book-outline" />}
       accessoryRight={() => {
@@ -16,7 +16,7 @@ export function RenderItem(props) {
           <Layout style={{marginRight: 8, flexDirection: 'row'}}>
             <Button
               size="tiny"
-              disabled={item.storeId === 0 ? true : false}
+              disabled={true}
               accessoryLeft={props => <Icon {...props} name="edit-outline" />}
               onPress={() => {
                 props.navigation.navigate('ManagePackagesScreen');
@@ -28,7 +28,7 @@ export function RenderItem(props) {
             <Button
               size="tiny"
               status="danger"
-              disabled={item.storeId === 0 ? true : false}
+              disabled={true}
               accessoryLeft={props => <Icon {...props} name="trash-outline" />}
               onPress={() => {
                 props.navigation.navigate('ManagePackagesScreen');

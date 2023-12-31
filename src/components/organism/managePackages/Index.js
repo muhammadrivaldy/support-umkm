@@ -32,6 +32,8 @@ export function ManagePackagesScreen(props) {
   useEffect(() => {
     if (once) {
       setOnce(false);
+      setService(null);
+      setPriceTypes([]);
 
       GetToken().then(token => {
         GetLaundryInfo().then(laundryInfo => {
@@ -73,7 +75,7 @@ export function ManagePackagesScreen(props) {
     return (
       <Layout style={{flex: 1, marginHorizontal: 10, marginTop: 10}}>
         <FlashList
-          data={[1, 2, 3]}
+          data={service === null ? [] : service.packages}
           renderItem={RenderItem(props)}
           estimatedItemSize={10}
         />
@@ -90,7 +92,13 @@ export function ManagePackagesScreen(props) {
         <Card status="success" disabled={true}>
           {FormServiceName(service)}
           <Layout style={{marginVertical: 4}} />
-          {FormPriceType(props)}
+          {FormPriceType(
+            priceTypes,
+            service === null ? null : service.price_type,
+            loadingVisible,
+            setLoadingVisible,
+            setOnce,
+          )}
           <Layout style={{marginVertical: 2}} />
         </Card>
 
