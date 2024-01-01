@@ -6,7 +6,6 @@ export function Loading(visible, setVisible) {
   return (
     <Modal
       visible={visible}
-      onBackdropPress={() => setVisible(false)}
       backdropStyle={{
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
       }}>

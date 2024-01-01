@@ -1,5 +1,6 @@
 const axios = require('axios').default;
-const baseURL = 'https://dev.resolusilaundry.com';
+// const baseURL = 'https://dev.resolusilaundry.com';
+const baseURL = 'https://d552-103-149-34-9.ngrok-free.app';
 
 export async function LoginAPI(email, password) {
   let result = {
@@ -518,7 +519,7 @@ export function GetServicesByStoreIdAPINew(token, storeId) {
   });
 }
 
-export async function GetPackagesByServiceIdAndStoreIdAPINew(
+export function GetPackagesByServiceIdAndStoreIdAPINew(
   token,
   serviceId,
   storeId,
@@ -533,10 +534,32 @@ export async function GetPackagesByServiceIdAndStoreIdAPINew(
   );
 }
 
-export async function GetPriceTypesAPI(token) {
+export function GetPriceTypesAPI(token) {
   return axios.get(baseURL + '/api/v1/packages/prices/types', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+}
+
+export function PutServiceByServiceIdAndStoreIdAPI(
+  token,
+  serviceId,
+  storeId,
+  name,
+  priceType,
+) {
+  return axios.put(
+    baseURL + `/api/v1/packages/services/${serviceId}/stores/${storeId}`,
+    {
+      name: name,
+      price_type: priceType,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
 }

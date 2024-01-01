@@ -94,7 +94,7 @@ export function ManagePackagesScreen(props) {
           <Layout style={{marginVertical: 4}} />
           {FormPriceType(
             priceTypes,
-            service === null ? null : service.price_type,
+            service,
             loadingVisible,
             setLoadingVisible,
             setOnce,

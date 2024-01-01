@@ -10,13 +10,16 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
+import {PutServiceByServiceIdAndStoreIdAPI} from '../../../stores/Services';
+import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
+import {DefaultErrorToast} from '../../../utils/DefaultToast';
 
 const iconEdit = props => <Icon {...props} name="edit-outline" />;
 const iconSave = props => <Icon {...props} name="save-outline" />;
 
 export function FormPriceType(
   priceTypes,
-  currentPriceType,
+  service,
   loadingVisible,
   setLoadingVisible,
   setOnce,
@@ -26,9 +29,9 @@ export function FormPriceType(
   const [value, setValue] = useState(null);
 
   useEffect(() => {
-    if (selected === null) {
+    if (selected === null && service !== null) {
       priceTypes.map(val => {
-        if (val.id === currentPriceType) {
+        if (val.id === service.price_type) {
           setValue(val.name.id);
         }
       });
@@ -40,6 +43,22 @@ export function FormPriceType(
       setValue(priceTypes[selected.row].name.id);
     }
   }, [selected]);
+
+  const updatePriceType = doFunc => {
+    GetToken().then(token => {
+      GetLaundryInfo().then(laundryInfo => {
+        PutServiceByServiceIdAndStoreIdAPI(
+          token,
+          service.service_id,
+          laundryInfo.id,
+          service.service_name,
+          priceTypes[selected.row].id,
+        )
+          .then(doFunc)
+          .catch(DefaultErrorToast);
+      });
+    });
+  };
 
   return (
     <Layout style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -75,8 +94,11 @@ export function FormPriceType(
         onPress={() => {
           if (save) {
             setSave(false);
-            setOnce(true);
+            setSelected(null);
             setLoadingVisible(true);
+            updatePriceType(() => {
+              setOnce(true);
+            });
           } else {
             setSave(true);
           }
