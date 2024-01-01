@@ -90,7 +90,7 @@ export function ManagePackagesScreen(props) {
       {Header(props)}
       <Layout style={{flex: 1, paddingVertical: 8, paddingHorizontal: 8}}>
         <Card status="success" disabled={true}>
-          {FormServiceName(service)}
+          {FormServiceName(service, setLoadingVisible, setOnce)}
           <Layout style={{marginVertical: 4}} />
           {FormPriceType(
             priceTypes,
