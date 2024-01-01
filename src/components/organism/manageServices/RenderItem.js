@@ -30,7 +30,8 @@ export function RenderItem(props) {
             <Button
               size="tiny"
               status="danger"
-              disabled={item.storeId === 0 ? true : false}
+              // disabled={item.storeId === 0 ? true : false}
+              disabled={true}
               accessoryLeft={props => <Icon {...props} name="trash-outline" />}
               onPress={() => {
                 props.navigation.navigate('ManagePackagesScreen', {

@@ -4,7 +4,7 @@
 import React, {useEffect, useState} from 'react';
 import {Layout} from '@ui-kitten/components';
 import {Header} from './Header';
-import {ButtonService} from './ButtonService';
+import {AddingService} from './AddingService';
 import {GetServicesByStoreIdAPINew} from '../../../stores/Services';
 import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
@@ -72,7 +72,7 @@ export function ManageServicesScreen(props) {
   return (
     <Layout style={{flex: 1}}>
       {Header(props)}
-      {ButtonService()}
+      {AddingService()}
       {mainContent(data)}
     </Layout>
   );
