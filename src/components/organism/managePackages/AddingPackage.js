@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Card,
@@ -9,9 +9,12 @@ import {
   Modal,
   Text,
 } from '@ui-kitten/components';
+import {FormatCurrency, FormatTest} from '../../../utils/Currency';
 
 export function AddingPackage(props) {
   const [visible, setVisible] = useState(false);
+  // const [value, setValue] = FormatCurrency();
+  const [value, setValue] = useState(null);
 
   return (
     <>
@@ -26,6 +29,8 @@ export function AddingPackage(props) {
           <Input
             placeholder="Harga"
             inputMode="numeric"
+            value={value !== null ? FormatTest().format(value) : value}
+            onChangeText={text => setValue(text)}
             style={{marginBottom: 10}}
           />
           <Input
