@@ -5,7 +5,6 @@ import {Card, Layout} from '@ui-kitten/components';
 import {Header} from './Header';
 import {FormServiceName} from './FormServiceName';
 import {FormPriceType} from './FormPriceType';
-import {ButtonPackage} from './ButtonPackage';
 import {FlashList} from '@shopify/flash-list';
 import {RenderItem} from './RenderItem';
 import {Loading} from '../../molecules/Loading';
@@ -15,6 +14,7 @@ import {
   GetPriceTypesAPI,
 } from '../../../stores/Services';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
+import {AddingPackage} from './AddingPackage';
 
 export function ManagePackagesScreen(props) {
   const {serviceId} = props.route.params;
@@ -86,7 +86,7 @@ export function ManagePackagesScreen(props) {
   return (
     <Layout style={{flex: 1}}>
       {Loading(loadingVisible, setLoadingVisible)}
-      {ButtonPackage()}
+      {AddingPackage()}
       {Header(props)}
       <Layout style={{flex: 1, paddingVertical: 8, paddingHorizontal: 8}}>
         <Card status="success" disabled={true}>

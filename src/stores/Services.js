@@ -562,3 +562,25 @@ export function PutServiceByServiceIdAndStoreIdAPI(
     },
   );
 }
+
+export function PutPackageByPackageIdAndStoreIdAPI(
+  token,
+  packageId,
+  storeId,
+  price,
+  estimationHours,
+) {
+  return axios.put(
+    baseURL + `/api/v1/packages/${packageId}/stores/${storeId}`,
+    {
+      price: price,
+      estimation_hours: estimationHours,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+}
