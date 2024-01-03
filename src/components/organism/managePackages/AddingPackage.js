@@ -9,12 +9,11 @@ import {
   Modal,
   Text,
 } from '@ui-kitten/components';
-import {MoneyFormat} from '../../../utils/Currency';
+import {FormattingNumberToMoney} from '../../../utils/Currency';
 
 export function AddingPackage(props) {
   const [visible, setVisible] = useState(false);
-
-  const moneyFormat = MoneyFormat();
+  const numberInMoney = FormattingNumberToMoney();
 
   return (
     <>
@@ -29,8 +28,8 @@ export function AddingPackage(props) {
           <Input
             placeholder="Harga"
             inputMode="numeric"
-            value={moneyFormat.getValue()}
-            onChangeText={text => moneyFormat.setValue(text)}
+            value={numberInMoney.getValue()}
+            onChangeText={text => numberInMoney.setValue(text)}
             style={{marginBottom: 10}}
           />
           <Input

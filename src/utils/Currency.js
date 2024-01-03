@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow */
 import {useState} from 'react';
 
-export function MoneyFormat() {
+export function FormattingNumberToMoney() {
   const [value, setValue] = useState(null);
 
   return {
+    valueInNumber: value,
     getValue: () => {
       if (value !== null && value > 0) {
         let formatting = Intl.NumberFormat();
@@ -17,7 +18,6 @@ export function MoneyFormat() {
     setValue: value => {
       let valueStr = String(value);
       setValue(Number(valueStr.replaceAll('.', '')));
-      return this;
     },
   };
 }
