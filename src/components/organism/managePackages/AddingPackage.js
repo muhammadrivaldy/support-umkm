@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
@@ -31,10 +32,38 @@ export function AddingPackage(props) {
             value={numberInMoney.getValue()}
             onChangeText={text => numberInMoney.setValue(text)}
             style={{marginBottom: 10}}
+            accessoryLeft={() => {
+              return (
+                <Layout
+                  style={{
+                    borderWidth: 0,
+                    marginLeft: 10,
+                    backgroundColor: 'transparent',
+                  }}>
+                  <Text category="s2" style={{textAlign: 'center'}}>
+                    Rp
+                  </Text>
+                </Layout>
+              );
+            }}
           />
           <Input
-            placeholder="Estimasi selesai (dalam jam) "
+            placeholder="Estimasi selesai "
             style={{marginBottom: 10}}
+            accessoryRight={() => {
+              return (
+                <Layout
+                  style={{
+                    borderWidth: 0,
+                    marginRight: 10,
+                    backgroundColor: 'transparent',
+                  }}>
+                  <Text category="s2" style={{textAlign: 'center'}}>
+                    Jam
+                  </Text>
+                </Layout>
+              );
+            }}
           />
 
           <Button>Submit</Button>
