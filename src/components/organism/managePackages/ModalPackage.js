@@ -25,7 +25,7 @@ export function ModalPackage(
             inputMode="numeric"
             value={numberInMoney.getValue()}
             onChangeText={text => numberInMoney.setValue(text)}
-            style={{marginBottom: 10}}
+            style={{marginBottom: 10, minWidth: 250}}
             accessoryLeft={() => {
               return (
                 <Layout
@@ -44,7 +44,7 @@ export function ModalPackage(
         ) : null}
 
         <Input
-          placeholder="Estimasi selesai "
+          placeholder="Estimasi selesai"
           style={{marginBottom: 10}}
           inputMode="numeric"
           value={hours}

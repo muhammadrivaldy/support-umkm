@@ -641,3 +641,19 @@ export function PutPackageByStoreIdAPI(
     },
   );
 }
+
+export function PostServiceByStoreIdAPI(token, storeId, name, priceType) {
+  return axios.post(
+    baseURL + `/api/v1/packages/services/stores/${storeId}`,
+    {
+      name: name,
+      price_type: priceType,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+}
