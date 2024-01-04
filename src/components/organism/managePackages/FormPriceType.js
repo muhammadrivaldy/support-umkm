@@ -55,7 +55,9 @@ export function FormPriceType(
           priceTypes[selected.row].id,
         )
           .then(doFunc)
-          .catch(DefaultErrorToast);
+          .catch(() => {
+            DefaultErrorToast();
+          });
       });
     });
   };

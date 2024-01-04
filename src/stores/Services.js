@@ -607,3 +607,37 @@ export function PostPackageByStoreIdAPI(
     },
   );
 }
+
+export function DeletePackageAPI(token, storeId, packageId) {
+  return axios.delete(
+    baseURL + `/api/v1/packages/${packageId}/stores/${storeId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+}
+
+export function PatchPackageByStoreIdAPI(
+  token,
+  storeId,
+  packageId,
+  price,
+  estimationHours,
+) {
+  return axios.post(
+    baseURL + `/api/v1/packages/${packageId}/stores/${storeId}`,
+    {
+      price: price,
+      estimation_hours: estimationHours,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+}

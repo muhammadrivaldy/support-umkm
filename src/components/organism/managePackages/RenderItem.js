@@ -3,8 +3,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {Button, Icon, Layout, ListItem} from '@ui-kitten/components';
+import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
+import {DeletePackageAPI} from '../../../stores/Services';
+import {DefaultErrorToast} from '../../../utils/DefaultToast';
 
-export function RenderItem(props) {
+export function RenderItem(props, setLoadingVisible, setOnce) {
   return ({item}) => (
     <ListItem
       title={item.name}
@@ -19,7 +22,7 @@ export function RenderItem(props) {
               disabled={true}
               accessoryLeft={props => <Icon {...props} name="edit-outline" />}
               onPress={() => {
-                props.navigation.navigate('ManagePackagesScreen');
+                setLoadingVisible(true);
               }}
             />
 
@@ -28,10 +31,25 @@ export function RenderItem(props) {
             <Button
               size="tiny"
               status="danger"
-              disabled={true}
               accessoryLeft={props => <Icon {...props} name="trash-outline" />}
               onPress={() => {
-                props.navigation.navigate('ManagePackagesScreen');
+                setLoadingVisible(true);
+
+                GetToken().then(token => {
+                  GetLaundryInfo().then(laundryInfo => {
+                    DeletePackageAPI(token, laundryInfo.id, item.id)
+                      .then(response => {
+                        if (response.data.code === 200) {
+                          setOnce(true);
+                        } else {
+                          DefaultErrorToast();
+                        }
+                      })
+                      .catch(() => {
+                        DefaultErrorToast();
+                      });
+                  });
+                });
               }}
             />
           </Layout>

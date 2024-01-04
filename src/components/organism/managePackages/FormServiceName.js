@@ -24,7 +24,9 @@ export function FormServiceName(service, setLoadingVisible, setOnce) {
           service.price_type,
         )
           .then(doFunc)
-          .catch(DefaultErrorToast);
+          .catch(() => {
+            DefaultErrorToast();
+          });
       });
     });
   };

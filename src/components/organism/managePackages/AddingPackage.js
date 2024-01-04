@@ -1,74 +1,58 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {
-  Button,
-  Card,
-  Icon,
-  Input,
-  Layout,
-  Modal,
-  Text,
-} from '@ui-kitten/components';
+import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 import {FormattingNumberToMoney} from '../../../utils/Currency';
+import {PostPackageByStoreIdAPI} from '../../../stores/Services';
+import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
+import {DefaultErrorToast} from '../../../utils/DefaultToast';
+import {ModalPackage} from './ModalPackage';
 
-export function AddingPackage(props) {
-  const [visible, setVisible] = useState(false);
+export function AddingPackage(serviceId, setLoadingVisible, setOnce) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hours, setHours] = useState(null);
   const numberInMoney = FormattingNumberToMoney();
+
+  const createPackage = (serviceId, price, hours) => {
+    return () => {
+      setLoadingVisible(true);
+      setModalVisible(false);
+
+      GetToken().then(token => {
+        GetLaundryInfo().then(laundryInfo => {
+          PostPackageByStoreIdAPI(
+            token,
+            laundryInfo.id,
+            serviceId,
+            price,
+            hours,
+          )
+            .then(response => {
+              if (response.data.code === 201) {
+                numberInMoney.setValue(0);
+                setHours(null);
+                setOnce(true);
+              }
+            })
+            .catch(() => {
+              DefaultErrorToast();
+            });
+        });
+      });
+    };
+  };
 
   return (
     <>
-      <Modal
-        visible={visible}
-        backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}}
-        onBackdropPress={() => {
-          console.log('onBackdropPress');
-          setVisible(false);
-        }}>
-        <Card>
-          <Input
-            placeholder="Harga"
-            inputMode="numeric"
-            value={numberInMoney.getValue()}
-            onChangeText={text => numberInMoney.setValue(text)}
-            style={{marginBottom: 10}}
-            accessoryLeft={() => {
-              return (
-                <Layout
-                  style={{
-                    borderWidth: 0,
-                    marginLeft: 10,
-                    backgroundColor: 'transparent',
-                  }}>
-                  <Text category="s2" style={{textAlign: 'center'}}>
-                    Rp
-                  </Text>
-                </Layout>
-              );
-            }}
-          />
-          <Input
-            placeholder="Estimasi selesai "
-            style={{marginBottom: 10}}
-            accessoryRight={() => {
-              return (
-                <Layout
-                  style={{
-                    borderWidth: 0,
-                    marginRight: 10,
-                    backgroundColor: 'transparent',
-                  }}>
-                  <Text category="s2" style={{textAlign: 'center'}}>
-                    Jam
-                  </Text>
-                </Layout>
-              );
-            }}
-          />
-
-          <Button>Submit</Button>
-        </Card>
-      </Modal>
+      {ModalPackage(
+        modalVisible,
+        setModalVisible,
+        numberInMoney,
+        hours,
+        setHours,
+        createPackage(serviceId, numberInMoney.valueInNumber, hours),
+      )}
 
       <Layout
         style={{
@@ -81,9 +65,9 @@ export function AddingPackage(props) {
         }}>
         <Button
           style={{borderRadius: 100}}
-          accessoryLeft={<Icon {...props} name="plus-outline" />}
+          accessoryLeft={props => <Icon {...props} name="plus-outline" />}
           onPress={async () => {
-            setVisible(true);
+            setModalVisible(true);
             console.log('Tambah Paket');
           }}>
           {TextProps => {

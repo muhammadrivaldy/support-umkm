@@ -50,7 +50,7 @@ export function ManagePackagesScreen(props) {
                 DefaultErrorToast();
               }
             })
-            .catch(error => {
+            .catch(() => {
               DefaultErrorToast();
             });
 
@@ -63,7 +63,7 @@ export function ManagePackagesScreen(props) {
                 DefaultErrorToast();
               }
             })
-            .catch(error => {
+            .catch(() => {
               DefaultErrorToast();
             });
         });
@@ -76,7 +76,7 @@ export function ManagePackagesScreen(props) {
       <Layout style={{flex: 1, marginHorizontal: 10, marginTop: 10}}>
         <FlashList
           data={service === null ? [] : service.packages}
-          renderItem={RenderItem(props)}
+          renderItem={RenderItem(props, setLoadingVisible, setOnce)}
           estimatedItemSize={10}
         />
       </Layout>
@@ -86,7 +86,7 @@ export function ManagePackagesScreen(props) {
   return (
     <Layout style={{flex: 1}}>
       {Loading(loadingVisible, setLoadingVisible)}
-      {AddingPackage()}
+      {AddingPackage(serviceId, setLoadingVisible, setOnce)}
       {Header(props)}
       <Layout style={{flex: 1, paddingVertical: 8, paddingHorizontal: 8}}>
         <Card status="success" disabled={true}>
