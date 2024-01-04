@@ -67,7 +67,9 @@ export function FormServiceName(service, setLoadingVisible, setOnce) {
         style={{alignSelf: 'flex-end', minHeight: 40}}
         accessoryLeft={save ? iconSave : iconEdit}
         onPress={() => {
-          if (save) {
+          if (save && serviceName === null) {
+            setSave(false);
+          } else if (save) {
             setSave(false);
             setLoadingVisible(true);
             updatePriceType(() => {

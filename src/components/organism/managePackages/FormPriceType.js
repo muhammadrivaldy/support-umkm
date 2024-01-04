@@ -94,7 +94,9 @@ export function FormPriceType(
         style={{alignSelf: 'flex-end', minHeight: 40}}
         accessoryLeft={save ? iconSave : iconEdit}
         onPress={() => {
-          if (save) {
+          if (save && selected === null) {
+            setSave(false);
+          } else if (save) {
             setSave(false);
             setSelected(null);
             setLoadingVisible(true);
