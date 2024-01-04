@@ -4,10 +4,43 @@
 import React from 'react';
 import {Button, Icon, Layout, ListItem} from '@ui-kitten/components';
 import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
-import {DeletePackageAPI} from '../../../stores/Services';
+import {
+  DeletePackageAPI,
+  PutPackageByStoreIdAPI,
+} from '../../../stores/Services';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
 
-export function RenderItem(props, setLoadingVisible, setOnce) {
+export function RenderItem(
+  props,
+  setLoadingVisible,
+  setModalVisible,
+  setOnce,
+  setDoFunc,
+  setHours,
+  numberInMoney,
+) {
+  const updatePackage = packageId => {
+    return (price, hours) => {
+      setLoadingVisible(true);
+      setModalVisible(false);
+
+      GetToken().then(token => {
+        GetLaundryInfo().then(laundryInfo => {
+          PutPackageByStoreIdAPI(token, laundryInfo.id, packageId, price, hours)
+            .then(response => {
+              if (response.data.code === 200) {
+                setModalVisible(false);
+                setOnce(true);
+              }
+            })
+            .catch(error => {
+              DefaultErrorToast();
+            });
+        });
+      });
+    };
+  };
+
   return ({item}) => (
     <ListItem
       title={item.name}
@@ -19,10 +52,14 @@ export function RenderItem(props, setLoadingVisible, setOnce) {
           <Layout style={{marginRight: 8, flexDirection: 'row'}}>
             <Button
               size="tiny"
-              disabled={true}
               accessoryLeft={props => <Icon {...props} name="edit-outline" />}
               onPress={() => {
-                setLoadingVisible(true);
+                numberInMoney.setValue(item.price);
+                setHours(String(item.estimation_in_hours));
+                setModalVisible(true);
+                setDoFunc(() => {
+                  return updatePackage(item.id);
+                });
               }}
             />
 
@@ -41,8 +78,6 @@ export function RenderItem(props, setLoadingVisible, setOnce) {
                       .then(response => {
                         if (response.data.code === 200) {
                           setOnce(true);
-                        } else {
-                          DefaultErrorToast();
                         }
                       })
                       .catch(() => {

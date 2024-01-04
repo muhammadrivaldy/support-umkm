@@ -12,7 +12,6 @@ export function AddingService() {
         visible={visible}
         backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}}
         onBackdropPress={() => {
-          console.log('onBackdropPress');
           setVisible(false);
         }}>
         <Card>
@@ -34,7 +33,6 @@ export function AddingService() {
           accessoryLeft={props => <Icon {...props} name="plus-outline" />}
           onPress={() => {
             setVisible(true);
-            console.log('Tambah Jasa');
           }}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';

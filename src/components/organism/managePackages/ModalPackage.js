@@ -2,6 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Button, Card, Input, Layout, Modal, Text} from '@ui-kitten/components';
+import {CustomPrice} from '../../../models/PriceTypes';
 
 export function ModalPackage(
   modalVisible,
@@ -9,7 +10,8 @@ export function ModalPackage(
   numberInMoney,
   hours,
   setHours,
-  doAction,
+  doFunc,
+  priceType,
 ) {
   return (
     <Modal
@@ -17,27 +19,30 @@ export function ModalPackage(
       backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}}
       onBackdropPress={() => setModalVisible(false)}>
       <Card>
-        <Input
-          placeholder="Harga"
-          inputMode="numeric"
-          value={numberInMoney.getValue()}
-          onChangeText={text => numberInMoney.setValue(text)}
-          style={{marginBottom: 10}}
-          accessoryLeft={() => {
-            return (
-              <Layout
-                style={{
-                  borderWidth: 0,
-                  marginLeft: 10,
-                  backgroundColor: 'transparent',
-                }}>
-                <Text category="s2" style={{textAlign: 'center'}}>
-                  Rp
-                </Text>
-              </Layout>
-            );
-          }}
-        />
+        {priceType !== CustomPrice ? (
+          <Input
+            placeholder="Harga"
+            inputMode="numeric"
+            value={numberInMoney.getValue()}
+            onChangeText={text => numberInMoney.setValue(text)}
+            style={{marginBottom: 10}}
+            accessoryLeft={() => {
+              return (
+                <Layout
+                  style={{
+                    borderWidth: 0,
+                    marginLeft: 10,
+                    backgroundColor: 'transparent',
+                  }}>
+                  <Text category="s2" style={{textAlign: 'center'}}>
+                    Rp
+                  </Text>
+                </Layout>
+              );
+            }}
+          />
+        ) : null}
+
         <Input
           placeholder="Estimasi selesai "
           style={{marginBottom: 10}}
@@ -60,7 +65,12 @@ export function ModalPackage(
           }}
         />
 
-        <Button onPress={doAction}>Submit</Button>
+        <Button
+          onPress={() => {
+            doFunc(numberInMoney.valueInNumber, hours);
+          }}>
+          Submit
+        </Button>
       </Card>
     </Modal>
   );

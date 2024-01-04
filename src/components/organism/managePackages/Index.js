@@ -15,6 +15,8 @@ import {
 } from '../../../stores/Services';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
 import {AddingPackage} from './AddingPackage';
+import {ModalPackage} from './ModalPackage';
+import {FormattingNumberToMoney} from '../../../utils/Currency';
 
 export function ManagePackagesScreen(props) {
   const {serviceId} = props.route.params;
@@ -22,6 +24,10 @@ export function ManagePackagesScreen(props) {
   const [loadingVisible, setLoadingVisible] = useState(true);
   const [service, setService] = useState(null);
   const [priceTypes, setPriceTypes] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hours, setHours] = useState(null);
+  const [doFunc, setDoFunc] = useState(null);
+  const numberInMoney = FormattingNumberToMoney();
 
   useEffect(() => {
     if (service !== null && priceTypes.length > 0) {
@@ -76,7 +82,15 @@ export function ManagePackagesScreen(props) {
       <Layout style={{flex: 1, marginHorizontal: 10, marginTop: 10}}>
         <FlashList
           data={service === null ? [] : service.packages}
-          renderItem={RenderItem(props, setLoadingVisible, setOnce)}
+          renderItem={RenderItem(
+            props,
+            setLoadingVisible,
+            setModalVisible,
+            setOnce,
+            setDoFunc,
+            setHours,
+            numberInMoney,
+          )}
           estimatedItemSize={10}
         />
       </Layout>
@@ -86,8 +100,22 @@ export function ManagePackagesScreen(props) {
   return (
     <Layout style={{flex: 1}}>
       {Loading(loadingVisible, setLoadingVisible)}
-      {AddingPackage(serviceId, setLoadingVisible, setOnce)}
+      {AddingPackage(
+        serviceId,
+        service === null ? 0 : service.price_type,
+        setLoadingVisible,
+        setOnce,
+      )}
       {Header(props)}
+      {ModalPackage(
+        modalVisible,
+        setModalVisible,
+        numberInMoney,
+        hours,
+        setHours,
+        doFunc,
+        service === null ? 0 : service.price_type,
+      )}
       <Layout style={{flex: 1, paddingVertical: 8, paddingHorizontal: 8}}>
         <Card status="success" disabled={true}>
           {FormServiceName(service, setLoadingVisible, setOnce)}

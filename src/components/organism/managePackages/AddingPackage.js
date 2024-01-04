@@ -9,7 +9,12 @@ import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
 import {ModalPackage} from './ModalPackage';
 
-export function AddingPackage(serviceId, setLoadingVisible, setOnce) {
+export function AddingPackage(
+  serviceId,
+  priceType,
+  setLoadingVisible,
+  setOnce,
+) {
   const [modalVisible, setModalVisible] = useState(false);
   const [hours, setHours] = useState(null);
   const numberInMoney = FormattingNumberToMoney();
@@ -52,6 +57,7 @@ export function AddingPackage(serviceId, setLoadingVisible, setOnce) {
         hours,
         setHours,
         createPackage(serviceId, numberInMoney.valueInNumber, hours),
+        priceType,
       )}
 
       <Layout
@@ -66,10 +72,7 @@ export function AddingPackage(serviceId, setLoadingVisible, setOnce) {
         <Button
           style={{borderRadius: 100}}
           accessoryLeft={props => <Icon {...props} name="plus-outline" />}
-          onPress={async () => {
-            setModalVisible(true);
-            console.log('Tambah Paket');
-          }}>
+          onPress={() => setModalVisible(true)}>
           {TextProps => {
             TextProps.style.fontFamily = 'Raleway-Bold';
             TextProps.style.fontWeight = '600';

@@ -620,14 +620,14 @@ export function DeletePackageAPI(token, storeId, packageId) {
   );
 }
 
-export function PatchPackageByStoreIdAPI(
+export function PutPackageByStoreIdAPI(
   token,
   storeId,
   packageId,
   price,
   estimationHours,
 ) {
-  return axios.post(
+  return axios.put(
     baseURL + `/api/v1/packages/${packageId}/stores/${storeId}`,
     {
       price: price,
