@@ -3,8 +3,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {Button, Icon, Layout, ListItem} from '@ui-kitten/components';
+import {DeleteServiceAPI} from '../../../stores/Services';
+import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
+import {DefaultErrorToast} from '../../../utils/DefaultToast';
 
-export function RenderItem(props) {
+export function RenderItem(props, setOnce, setRefreshing, setLoadingVisible) {
   return ({item}) => (
     <ListItem
       title={item.serviceName}
@@ -30,12 +33,22 @@ export function RenderItem(props) {
             <Button
               size="tiny"
               status="danger"
-              // disabled={item.storeId === 0 ? true : false}
-              disabled={true}
+              disabled={item.storeId === 0 ? true : false}
               accessoryLeft={props => <Icon {...props} name="trash-outline" />}
               onPress={() => {
-                props.navigation.navigate('ManagePackagesScreen', {
-                  serviceId: item.id,
+                setLoadingVisible(true);
+
+                GetToken().then(token => {
+                  GetLaundryInfo().then(laundryInfo => {
+                    DeleteServiceAPI(token, laundryInfo.id, item.id)
+                      .then(() => {
+                        setOnce(true);
+                        setRefreshing(true);
+                      })
+                      .catch(() => {
+                        DefaultErrorToast();
+                      });
+                  });
                 });
               }}
             />

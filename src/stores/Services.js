@@ -620,6 +620,18 @@ export function DeletePackageAPI(token, storeId, packageId) {
   );
 }
 
+export function DeleteServiceAPI(token, storeId, serviceId) {
+  return axios.delete(
+    baseURL + `/api/v1/packages/services/${serviceId}/stores/${storeId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+}
+
 export function PutPackageByStoreIdAPI(
   token,
   storeId,

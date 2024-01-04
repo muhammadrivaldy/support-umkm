@@ -15,12 +15,14 @@ import {RenderItem} from './RenderItem';
 import {FlashList} from '@shopify/flash-list';
 import {RefreshControl} from 'react-native';
 import {ModalService} from './ModalService';
+import {Loading} from '../../molecules/Loading';
 
 export function ManageServicesScreen(props) {
   const [once, setOnce] = useState(true);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loadingVisible, setLoadingVisible] = useState(false);
   const [priceTypes, setPriceTypes] = useState(null);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export function ManageServicesScreen(props) {
                       setPriceTypes(response.data.data);
                       setData(data);
                       setRefreshing(false);
+                      setLoadingVisible(false);
                     }
                   })
                   .catch(() => {
@@ -72,7 +75,12 @@ export function ManageServicesScreen(props) {
     return (
       <FlashList
         data={data.length === 0 ? [] : data}
-        renderItem={RenderItem(props)}
+        renderItem={RenderItem(
+          props,
+          setOnce,
+          setRefreshing,
+          setLoadingVisible,
+        )}
         estimatedItemSize={15}
         refreshControl={
           <RefreshControl
@@ -93,6 +101,7 @@ export function ManageServicesScreen(props) {
       {Header(props)}
       {AddingService(setModalVisible)}
       {mainContent(data)}
+      {Loading(loadingVisible, setLoadingVisible)}
       {ModalService(
         modalVisible,
         setModalVisible,
