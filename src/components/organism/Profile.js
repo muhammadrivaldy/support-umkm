@@ -57,8 +57,15 @@ export function ProfileScreen({navigation}) {
         <Menu
           selectedIndex={selectedIndex}
           onSelect={index => setSelectedIndex(index)}>
-          <MenuItem title="Edit Password" accessoryLeft={SmartphoneIcon} />
-          <MenuGroup title="Edit Laundry" accessoryLeft={ShoppingIcon}>
+          <MenuItem
+            disabled={true}
+            title="Edit Password"
+            accessoryLeft={SmartphoneIcon}
+          />
+          <MenuGroup
+            disabled={true}
+            title="Edit Laundry"
+            accessoryLeft={ShoppingIcon}>
             <MenuItem title="Nama" accessoryLeft={CorderIcon} />
             <MenuItem title="Logo" disabled={true} accessoryLeft={CorderIcon} />
           </MenuGroup>
@@ -69,12 +76,18 @@ export function ProfileScreen({navigation}) {
               navigation.navigate('ManageServicesScreen');
             }}
           />
-          <MenuItem title="Paket Member" accessoryLeft={PeopleIcon} />
           <MenuItem
+            disabled={true}
+            title="Paket Member"
+            accessoryLeft={PeopleIcon}
+          />
+          <MenuItem
+            disabled={true}
             title="Masukkan Dari Pelanggan"
             accessoryLeft={BookmarkIcon}
           />
           <MenuItem
+            disabled={true}
             title="Kasih Masukkan Untuk Pembuat Aplikasi"
             accessoryLeft={EmailIcon}
           />
