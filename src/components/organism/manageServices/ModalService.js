@@ -19,6 +19,7 @@ export function ModalService(
   priceTypes,
   setOnce,
   setRefreshing,
+  setLoadingVisible,
 ) {
   const [serviceName, setServiceName] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -64,6 +65,7 @@ export function ModalService(
         <Button
           onPress={() => {
             setModalVisible(false);
+            setLoadingVisible(true);
 
             GetToken().then(token => {
               GetLaundryInfo().then(laundryInfo => {

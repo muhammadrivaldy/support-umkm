@@ -108,6 +108,7 @@ export function ManageServicesScreen(props) {
         priceTypes,
         setOnce,
         setRefreshing,
+        setLoadingVisible,
       )}
     </Layout>
   );
