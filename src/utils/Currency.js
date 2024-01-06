@@ -1,16 +1,14 @@
 /* eslint-disable no-shadow */
 import {useState} from 'react';
 
-export function FormattingNumberToMoney() {
+export function FormattingNumberToMoneyWithState() {
   const [value, setValue] = useState(null);
 
   return {
     valueInNumber: value,
     getValue: () => {
       if (value !== null && value > 0) {
-        let formatting = Intl.NumberFormat();
-        let newValue = formatting.format(value);
-        return newValue.replaceAll(',', '.');
+        return FormattingNumberToMoney(value);
       }
 
       return null;
@@ -20,4 +18,10 @@ export function FormattingNumberToMoney() {
       setValue(Number(valueStr.replaceAll('.', '')));
     },
   };
+}
+
+export function FormattingNumberToMoney(value) {
+  let formatting = Intl.NumberFormat();
+  let newValue = formatting.format(value);
+  return newValue.replaceAll(',', '.');
 }

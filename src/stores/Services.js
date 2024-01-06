@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const axios = require('axios').default;
 const baseURL = 'https://dev.resolusilaundry.com';
 
@@ -668,4 +669,29 @@ export function PostServiceByStoreIdAPI(token, storeId, name, priceType) {
       },
     },
   );
+}
+
+export function GetStatisticIncomesByStoreIdAPI(token, storeId, time, value) {
+  let params = [];
+  params.push({time: time});
+  value !== null ? params.push({value: value}) : params.push({value: 'empty'});
+
+  let queryParams = '';
+  params.map(val => {
+    let key = Object.keys(val)[0];
+    let value = val[key];
+    queryParams +=
+      queryParams !== '' ? '&' + key + '=' + value : key + '=' + value;
+  });
+
+  var buildPathURL = `/api/v1/stores/${storeId}/incomes/statistic`;
+  if (queryParams !== '') {
+    buildPathURL += '?' + queryParams;
+  }
+
+  return axios.get(baseURL + buildPathURL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

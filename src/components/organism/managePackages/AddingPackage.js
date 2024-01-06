@@ -3,7 +3,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
-import {FormattingNumberToMoney} from '../../../utils/Currency';
+import {FormattingNumberToMoneyWithState} from '../../../utils/Currency';
 import {PostPackageByStoreIdAPI} from '../../../stores/Services';
 import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
@@ -17,7 +17,7 @@ export function AddingPackage(
 ) {
   const [modalVisible, setModalVisible] = useState(false);
   const [hours, setHours] = useState(null);
-  const numberInMoney = FormattingNumberToMoney();
+  const numberInMoney = FormattingNumberToMoneyWithState();
 
   const createPackage = (serviceId, price, hours) => {
     return () => {

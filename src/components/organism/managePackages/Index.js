@@ -16,7 +16,7 @@ import {
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
 import {AddingPackage} from './AddingPackage';
 import {ModalPackage} from './ModalPackage';
-import {FormattingNumberToMoney} from '../../../utils/Currency';
+import {FormattingNumberToMoneyWithState} from '../../../utils/Currency';
 
 export function ManagePackagesScreen(props) {
   const {serviceId} = props.route.params;
@@ -27,7 +27,7 @@ export function ManagePackagesScreen(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [hours, setHours] = useState(null);
   const [doFunc, setDoFunc] = useState(null);
-  const numberInMoney = FormattingNumberToMoney();
+  const numberInMoney = FormattingNumberToMoneyWithState();
 
   useEffect(() => {
     if (service !== null && priceTypes.length > 0) {
