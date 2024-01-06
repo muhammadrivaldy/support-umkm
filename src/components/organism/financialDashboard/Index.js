@@ -25,16 +25,15 @@ export function FinancialDashboardScreen(props) {
   const [once, setOnce] = useState(true);
   const [loadingVisible, setLoadingVisible] = useState(true);
   const [data, setData] = useState(Object.assign({}, templateData));
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   // const testTime = 'years';
   // const testValue = null;
 
-  const testTime = 'months';
-  const testValue = '2023';
+  // const testTime = 'months';
+  // const testValue = '2023';
 
-  // const testTime = 'days';
-  // const testValue = '1';
+  const testTime = 'days';
+  const testValue = '1';
 
   useState(() => {
     if (once) {
@@ -101,11 +100,19 @@ export function FinancialDashboardScreen(props) {
                         key={`nominal-${index}`}
                         style={{
                           position: 'absolute',
-                          top: y - 25,
-                          left: x - 12 - nominal.length * 2.5,
-                          backgroundColor: 'transparent',
+                          top: y - 28,
+                          left: x - 17 - nominal.length * 2.5,
+                          backgroundColor: 'white',
+                          borderRadius: 4,
+                          borderWidth: 1,
                         }}>
-                        <Text category="s1" style={{fontSize: 10}}>
+                        <Text
+                          category="s1"
+                          style={{
+                            fontSize: 10,
+                            marginHorizontal: 6,
+                            marginBottom: 3,
+                          }}>
                           Rp. {nominal}
                         </Text>
                       </Layout>
