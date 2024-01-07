@@ -155,7 +155,8 @@ export function FinancialDashboardScreen(props) {
       {Loading(loadingVisible, setLoadingVisible)}
       {loadingVisible === false ? (
         <>
-          <Layout style={{padding: 20, paddingBottom: 0}}>
+          <Layout
+            style={{paddingHorizontal: 8, paddingTop: 12, paddingBottom: 0}}>
             <Select
               style={{marginBottom: 8}}
               value={showTimes[selectedTime.row]}
