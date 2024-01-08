@@ -1,9 +1,22 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {Button, Layout, Select, SelectItem, Text} from '@ui-kitten/components';
+import {
+  Button,
+  Divider,
+  Icon,
+  Layout,
+  List,
+  ListItem,
+  Select,
+  SelectItem,
+  Text,
+} from '@ui-kitten/components';
 import {Dimensions, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
+import {FlashList} from '@shopify/flash-list';
 import {GetLaundryInfo, GetToken} from '../../../stores/Storages';
 import {GetStatisticIncomesByStoreIdAPI} from '../../../stores/Services';
 import {DefaultErrorToast} from '../../../utils/DefaultToast';
@@ -150,11 +163,29 @@ export function FinancialDashboardScreen(props) {
     return true;
   };
 
+  const iconPlus = props => <Icon {...props} name="plus-square-outline" />;
+
+  const listMoney = data => {
+    return (
+      <ListItem
+        disabled={true}
+        title={'Rp. ' + FormattingNumberToMoney(data.item)}
+        description={TextProps => (
+          <>
+            <Text {...TextProps}>22 Okt 2023</Text>
+            <Text {...TextProps}>Pembayaran cash</Text>
+          </>
+        )}
+        accessoryLeft={iconPlus}
+      />
+    );
+  };
+
   return (
-    <>
+    <Layout style={{flex: 1}}>
       {Loading(loadingVisible, setLoadingVisible)}
       {loadingVisible === false ? (
-        <>
+        <Layout style={{flex: 1}}>
           <Layout
             style={{paddingHorizontal: 8, paddingTop: 12, paddingBottom: 0}}>
             <Select
@@ -184,7 +215,7 @@ export function FinancialDashboardScreen(props) {
             </Button>
           </Layout>
 
-          <Layout style={{marginBottom: 50}}>
+          <Layout style={{marginBottom: 10}}>
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
@@ -242,8 +273,8 @@ export function FinancialDashboardScreen(props) {
                 withHorizontalLabels={false}
                 withVerticalLabels={false}
                 horizontalLabelRotation={300}
-                withVerticalLines={true}
-                withHorizontalLines={true}
+                withVerticalLines={false}
+                withHorizontalLines={false}
                 formatYLabel={text => {
                   return 'Rp. ' + FormattingNumberToMoney(text.split('.')[0]);
                 }}
@@ -259,11 +290,23 @@ export function FinancialDashboardScreen(props) {
             </ScrollView>
           </Layout>
 
-          <Layout>
-            <Text>Hello World</Text>
+          <Layout style={{flex: 1, marginLeft: 20}}>
+            <Text category="s2" style={{marginTop: 15, marginBottom: 8}}>
+              Daftar Pemasukkan
+            </Text>
+            <FlashList
+              data={[
+                10000, 20000, 30000, 24000, 1002300, 34100, 32000, 49100,
+                900000, 2000000, 10000, 20000, 30000, 24000, 1002300, 34100,
+                32000, 49100, 900000, 2000000,
+              ]}
+              renderItem={listMoney}
+              showsVerticalScrollIndicator={false}
+              estimatedItemSize={50}
+            />
           </Layout>
-        </>
+        </Layout>
       ) : null}
-    </>
+    </Layout>
   );
 }
